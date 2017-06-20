@@ -6,4 +6,6 @@
   int printSector2(unsigned char* buffer, int currentSector);
 
   int printBlock(unsigned char* buffer);
+
+  void showBlock(int block);
 #endif

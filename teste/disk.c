@@ -20,5 +20,13 @@ int main(int argc, char const *argv[]) {
   readBlock(1, &blockBuffer);
   printBlock(blockBuffer.at);
 
+  /* Mostrar blocos de importância */
+  printf("-- BOOT BLOCK --\n");
+  showBlock(BOOT_BLOCK);
+  printf("-- MFT BLOCK --\n");
+  showBlock(MFT_BLOCK);
+  printf("-- DATA BLOCK --\n");
+  showBlock(DATA_BLOCK);
+
   return 0;
 }
