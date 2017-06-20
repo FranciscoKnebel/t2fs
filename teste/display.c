@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	while (1) {
 		printf ("CMD> ");
 
-		gets(command);
+		scanf("%s", command);
 
 		if (strlen(command)==0)
 			continue;
@@ -49,16 +49,20 @@ int main(int argc, char *argv[])
 			int linhaBase = SECTOR_SIZE * sector;
 			int linha, coluna;
 			for (linha=0; linha<16; ++linha) {
-			    printf ("%04X  ", linhaBase+16*linha);
-			    for (coluna=0; coluna<16; ++coluna) {
-				int index = 16*linha+coluna;
-				char c = buffer[index];
-				if (c>=' ' && c<='z') str[coluna]=c;
-				else str[coluna]=' ';
-				printf ("%02X ", c&0xFF);
-			    }
-			    str[16]='\0';
-			    printf (" *%s*\n", str);
+		    printf ("%04X  ", linhaBase+16*linha);
+		    for (coluna=0; coluna<16; ++coluna) {
+					int index = 16*linha+coluna;
+					char c = buffer[index];
+
+					if (c>=' ' && c<='z')
+						str[coluna]=c;
+					else
+						str[coluna]=' ';
+
+					printf ("%02X ", c&0xFF);
+		    }
+		    str[16]='\0';
+		    printf (" *%s*\n", str);
 			}
 			continue;
 		}
