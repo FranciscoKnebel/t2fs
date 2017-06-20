@@ -1,3 +1,12 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Módulo desenvolvido por Francisco Knebel
+  Funções:
+    printSector, printSector2, printBlock, showBlock
+*/
+
 #include <stdio.h>
 #include "aux.h"
 #include "constants.h"
@@ -12,7 +21,7 @@ int printSector2(unsigned char* buffer, int currentSector) {
   char str[20];
 
   for (i = 0; i < 16; ++i) {
-    printf("%04X  ", (SECTOR_SIZE * currentSector) + 16 * i);
+    printf("%04X  ", (SECTOR_SIZE * currentSector) + 16 * i);git
     for (j = 0; j < 16; ++j) {
       int index = 16*i+j;
       char c = buffer[index];

@@ -14,4 +14,8 @@
 
   int readBlock(int block, BLOCK_T* buffer);
 
+  int writeSector(int sector, SECTOR_T* buffer);
+
+  int writeBlock(int block, BLOCK_T* buffer);
+
 #endif
