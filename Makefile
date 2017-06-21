@@ -41,6 +41,9 @@ $(BIN_DIR)/display: all $(TST_DIR)/display.c
 $(BIN_DIR)/disk: all $(TST_DIR)/disk.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/disk $(TST_DIR)/disk.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
+$(BIN_DIR)/t2fs: all $(TST_DIR)/t2fs.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/t2fs $(TST_DIR)/t2fs.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
 $(BIN_DIR)/parse: all $(TST_DIR)/parse.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/parse $(TST_DIR)/parse.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 

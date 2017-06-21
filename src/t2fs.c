@@ -7,7 +7,24 @@
 #include "t2fs.h"
 
 int identify2 (char *name, int size) {
-  return -1;
+  if (size == 0) {
+    name[0] = '\0';
+
+    return 0;
+  }
+
+  char info[] = "\n Douglas Lazaro S P Silva \t- 207305 \n Francisco Paiva Knebel \t- 243688";
+  int length = strlen(info);
+
+  if(size < length) {
+    memcpy(name, info, size);
+    name[size] = '\0';
+  } else {
+    memcpy(name, info, length);
+    name[length] = '\0';
+  }
+
+  return 0;
 };
 
 FILE2 create2 (char *filename) {
