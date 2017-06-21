@@ -4,7 +4,7 @@
 
   Testes dos métodos de src/disk.c
 
-  Módulo desenvolvido por Francisco Knebel
+  Desenvolvido por Francisco Knebel
 */
 
 #include <stdio.h>
