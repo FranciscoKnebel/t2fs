@@ -1,8 +1,13 @@
+/*
+	INF01142 - Sistemas Operacionais I
+	T2FS - 2017/1
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "apidisk.h"
+	Display de setores fornecido.
+
+	Modificações por Francisco Knebel
+*/
+
+#include "libs.h"
 
 void help() {
 	printf ("Testing program - read and write setores do arquivo t2fs_disk.dat\n");

@@ -7,15 +7,7 @@
     readSector, readBlock, writeSector, writeBlock
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "constants.h"
-#include "disk.h"
-
-#include "t2fs.h"
-#include "apidisk.h"
+#include "libs.h"
 
 int readSector(int sector, SECTOR_T* buffer) {
   if(sector < 0) {
@@ -49,6 +41,10 @@ int readBlock(int block, BLOCK_T* buffer) {
   return TRUE;
 }
 
+int readRegister(int sector, int offset) {
+  return FALSE;
+}
+
 int writeSector(int sector, SECTOR_T* buffer) {
   if (sector < 0) {
     return FALSE;
@@ -77,4 +73,8 @@ int writeBlock(int block, BLOCK_T* buffer) {
   }
 
   return TRUE;
+}
+
+int writeRegister(int sector, int offset) {
+  return FALSE;
 }

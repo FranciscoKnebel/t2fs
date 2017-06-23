@@ -9,4 +9,9 @@
     DWORD diskSectorSize;
   };
 
+  struct configuration {
+    int initiated;
+    struct bootBlock bootBlock;
+  };
+
 #endif

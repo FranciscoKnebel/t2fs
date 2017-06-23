@@ -7,17 +7,7 @@
     parseBootBlock, parseVersion, parseBlockSize, parseMFTBlocksSize, parseDiskSectorSize
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "constants.h"
-#include "disk.h"
-
-#include "t2fs.h"
-#include "apidisk.h"
-#include "parse.h"
-#include "types.h"
+#include "libs.h"
 
 DWORD parseDiskSectorSize(unsigned char* DiskSectorSize) {
   /* 00 80 00 00 => 0x00008000 => 32768 */
@@ -94,3 +84,17 @@ struct bootBlock parseBootBlock(unsigned char* bootBlock) {
 
   return config;
 }
+
+void parseRegister() {
+  return;
+}
+
+void parseDirectory() {
+  parseRegister();
+  return;
+}
+
+void parseFile() {
+  parseRegister();
+  return;
+};

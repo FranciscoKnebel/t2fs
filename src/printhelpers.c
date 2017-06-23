@@ -4,13 +4,10 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    printSector, printSector2, printBlock, showBlock
+    printSector, printSector2, printBlock, showBlock, printBootBlock
 */
 
-#include <stdio.h>
-#include "aux.h"
-#include "constants.h"
-#include "disk.h"
+#include "libs.h"
 
 int printSector(unsigned char* buffer) {
   return printSector2(buffer, 0);
@@ -61,4 +58,12 @@ void showBlock(int block) {
   printBlock(buffer.at);
 
   return;
+}
+
+void printBootBlock() {
+  printf("ID: %s\n", config.bootBlock.id);
+  printf("Version: %s\n", config.bootBlock.version);
+  printf("Block Size: %d\n", config.bootBlock.blockSize);
+  printf("MFT Blocks Size: %d\n", config.bootBlock.MFTBlocksSize);
+  printf("Disk Sector Size: %d\n", config.bootBlock.diskSectorSize);
 }

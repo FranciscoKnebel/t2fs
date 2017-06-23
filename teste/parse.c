@@ -2,22 +2,14 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Casos de teste desenvolvidos por Francisco Knebel
+  Testes desenvolvidos por Francisco Knebel
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "apidisk.h"
-#include "bitmap2.h"
-#include "t2fs.h"
-
-#include "aux.h"
-#include "types.h"
-#include "constants.h"
-#include "disk.h"
-#include "parse.h"
+#include "libs.h"
 
 void test_parseBootBlock() {
   BLOCK_T bootBlock;

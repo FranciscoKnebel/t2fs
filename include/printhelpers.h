@@ -8,5 +8,7 @@
   int printBlock(unsigned char* buffer);
 
   void showBlock(int block);
-  
+
+  void printBootBlock();
+
 #endif

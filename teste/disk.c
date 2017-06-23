@@ -7,15 +7,7 @@
   Desenvolvido por Francisco Knebel
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "apidisk.h"
-
-#include "aux.h"
-#include "constants.h"
-#include "disk.h"
+#include "libs.h"
 
 void test_readSector() {
   printf("-- READ SECTOR --\n");
