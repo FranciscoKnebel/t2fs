@@ -8,9 +8,9 @@ TST_DIR=./teste
 
 # GERAÇÂO DO T2FS #
 LIB_OBJECTS=$(LIB_GENERATED_OBJECTS) $(LIB_DIR)/apidisk.o $(LIB_DIR)/bitmap2.o
-LIB_GENERATED_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/printhelpers.o $(LIB_DIR)/parse.o $(LIB_DIR)/util.o
+LIB_GENERATED_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o $(HELPER_OBJECTS)
 
-all: $(LIB_OBJECTS)
+all: $(LIB_OBJECTS) $(LIB_DIR)/helpers
 	ar rcs $(LIB_DIR)/libt2fs.a $(LIB_OBJECTS)
 
 $(LIB_DIR)/t2fs.o: $(SRC_DIR)/t2fs.c
@@ -19,20 +19,32 @@ $(LIB_DIR)/t2fs.o: $(SRC_DIR)/t2fs.c
 $(LIB_DIR)/disk.o: $(SRC_DIR)/disk.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/disk.o -I$(INC_DIR) $(SRC_DIR)/disk.c
 
-$(LIB_DIR)/printhelpers.o: $(SRC_DIR)/printhelpers.c
-	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/printhelpers.o -I$(INC_DIR) $(SRC_DIR)/printhelpers.c
-
 $(LIB_DIR)/parse.o: $(SRC_DIR)/parse.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/parse.o -I$(INC_DIR) $(SRC_DIR)/parse.c
 
-$(LIB_DIR)/util.o: $(SRC_DIR)/util.c
-	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/util.o -I$(INC_DIR) $(SRC_DIR)/util.c
+## HELPERS ##
+HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o
+
+$(LIB_DIR)/helpers: $(HELPER_OBJECTS)
+
+$(LIB_DIR)/helpers/print.o: $(SRC_DIR)/helpers/print.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/print.o -I$(INC_DIR) $(SRC_DIR)/helpers/print.c
+
+$(LIB_DIR)/helpers/util.o: $(SRC_DIR)/helpers/util.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/util.o -I$(INC_DIR) $(SRC_DIR)/helpers/util.c
 
 # COMANDOS DE TESTE #
+
+ifeq (teste,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
 TEST_FILES=$(BIN_DIR)/display $(BIN_DIR)/disk $(BIN_DIR)/api $(BIN_DIR)/parse
 
+# make teste _NOME_
 teste: $(TEST_FILES)
-	$(BIN_DIR)/api
+	$(BIN_DIR)/$(RUN_ARGS)
 
 $(BIN_DIR)/display: all $(TST_DIR)/display.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/display $(TST_DIR)/display.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)

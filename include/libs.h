@@ -9,9 +9,10 @@
 #include "constants.h"
 #include "types.h"
 
-#include "printhelpers.h"
+#include "helpers/print.h"
+#include "helpers/util.h"
+
 #include "disk.h"
 #include "parse.h"
-#include "util.h"
 
 extern struct configuration config;
