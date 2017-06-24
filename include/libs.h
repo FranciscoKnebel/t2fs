@@ -15,4 +15,5 @@
 #include "disk.h"
 #include "parse.h"
 
-extern struct configuration config;
+extern struct Configuration config;
+extern struct Constants constants;

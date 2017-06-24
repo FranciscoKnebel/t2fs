@@ -11,4 +11,6 @@
 
   void printBootBlock();
 
+  void printConstants();
+
 #endif

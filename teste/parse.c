@@ -13,7 +13,7 @@
 
 void test_parseBootBlock() {
   BLOCK_T bootBlock;
-  struct bootBlock config;
+  struct BootBlock config;
 
   readBlock(0, &bootBlock);
 

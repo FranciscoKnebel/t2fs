@@ -54,8 +54,8 @@ void parseVersion(char* version, char* str) {
   return;
 }
 
-struct bootBlock parseBootBlock(unsigned char* bootBlock) {
-  struct bootBlock config;
+struct BootBlock parseBootBlock(unsigned char* bootBlock) {
+  struct BootBlock config;
 
   char version[2] = "";
   unsigned char blockSize[2] = "";

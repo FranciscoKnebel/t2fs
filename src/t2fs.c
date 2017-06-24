@@ -1,6 +1,7 @@
 #include "libs.h"
 
-struct configuration config = { .initiated = FALSE };
+struct Configuration config = { .initiated = FALSE };
+struct Constants constants;
 
 int identify2 (char *name, int size) {
   if (size == 0) {
