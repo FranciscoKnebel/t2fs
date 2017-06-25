@@ -11,6 +11,7 @@
 
 #include "helpers/print.h"
 #include "helpers/util.h"
+#include "helpers/files.h"
 
 #include "disk.h"
 #include "parse.h"

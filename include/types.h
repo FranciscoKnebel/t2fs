@@ -45,6 +45,9 @@
     /* Tupla */
     int MAX_TUPLAS_REGISTER;
     int TUPLA_SIZE;
+
+    /* Arquivo */
+    int FILENAME_SIZE_LIMIT;
   };
 
   struct Configuration {

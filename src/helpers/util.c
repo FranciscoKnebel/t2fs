@@ -43,6 +43,8 @@ struct Constants buildConstants(struct BootBlock bootBlock) {
   constants.MAX_TUPLAS_REGISTER = 32;
   constants.TUPLA_SIZE = constants.REGISTER_SIZE / constants.MAX_TUPLAS_REGISTER;
 
+  constants.FILENAME_SIZE_LIMIT = 51;
+
   return constants;
 }
 
