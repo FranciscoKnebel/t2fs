@@ -13,4 +13,6 @@
 
   void printConstants();
 
+  void printRegister(unsigned char* buffer, int sector);
+  
 #endif

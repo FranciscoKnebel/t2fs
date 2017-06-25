@@ -10,32 +10,37 @@
   };
 
   struct Constants {
-    unsigned short SECTORSIZE;
-    unsigned short SECTOR_PER_BLOCK;
-    unsigned short BLOCKSIZE;
+    int SECTORSIZE;
+    int SECTOR_PER_BLOCK;
+    int BLOCKSIZE;
 
-    unsigned short DISK_SECTORS;
-    unsigned short DISK_BLOCKS;
+    int DISK_SECTORS;
+    int DISK_BLOCKS;
 
     /* Partições do disco */
-    unsigned short BOOT_BLOCK_SIZE;
-    unsigned short BOOT_SECTOR_SIZE;
+    int BOOT_BLOCK_SIZE;
+    int BOOT_SECTOR_SIZE;
 
-    unsigned short MFT_BLOCK_SIZE;
-    unsigned short MFT_SECTOR_SIZE;
+    int MFT_BLOCK_SIZE;
+    int MFT_SECTOR_SIZE;
 
-    unsigned short DATA_BLOCK_SIZE;
-    unsigned short DATA_SECTOR_SIZE;
-
-    /* Blocos do disco */
-    unsigned short BOOT_BLOCK;
-    unsigned short MFT_BLOCK;
-    unsigned short DATA_BLOCK;
+    int DATA_BLOCK_SIZE;
+    int DATA_SECTOR_SIZE;
 
     /* Blocos do disco */
-    unsigned short BOOT_SECTOR;
-    unsigned short MFT_SECTOR;
-    unsigned short DATA_SECTOR;
+    int BOOT_BLOCK;
+    int MFT_BLOCK;
+    int DATA_BLOCK;
+
+    /* Blocos do disco */
+    int BOOT_SECTOR;
+    int MFT_SECTOR;
+    int DATA_SECTOR;
+
+    /* Registro */
+    int REGISTER_SIZE;
+    int REGISTER_PER_BLOCK;
+    int MAX_REGISTERS;
   };
 
   struct Configuration {

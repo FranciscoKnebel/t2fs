@@ -68,7 +68,27 @@ void test_writeBlock() {
 }
 
 void test_readRegister() {
+  REGISTER_T reg;
+  int registerIndex = 0;
 
+  printf("Lendo registro %d\n", registerIndex);
+  if(readRegister(registerIndex, &reg) != TRUE) {
+    printf("Registro %d não existe, logo retorna erro.\n", registerIndex);
+    return;
+  }
+  printRegister(reg.at, registerIndex);
+
+
+  REGISTER_T reg2;
+  int registerIndex2 = 4096;
+
+  printf("\n\nLendo registro %d\n", registerIndex2);
+  if(readRegister(registerIndex2, &reg2) != TRUE) {
+    printf("Registro %d não existe, logo retorna erro.\n", registerIndex2);
+    return;
+  }
+
+  printRegister(reg2.at, registerIndex2);
 }
 
 void old() {
@@ -89,6 +109,8 @@ void old() {
 }
 
 int main(int argc, char const *argv[]) {
+  initConfig();
+
   /* READ REGISTER */
   test_readRegister();
 

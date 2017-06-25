@@ -27,6 +27,8 @@ void test_parseBootBlock() {
 }
 
 int main(int argc, char const *argv[]) {
+  initConfig();
+
   // PARSE BOOT BLOCK
   test_parseBootBlock();
 

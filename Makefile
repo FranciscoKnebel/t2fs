@@ -40,26 +40,26 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/display $(BIN_DIR)/disk $(BIN_DIR)/api $(BIN_DIR)/parse $(BIN_DIR)/util
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util
 
 # make teste _NOME_
 teste: $(TEST_FILES)
 	$(BIN_DIR)/$(RUN_ARGS)
 
-$(BIN_DIR)/display: all $(TST_DIR)/display.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/display $(TST_DIR)/display.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(BIN_DIR)/test_display: all $(TST_DIR)/test_display.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_display $(TST_DIR)/test_display.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/disk: all $(TST_DIR)/disk.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/disk $(TST_DIR)/disk.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(BIN_DIR)/test_disk: all $(TST_DIR)/test_disk.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_disk $(TST_DIR)/test_disk.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/api: all $(TST_DIR)/api.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/api $(TST_DIR)/api.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(BIN_DIR)/test_api: all $(TST_DIR)/test_api.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api $(TST_DIR)/test_api.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/parse: all $(TST_DIR)/parse.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/parse $(TST_DIR)/parse.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(BIN_DIR)/test_parse: all $(TST_DIR)/test_parse.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_parse $(TST_DIR)/test_parse.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/util: all $(TST_DIR)/util.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/util $(TST_DIR)/util.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(BIN_DIR)/test_util: all $(TST_DIR)/test_util.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_util $(TST_DIR)/test_util.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 
 # LIMPEZA #

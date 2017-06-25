@@ -27,6 +27,10 @@ struct Constants buildConstants(struct BootBlock bootBlock) {
   constants.MFT_BLOCK = constants.BOOT_BLOCK + 1;
   constants.DATA_BLOCK = constants.MFT_BLOCK_SIZE + 1;
 
+  constants.REGISTER_SIZE = 512;
+  constants.REGISTER_PER_BLOCK = constants.BLOCKSIZE / constants.REGISTER_SIZE;
+  constants.MAX_REGISTERS = (constants.MFT_SECTOR_SIZE / constants.REGISTER_PER_BLOCK) - 1;
+
   return constants;
 }
 

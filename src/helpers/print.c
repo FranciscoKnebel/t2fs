@@ -71,31 +71,43 @@ void printBootBlock() {
 void printConstants() {
   printf("\n");
   printf("CONSTANTS:\n");
-  printf("Sector Size: %u\n", constants.SECTORSIZE);
-  printf("Sector per Block: %u\n", constants.SECTOR_PER_BLOCK);
-  printf("Block Size: %u\n", constants.BLOCKSIZE);
+  printf("Sector Size: %d\n", constants.SECTORSIZE);
+  printf("Sector per Block: %d\n", constants.SECTOR_PER_BLOCK);
+  printf("Block Size: %d\n", constants.BLOCKSIZE);
 
   printf("\n");
-  printf("Disk Sectors: %u\n", constants.DISK_SECTORS);
-  printf("Disk Blocks: %u\n", constants.DISK_BLOCKS);
+  printf("Disk Sectors: %d\n", constants.DISK_SECTORS);
+  printf("Disk Blocks: %d\n", constants.DISK_BLOCKS);
 
   printf("\n");
-  printf("Boot Block Size: %u\n", constants.BOOT_BLOCK_SIZE);
-  printf("Boot Sector Size: %u\n", constants.BOOT_SECTOR_SIZE);
+  printf("Boot Block Size: %d\n", constants.BOOT_BLOCK_SIZE);
+  printf("Boot Sector Size: %d\n", constants.BOOT_SECTOR_SIZE);
 
-  printf("MFT Block Size: %u\n", constants.MFT_BLOCK_SIZE);
-  printf("MFT Sector Size: %u\n", constants.MFT_SECTOR_SIZE);
+  printf("MFT Block Size: %d\n", constants.MFT_BLOCK_SIZE);
+  printf("MFT Sector Size: %d\n", constants.MFT_SECTOR_SIZE);
 
-  printf("Data Block Size: %u\n", constants.DATA_BLOCK_SIZE);
-  printf("Data Sector Size: %u\n", constants.DATA_SECTOR_SIZE);
-
-  printf("\n");
-  printf("BOOT first sector: %u\n", constants.BOOT_SECTOR);
-  printf("MFT first sector : %u\n", constants.MFT_SECTOR);
-  printf("Data first sector: %u\n", constants.DATA_SECTOR);
+  printf("Data Block Size: %d\n", constants.DATA_BLOCK_SIZE);
+  printf("Data Sector Size: %d\n", constants.DATA_SECTOR_SIZE);
 
   printf("\n");
-  printf("BOOT first block: %u\n", constants.BOOT_BLOCK);
-  printf("MFT first block : %u\n", constants.MFT_BLOCK);
-  printf("Data first block: %u\n", constants.DATA_BLOCK);
+  printf("BOOT first sector: %d\n", constants.BOOT_SECTOR);
+  printf("MFT first sector : %d\n", constants.MFT_SECTOR);
+  printf("Data first sector: %d\n", constants.DATA_SECTOR);
+
+  printf("\n");
+  printf("BOOT first block: %d\n", constants.BOOT_BLOCK);
+  printf("MFT first block : %d\n", constants.MFT_BLOCK);
+  printf("Data first block: %d\n", constants.DATA_BLOCK);
+
+  printf("\n");
+  printf("Register Size: %d\n", constants.REGISTER_SIZE);
+  printf("Registers per Block: %d\n", constants.REGISTER_PER_BLOCK);
+}
+
+void printRegister(unsigned char* buffer, int sector) {
+  int i;
+
+  for (i = 0; i < 2; i++) {
+    printSector2(&buffer[i * SECTOR_SIZE], sector + i);
+  }
 }
