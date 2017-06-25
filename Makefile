@@ -40,7 +40,7 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap
 
 # make teste _NOME_
 teste: $(TEST_FILES)
@@ -60,6 +60,9 @@ $(BIN_DIR)/test_parse: all $(TST_DIR)/test_parse.c
 
 $(BIN_DIR)/test_util: all $(TST_DIR)/test_util.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_util $(TST_DIR)/test_util.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(BIN_DIR)/test_bitmap: all $(TST_DIR)/test_bitmap.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_bitmap $(TST_DIR)/test_bitmap.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 
 # LIMPEZA #
