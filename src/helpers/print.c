@@ -4,7 +4,7 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    printSector, printSector2, printBlock, showBlock, printBootBlock
+    printSector, printSector2, printBlock, showBlock, printBootBlock, printConstants, printRegister
 */
 
 #include "libs.h"

@@ -1,3 +1,12 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Módulo desenvolvido por Francisco Knebel
+  Funções:
+    initConfig, buildConstants
+*/
+
 #include "libs.h"
 
 struct Constants buildConstants(struct BootBlock bootBlock) {

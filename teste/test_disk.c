@@ -91,7 +91,51 @@ void test_readRegister() {
   printRegister(reg2.at, registerIndex2);
 }
 
-void old() {
+/* READ REGISTER */
+void test_writeRegister() {
+  REGISTER_T reg;
+
+  REGISTER_T registerBefore, registerAfter;
+
+  int registerRead = 5;   // Um dos registros definidos no disco
+  int registerWrite = 20; // Um registro não definido qualquer
+
+  /* SAVE PREVIOUS REGISTER */
+  if(readRegister(registerWrite, &reg) != TRUE) {
+    return;
+  }
+  memcpy((void*) &registerBefore.at, (void*) &reg, sizeof(REGISTER_T)); // Copiando _valor_ para registerBefore
+
+  /* GET REGISTER TO COPY */
+  if(readRegister(registerRead, &reg) != TRUE) {
+    return;
+  }
+
+  /* WRITE NEW REGISTER */
+  if(writeRegister(registerWrite, &reg) != TRUE) {
+    return;
+  };
+
+  /* READ WRITTEN REGISTER */
+  if(readRegister(registerWrite, &registerAfter) != TRUE) {
+    return;
+  }
+  printf("------------------------------\n");
+  printf("--------- Before \n");
+  printRegister(registerBefore.at, registerWrite);
+  printf("--------- After \n");
+  printRegister(registerAfter.at, registerWrite);
+  printf("------------------------------\n");
+
+  /* WRITE OLD VALUE BACK ON REGISTER */
+  if(writeRegister(registerWrite, &registerBefore) != TRUE) {
+    return;
+  };
+}
+
+int main(int argc, char const *argv[]) {
+  initConfig();
+
   /* READ SECTOR */
   test_readSector();
 
@@ -106,13 +150,12 @@ void old() {
 
   /* WRITE BLOCK */
   test_writeBlock();
-}
-
-int main(int argc, char const *argv[]) {
-  initConfig();
 
   /* READ REGISTER */
   test_readRegister();
+
+  /* WRITE REGISTER */
+  test_writeRegister();
 
   return 0;
 }

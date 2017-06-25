@@ -23,5 +23,6 @@
 
   int writeBlock(int block, BLOCK_T* buffer);
 
+  int writeRegister(int registerIndex, REGISTER_T* reg);
 
 #endif

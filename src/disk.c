@@ -4,7 +4,7 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    readSector, readBlock, writeSector, writeBlock
+    readSector, readBlock, writeSector, writeBlock, readRegister, writeRegister
 */
 
 #include "libs.h"
@@ -92,6 +92,23 @@ int writeBlock(int block, BLOCK_T* buffer) {
   return TRUE;
 }
 
-int writeRegister(int registerIndex, int offset) {
-  return FALSE;
+int writeRegister(int registerIndex, REGISTER_T* reg) {
+  if(registerIndex > constants.MAX_REGISTERS) {
+    return -1;
+  }
+
+  int sector = constants.MFT_SECTOR + registerIndex * constants.REGISTER_PER_BLOCK;
+
+  /* Escrita dos dois setores do Registro */
+  /* Primeiro setor */
+  if (writeSector(sector, (SECTOR_T*) reg) == FALSE) {
+    return FALSE;
+  }
+
+  /* Segundo setor */
+  if(writeSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
+    return FALSE;
+  }
+
+  return TRUE;
 }
