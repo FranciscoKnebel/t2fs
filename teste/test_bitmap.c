@@ -2,7 +2,7 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Testes dos métodos de src/disk.c
+  Testes dos métodos do módulo Bitmap2
 
   Desenvolvido por Douglas Lázaro
 */
@@ -46,7 +46,7 @@ void test_searchBitmap2(int flag) {
     else
       printf(" Livre --\n");
 
-  int bloco = searchBitmap2(flag); 
+  int bloco = searchBitmap2(flag);
   if(bloco <= 0)
     printf("ERRO :: Não Encontrado --\n");
   else{

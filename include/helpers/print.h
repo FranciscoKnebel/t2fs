@@ -14,5 +14,9 @@
   void printConstants();
 
   void printRegister(unsigned char* buffer, int sector);
-  
+
+  void printTuplaBinary(unsigned char* buffer, int tupla);
+
+  void printTupla(struct t2fs_4tupla registro);
+
 #endif

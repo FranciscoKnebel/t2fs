@@ -41,6 +41,10 @@
     int REGISTER_SIZE;
     int REGISTER_PER_BLOCK;
     int MAX_REGISTERS;
+
+    /* Tupla */
+    int MAX_TUPLAS_REGISTER;
+    int TUPLA_SIZE;
   };
 
   struct Configuration {

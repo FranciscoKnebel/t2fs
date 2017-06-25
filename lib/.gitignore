@@ -1,0 +1,5 @@
+*
+!/helpers
+!.gitignore
+!apidisk.o
+!bitmap2.o

@@ -4,7 +4,8 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    printSector, printSector2, printBlock, showBlock, printBootBlock, printConstants, printRegister
+    printSector, printSector2, printBlock, showBlock, printBootBlock, printConstants, printRegister, printTuplaBinary, printTupla
+
 */
 
 #include "libs.h"
@@ -102,6 +103,11 @@ void printConstants() {
   printf("\n");
   printf("Register Size: %d\n", constants.REGISTER_SIZE);
   printf("Registers per Block: %d\n", constants.REGISTER_PER_BLOCK);
+  printf("Last Register: %d\n", constants.MAX_REGISTERS);
+
+  printf("\n");
+  printf("Max Tuplas in Register: %d\n", constants.MAX_TUPLAS_REGISTER);
+  printf("Tupla Size: %d\n", constants.TUPLA_SIZE);
 }
 
 void printRegister(unsigned char* buffer, int sector) {
@@ -110,4 +116,31 @@ void printRegister(unsigned char* buffer, int sector) {
   for (i = 0; i < 2; i++) {
     printSector2(&buffer[i * SECTOR_SIZE], sector + i);
   }
+}
+
+void printTuplaBinary(unsigned char* buffer, int tupla) {
+  char temp[8] = "";
+  int j, num = 0;
+
+  for (j = 0; j < constants.TUPLA_SIZE; j += 4) {
+    printf("%02X ", buffer[tupla + j     ]&0xFF);
+    printf("%02X ", buffer[tupla + j + 1 ]&0xFF);
+    printf("%02X ", buffer[tupla + j + 2 ]&0xFF);
+    printf("%02X ", buffer[tupla + j + 3 ]&0xFF);
+    printf("---");
+
+    sprintf(temp, "%02X%02X%02X%02X", buffer[tupla + j + 3], buffer[tupla + j + 2], buffer[tupla + j + 1], buffer[tupla + j]);
+    sscanf(temp, "%x", &num);
+
+    printf(" %s ", temp);
+
+    printf("--- %d\n", num);
+  }
+}
+
+void printTupla(struct t2fs_4tupla registro) {
+  printf("Attribute Type: %d\n", registro.atributeType);
+  printf("Virtual Block Number: %d\n", registro.virtualBlockNumber);
+  printf("Logical Block Number: %d\n", registro.logicalBlockNumber);
+  printf("Number of Contiguous Blocks: %d\n", registro.numberOfContiguosBlocks);
 }

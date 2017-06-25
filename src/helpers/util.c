@@ -4,7 +4,7 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    initConfig, buildConstants
+    initConfig, buildConstants, convertTwoBytes, convertFourBytes
 */
 
 #include "libs.h"
@@ -38,7 +38,10 @@ struct Constants buildConstants(struct BootBlock bootBlock) {
 
   constants.REGISTER_SIZE = 512;
   constants.REGISTER_PER_BLOCK = constants.BLOCKSIZE / constants.REGISTER_SIZE;
-  constants.MAX_REGISTERS = (constants.MFT_SECTOR_SIZE / constants.REGISTER_PER_BLOCK) - 1;
+  constants.MAX_REGISTERS = (constants.MFT_SECTOR_SIZE / constants.REGISTER_PER_BLOCK);
+
+  constants.MAX_TUPLAS_REGISTER = 32;
+  constants.TUPLA_SIZE = constants.REGISTER_SIZE / constants.MAX_TUPLAS_REGISTER;
 
   return constants;
 }
@@ -56,4 +59,22 @@ int initConfig() {
   constants = config.constants;
 
   return TRUE;
+}
+
+int convertTwoBytes(unsigned char* buffer, int index, char* str) {
+  int num;
+
+  sprintf(str, "%02X%02X", buffer[index + 1], buffer[index]);
+  sscanf(str, "%x", &num);
+
+  return num;
+}
+
+int convertFourBytes(unsigned char* buffer, int index, char* str) {
+  int num;
+
+  sprintf(str, "%02X%02X%02X%02X", buffer[index + 3], buffer[index + 2], buffer[index + 1], buffer[index]);
+  sscanf(str, "%x", &num);
+
+  return num;
 }
