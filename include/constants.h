@@ -40,6 +40,7 @@
 
   #define REGISTER_BOOT_BLOCK 0
   #define REGISTER_ROOT 1
+  #define REGISTER_REGULAR 4
 
   #define REGISTER_FIM 0
   #define REGISTER_MAP 1

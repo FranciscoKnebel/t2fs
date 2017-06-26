@@ -14,27 +14,22 @@ void initMFT() {
   REGISTER_T reg;
   int i;
 
-  for (i = 0; i < MAX_REGISTERS; i++) {
+  for (i = 0; i < REGISTER_REGULAR; i++) { //primeiros resgistros reservados
+    config.indexMFT[i] = 1;
+  }
 
+  for (i = REGISTER_REGULAR; i < MAX_REGISTERS; i++) {
     if(readRegister(i, &reg) != TRUE) {
       return;
     }
 
-    if(i < 4) //primeiros resgistros reservados
-      config.indexMFT[i] = 1;
-    else{
-      struct t2fs_4tupla *tuplas = malloc(sizeof(struct t2fs_4tupla));
-      parseRegister(reg.at, tuplas);
+    struct t2fs_4tupla *tuplas = malloc(sizeof(struct t2fs_4tupla));
+    parseRegister(reg.at, tuplas);
 
-
-      if(tuplas[0].atributeType == -1){
-        config.indexMFT[i] = 0; //livre
-
-      }
-      else{
-        config.indexMFT[i] = 1; //ocupado
-
-      }
+    if(tuplas[0].atributeType == -1){
+      config.indexMFT[i] = 0; //livre
+    } else {
+      config.indexMFT[i] = 1; //ocupado
     }
   }
 }
@@ -67,7 +62,7 @@ int setMFT(int registerIndex, int allocated){
 
 int searchMFT(int allocated){
   int i;
-  for (i = 4; i < MAX_REGISTERS; ++i)
+  for (i = REGISTER_REGULAR; i < MAX_REGISTERS; ++i)
   {
     if (config.indexMFT[i] == allocated)
       return i;

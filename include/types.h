@@ -14,6 +14,6 @@
 
     struct BootBlock bootBlock;
 
-    int indexMFT[];
+    int indexMFT[MAX_REGISTERS];
   };
 #endif

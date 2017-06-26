@@ -18,8 +18,6 @@ int initConfig() {
 
   config.bootBlock = parseBootBlock(bootBlock.at);
 
-  // config.indexMFT[MAX_REGISTERS];
-
   return TRUE;
 }
 
