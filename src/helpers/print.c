@@ -4,7 +4,7 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    printSector, printSector2, printBlock, showBlock, printBootBlock, printConstants, printRegister, printTuplaBinary, printTupla
+    printSector, printSector2, printBlock, showBlock, printBootBlock, printRegister, printTuplaBinary, printTupla, printRecord
 
 */
 
@@ -102,4 +102,12 @@ void printTupla(struct t2fs_4tupla registro) {
   printf("Virtual Block Number: %d\n", registro.virtualBlockNumber);
   printf("Logical Block Number: %d\n", registro.logicalBlockNumber);
   printf("Number of Contiguous Blocks: %d\n", registro.numberOfContiguosBlocks);
+}
+
+void printRecord(struct t2fs_record record) {
+  printf("TypeVal: %d\n", record.TypeVal);
+  printf("Name: %s\n", record.name);
+  printf("Blocks: %d\n", record.blocksFileSize);
+  printf("Bytes: %d\n", record.bytesFileSize);
+  printf("MFT Number: %d\n", record.MFTNumber);
 }

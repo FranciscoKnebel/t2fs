@@ -61,6 +61,26 @@ int readRegister(int registerIndex, REGISTER_T* reg) {
   return TRUE;
 }
 
+int readRecord(int block, int index, struct t2fs_record * record) {
+  if(block < DATA_BLOCK || block > DISK_BLOCKS) {
+    return FALSE;
+  }
+
+  int offset = (index * RECORD_SIZE);
+  BLOCK_T blockBuffer;
+  char str[2];
+
+  readBlock(block, &blockBuffer);
+
+  (* record).TypeVal = blockBuffer.at[RECORD_TYPE + offset];
+  memcpy((* record).name, &blockBuffer.at[RECORD_NAME + offset], MAX_FILE_NAME_SIZE * sizeof(char));
+  (* record).blocksFileSize = convertFourBytes(blockBuffer.at, RECORD_BLOCK_FILE_SIZE + offset, str);
+  (* record).bytesFileSize = convertFourBytes(blockBuffer.at, RECORD_BYTES_FILE_SIZE + offset, str);
+  (* record).MFTNumber = convertFourBytes(blockBuffer.at, RECORD_MFT_NUMBER + offset, str);
+
+  return TRUE;
+}
+
 int writeSector(int sector, SECTOR_T* buffer) {
   if (sector < 0) {
     return FALSE;

@@ -133,9 +133,20 @@ void test_writeRegister() {
   };
 }
 
-int main(int argc, char const *argv[]) {
-  initConfig();
+void test_readRecord() {
+  printf("-- READ RECORD --\n");
 
+  struct t2fs_record record1, record2;
+
+  readRecord(2050, 0, &record1);
+  readRecord(2050, 1, &record2);
+
+  printRecord(record1);
+  printf("\n");
+  printRecord(record2);
+}
+
+void old() {
   /* READ SECTOR */
   test_readSector();
 
@@ -156,6 +167,18 @@ int main(int argc, char const *argv[]) {
 
   /* WRITE REGISTER */
   test_writeRegister();
+
+  /* READ RECORD */
+  test_readRecord();
+
+  /* WRITE RECORD */
+
+}
+
+int main(int argc, char const *argv[]) {
+  initConfig();
+
+  test_readRecord();
 
   return 0;
 }

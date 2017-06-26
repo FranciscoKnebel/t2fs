@@ -19,4 +19,6 @@
 
   void printTupla(struct t2fs_4tupla registro);
 
+  void printRecord(struct t2fs_record record);
+
 #endif
