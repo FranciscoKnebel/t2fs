@@ -23,7 +23,7 @@ $(LIB_DIR)/parse.o: $(SRC_DIR)/parse.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/parse.o -I$(INC_DIR) $(SRC_DIR)/parse.c
 
 ## HELPERS ##
-HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o
+HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o
 
 $(LIB_DIR)/helpers: $(HELPER_OBJECTS)
 
@@ -36,6 +36,9 @@ $(LIB_DIR)/helpers/util.o: $(SRC_DIR)/helpers/util.c
 $(LIB_DIR)/helpers/files.o: $(SRC_DIR)/helpers/files.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/files.o -I$(INC_DIR) $(SRC_DIR)/helpers/files.c
 
+$(LIB_DIR)/helpers/mft.o: $(SRC_DIR)/helpers/mft.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/mft.o -I$(INC_DIR) $(SRC_DIR)/helpers/mft.c
+
 # COMANDOS DE TESTE #
 
 ifeq (teste,$(firstword $(MAKECMDGOALS)))
@@ -43,7 +46,7 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft
 
 # make teste _NOME_
 teste: $(TEST_FILES)
@@ -69,6 +72,9 @@ $(BIN_DIR)/test_bitmap: all $(TST_DIR)/test_bitmap.c
 
 $(BIN_DIR)/test_files: all $(TST_DIR)/test_files.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_files $(TST_DIR)/test_files.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(BIN_DIR)/test_files: all $(TST_DIR)/test_mft.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_mft $(TST_DIR)/test_mft.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
 clean:

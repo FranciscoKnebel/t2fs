@@ -59,6 +59,8 @@ int initConfig() {
 
   config.constants = buildConstants(config.bootBlock);
   constants = config.constants;
+  
+  config.indexMFT[constants.MAX_REGISTERS];
 
   return TRUE;
 }

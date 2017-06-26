@@ -56,5 +56,7 @@
     struct BootBlock bootBlock;
 
     struct Constants constants;
+
+    int indexMFT[];
   };
 #endif

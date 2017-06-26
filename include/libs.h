@@ -12,6 +12,7 @@
 #include "helpers/print.h"
 #include "helpers/util.h"
 #include "helpers/files.h"
+#include "helpers/mft.h"
 
 #include "disk.h"
 #include "parse.h"
