@@ -4,8 +4,6 @@ void test_initConfig() {
   initConfig();
 
   printBootBlock();
-
-  printConstants();
 }
 
 int main(int argc, char const *argv[]) {

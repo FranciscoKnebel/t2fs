@@ -26,11 +26,11 @@ void test_readBlock() {
 void test_showBlock() {
   /* Mostrar blocos de importância */
   printf("-- BOOT BLOCK --\n");
-  showBlock(constants.BOOT_BLOCK);
+  showBlock(BOOT_BLOCK);
   printf("-- MFT BLOCK --\n");
-  showBlock(constants.MFT_BLOCK);
+  showBlock(MFT_BLOCK);
   printf("-- DATA BLOCK --\n");
-  showBlock(constants.DATA_BLOCK);
+  showBlock(DATA_BLOCK);
 }
 
 void test_writeSector() {

@@ -28,9 +28,9 @@ int readBlock(int block, BLOCK_T* buffer) {
     return FALSE;
   }
 
-  sector = block * SECTOR_EACH_BLOCK;
+  sector = block * SECTOR_PER_BLOCK;
 
-  for(i = 0; i < SECTOR_EACH_BLOCK; i++) {
+  for(i = 0; i < SECTOR_PER_BLOCK; i++) {
     if (readSector(sector, (SECTOR_T*) &buffer->at[i * SECTOR_SIZE]) == FALSE) {
       return FALSE;
     }
@@ -42,12 +42,11 @@ int readBlock(int block, BLOCK_T* buffer) {
 }
 
 int readRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex > constants.MAX_REGISTERS) {
+  if(registerIndex > MAX_REGISTERS) {
     return -1;
   }
 
-  int sector = constants.MFT_SECTOR + registerIndex * constants.REGISTER_PER_BLOCK;
-
+  int sector = MFT_SECTOR + registerIndex * REGISTER_PER_BLOCK;
   /* Leitura dos dois setores do Registro */
   /* Primeiro setor */
   if (readSector(sector, (SECTOR_T*) reg) == FALSE) {
@@ -81,9 +80,9 @@ int writeBlock(int block, BLOCK_T* buffer) {
     return FALSE;
   }
 
-  sector = block * constants.SECTOR_PER_BLOCK;
+  sector = block * SECTOR_PER_BLOCK;
 
-  for(i = 0; i < constants.SECTOR_PER_BLOCK; i++){
+  for(i = 0; i < SECTOR_PER_BLOCK; i++){
     if (writeSector(sector++, (SECTOR_T*) &buffer->at[i*SECTOR_SIZE]) == FALSE) {
       return FALSE;
     }
@@ -93,11 +92,11 @@ int writeBlock(int block, BLOCK_T* buffer) {
 }
 
 int writeRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex > constants.MAX_REGISTERS) {
+  if(registerIndex > MAX_REGISTERS) {
     return -1;
   }
 
-  int sector = constants.MFT_SECTOR + registerIndex * constants.REGISTER_PER_BLOCK;
+  int sector = MFT_SECTOR + registerIndex * REGISTER_PER_BLOCK;
 
   /* Escrita dos dois setores do Registro */
   /* Primeiro setor */

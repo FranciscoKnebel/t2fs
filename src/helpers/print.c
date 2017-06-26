@@ -43,7 +43,7 @@ int printSector2(unsigned char* buffer, int currentSector) {
 int printBlock(unsigned char* buffer) {
   int i;
 
-  for(i = 0; i < constants.SECTOR_PER_BLOCK; i++) {
+  for(i = 0; i < SECTOR_PER_BLOCK; i++) {
     printSector2(&buffer[i * SECTOR_SIZE], i);
     printf("\n");
   }
@@ -69,47 +69,6 @@ void printBootBlock() {
   printf("Disk Sector Size: %d\n", config.bootBlock.diskSectorSize);
 }
 
-void printConstants() {
-  printf("\n");
-  printf("CONSTANTS:\n");
-  printf("Sector Size: %d\n", constants.SECTORSIZE);
-  printf("Sector per Block: %d\n", constants.SECTOR_PER_BLOCK);
-  printf("Block Size: %d\n", constants.BLOCKSIZE);
-
-  printf("\n");
-  printf("Disk Sectors: %d\n", constants.DISK_SECTORS);
-  printf("Disk Blocks: %d\n", constants.DISK_BLOCKS);
-
-  printf("\n");
-  printf("Boot Block Size: %d\n", constants.BOOT_BLOCK_SIZE);
-  printf("Boot Sector Size: %d\n", constants.BOOT_SECTOR_SIZE);
-
-  printf("MFT Block Size: %d\n", constants.MFT_BLOCK_SIZE);
-  printf("MFT Sector Size: %d\n", constants.MFT_SECTOR_SIZE);
-
-  printf("Data Block Size: %d\n", constants.DATA_BLOCK_SIZE);
-  printf("Data Sector Size: %d\n", constants.DATA_SECTOR_SIZE);
-
-  printf("\n");
-  printf("BOOT first sector: %d\n", constants.BOOT_SECTOR);
-  printf("MFT first sector : %d\n", constants.MFT_SECTOR);
-  printf("Data first sector: %d\n", constants.DATA_SECTOR);
-
-  printf("\n");
-  printf("BOOT first block: %d\n", constants.BOOT_BLOCK);
-  printf("MFT first block : %d\n", constants.MFT_BLOCK);
-  printf("Data first block: %d\n", constants.DATA_BLOCK);
-
-  printf("\n");
-  printf("Register Size: %d\n", constants.REGISTER_SIZE);
-  printf("Registers per Block: %d\n", constants.REGISTER_PER_BLOCK);
-  printf("Last Register: %d\n", constants.MAX_REGISTERS);
-
-  printf("\n");
-  printf("Max Tuplas in Register: %d\n", constants.MAX_TUPLAS_REGISTER);
-  printf("Tupla Size: %d\n", constants.TUPLA_SIZE);
-}
-
 void printRegister(unsigned char* buffer, int sector) {
   int i;
 
@@ -122,7 +81,7 @@ void printTuplaBinary(unsigned char* buffer, int tupla) {
   char temp[8] = "";
   int j, num = 0;
 
-  for (j = 0; j < constants.TUPLA_SIZE; j += 4) {
+  for (j = 0; j < TUPLA_SIZE; j += 4) {
     printf("%02X ", buffer[tupla + j     ]&0xFF);
     printf("%02X ", buffer[tupla + j + 1 ]&0xFF);
     printf("%02X ", buffer[tupla + j + 2 ]&0xFF);

@@ -42,13 +42,13 @@ int test_printPath(char * pathname, char ** elements) {
   printf("\n\n");
 
   free(elements);
-  elements = malloc(sizeof(char) * 51);
+  elements = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
 
   return i;
 }
 
 void test_parsePath() {
-  char ** elements = malloc(sizeof(char) * 51);
+  char ** elements = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
 
   char path1[20] = "/arquivo.txt";
   char path2[20] = "/";
