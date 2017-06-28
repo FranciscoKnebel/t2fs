@@ -110,15 +110,44 @@ void test_isFileName() {
   printf("--- Acabou o teste de verificação de filename ---\n");
 }
 
+void test_lookup() {
+  printf("\n--- Teste de Lookup ---\n\n");
+  struct t2fs_record record1, record2, record3, record4, record5;
+
+  char path1[30] = "/file2";
+  char path2[30] = "/file2/file";
+  char path3[30] = "/file1";
+  char path4[30] = "/file/file/file";
+  char path5[30] = "/file1/file";
+
+  lookup(path1, &record1);
+  lookup(path2, &record2);
+  lookup(path3, &record3);
+  lookup(path4, &record4);
+  lookup(path5, &record5);
+
+  printRecord(record1); printf("\n");
+  printRecord(record2); printf("\n");
+  printRecord(record3); printf("\n");
+  printRecord(record4); printf("\n");
+  printRecord(record5); printf("\n");
+  
+  printf("--- Acabou o teste de Lookup ---\n");
+}
+
 int main(int argc, char const *argv[]) {
+  initConfig();
   /* Valid Path */
-  test_validPath();
+  //test_validPath();
 
   /* Parse Path */
-  test_parsePath();
+  //test_parsePath();
 
   /* Valid File Name */
-  test_isFileName();
+  //test_isFileName();
+
+  /* Lookup File */
+  test_lookup();
 
   return 0;
 }
