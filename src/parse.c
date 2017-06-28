@@ -94,8 +94,8 @@ int parseRegister(unsigned char* buffer, struct t2fs_4tupla * tuplas) {
   int amountOfRegisters = 0;
   int i, offset;
 
-  for (i = 0; i < MAX_TUPLAS_REGISTER; ++i) {
-    offset = TUPLA_SIZE * i;
+  for (i = 0; i < constants.MAX_TUPLAS_REGISTER; ++i) {
+    offset = constants.TUPLA_SIZE * i;
 
     tuplas = (struct t2fs_4tupla *) realloc(tuplas, (++amountOfRegisters) * sizeof(struct t2fs_4tupla));
     tuplas[i] = parseRegister_tupla(&buffer[offset], 0);

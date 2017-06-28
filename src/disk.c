@@ -4,7 +4,8 @@
 
   Módulo desenvolvido por Francisco Knebel
   Funções:
-    readSector, readBlock, writeSector, writeBlock, readRegister, writeRegister
+    readSector, readBlock, readBootBlock, writeSector, writeBlock, readRegister, writeRegister
+    readRecord,
 */
 
 #include "libs.h"
@@ -28,9 +29,9 @@ int readBlock(int block, BLOCK_T* buffer) {
     return FALSE;
   }
 
-  sector = block * SECTOR_PER_BLOCK;
+  sector = block * constants.SECTOR_PER_BLOCK;
 
-  for(i = 0; i < SECTOR_PER_BLOCK; i++) {
+  for(i = 0; i < constants.SECTOR_PER_BLOCK; i++) {
     if (readSector(sector, (SECTOR_T*) &buffer->at[i * SECTOR_SIZE]) == FALSE) {
       return FALSE;
     }
@@ -41,12 +42,20 @@ int readBlock(int block, BLOCK_T* buffer) {
   return TRUE;
 }
 
+int readBootBlock(SECTOR_T* buffer) {
+  if (read_sector(REGISTER_BOOT_BLOCK, (unsigned char*) buffer) == 0) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 int readRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex > MAX_REGISTERS) {
+  if(registerIndex > constants.MAX_REGISTERS) {
     return -1;
   }
 
-  int sector = MFT_SECTOR + registerIndex * REGISTER_PER_BLOCK;
+  int sector = constants.MFT_SECTOR + registerIndex * constants.REGISTER_PER_BLOCK;
   /* Leitura dos dois setores do Registro */
   /* Primeiro setor */
   if (readSector(sector, (SECTOR_T*) reg) == FALSE) {
@@ -62,7 +71,7 @@ int readRegister(int registerIndex, REGISTER_T* reg) {
 }
 
 int readRecord(int block, int index, struct t2fs_record * record) {
-  if(block < DATA_BLOCK || block > DISK_BLOCKS) {
+  if(block < constants.DATA_BLOCK || block > constants.DISK_BLOCKS) {
     return FALSE;
   }
 
@@ -70,7 +79,9 @@ int readRecord(int block, int index, struct t2fs_record * record) {
   BLOCK_T blockBuffer;
   char str[2];
 
-  readBlock(block, &blockBuffer);
+  if(readBlock(block, &blockBuffer) == FALSE) {
+    return FALSE;
+  }
 
   (* record).TypeVal = blockBuffer.at[RECORD_TYPE + offset];
   memcpy((* record).name, &blockBuffer.at[RECORD_NAME + offset], MAX_FILE_NAME_SIZE * sizeof(char));
@@ -100,9 +111,9 @@ int writeBlock(int block, BLOCK_T* buffer) {
     return FALSE;
   }
 
-  sector = block * SECTOR_PER_BLOCK;
+  sector = block * constants.SECTOR_PER_BLOCK;
 
-  for(i = 0; i < SECTOR_PER_BLOCK; i++){
+  for(i = 0; i < constants.SECTOR_PER_BLOCK; i++){
     if (writeSector(sector++, (SECTOR_T*) &buffer->at[i*SECTOR_SIZE]) == FALSE) {
       return FALSE;
     }
@@ -112,11 +123,11 @@ int writeBlock(int block, BLOCK_T* buffer) {
 }
 
 int writeRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex > MAX_REGISTERS) {
+  if(registerIndex > constants.MAX_REGISTERS) {
     return -1;
   }
 
-  int sector = MFT_SECTOR + registerIndex * REGISTER_PER_BLOCK;
+  int sector = constants.MFT_SECTOR + registerIndex * constants.REGISTER_PER_BLOCK;
 
   /* Escrita dos dois setores do Registro */
   /* Primeiro setor */

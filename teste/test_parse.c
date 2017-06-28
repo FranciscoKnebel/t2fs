@@ -38,7 +38,7 @@ void test_parseRegister() {
   parseRegister(reg.at, tuplas);
 
   int i;
-  for (i = 0; i < MAX_TUPLAS_REGISTER; i++) {
+  for (i = 0; i < constants.MAX_TUPLAS_REGISTER; i++) {
     printf("\n");
     printTupla(tuplas[i]);
   }

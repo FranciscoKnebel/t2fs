@@ -12,12 +12,8 @@
 int main(int argc, char const *argv[]) {
   initConfig();
 
-  // int indexMFT[constants.MAX_REGISTERS];
-
-  initMFT();
   setMFT(15, 1);
-  printMFT(10, 20);
-
+  printMFT(0, 20);
 
   return 0;
 }

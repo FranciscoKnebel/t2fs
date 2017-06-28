@@ -10,6 +10,7 @@
 
 #include "libs.h"
 
+
 void initMFT() {
   REGISTER_T reg;
   int i;
@@ -18,7 +19,7 @@ void initMFT() {
     config.indexMFT[i] = 1;
   }
 
-  for (i = REGISTER_REGULAR; i < MAX_REGISTERS; i++) {
+  for (i = REGISTER_REGULAR; i < constants.MAX_REGISTERS; i++) {
     if(readRegister(i, &reg) != TRUE) {
       return;
     }
@@ -62,7 +63,7 @@ int setMFT(int registerIndex, int allocated){
 
 int searchMFT(int allocated){
   int i;
-  for (i = REGISTER_REGULAR; i < MAX_REGISTERS; ++i)
+  for (i = REGISTER_REGULAR; i < constants.MAX_REGISTERS; ++i)
   {
     if (config.indexMFT[i] == allocated)
       return i;

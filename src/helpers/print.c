@@ -43,7 +43,7 @@ int printSector2(unsigned char* buffer, int currentSector) {
 int printBlock(unsigned char* buffer) {
   int i;
 
-  for(i = 0; i < SECTOR_PER_BLOCK; i++) {
+  for(i = 0; i < constants.SECTOR_PER_BLOCK; i++) {
     printSector2(&buffer[i * SECTOR_SIZE], i);
     printf("\n");
   }
@@ -81,7 +81,7 @@ void printTuplaBinary(unsigned char* buffer, int tupla) {
   char temp[8] = "";
   int j, num = 0;
 
-  for (j = 0; j < TUPLA_SIZE; j += 4) {
+  for (j = 0; j < constants.TUPLA_SIZE; j += 4) {
     printf("%02X ", buffer[tupla + j     ]&0xFF);
     printf("%02X ", buffer[tupla + j + 1 ]&0xFF);
     printf("%02X ", buffer[tupla + j + 2 ]&0xFF);

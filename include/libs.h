@@ -18,3 +18,4 @@
 #include "parse.h"
 
 extern struct Configuration config;
+extern struct Constants constants;
