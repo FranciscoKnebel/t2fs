@@ -44,14 +44,35 @@ void test_parseRegister() {
   }
 }
 
+void test_parseDirectory() {
+  BLOCK_T blockBuffer;
+  struct t2fs_record records[constants.RECORD_PER_BLOCK];
+
+  if(readBlock(2050, &blockBuffer) == FALSE) {
+    return;
+  };
+
+  parseDirectory(blockBuffer, records);
+  printf("-- Parse Directory --\n");
+  int i;
+  for (i = 0; i < constants.RECORD_PER_BLOCK; i++) {
+    printRecord(records[i]);
+    printf("\n");
+  }
+  printf("-- End Directory --\n");
+}
+
 int main(int argc, char const *argv[]) {
   initConfig();
 
   // PARSE BOOT BLOCK
-  test_parseBootBlock();
+  //test_parseBootBlock();
 
   /* Parse Register */
-  test_parseRegister();
+  //test_parseRegister();
+
+  /* Parse Directory */
+  test_parseDirectory();
 
   return 0;
 }

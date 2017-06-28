@@ -45,6 +45,9 @@ struct Constants initConstants(struct BootBlock bootBlock) {
   k.MAX_TUPLAS_REGISTER = 32;
   k.TUPLA_SIZE = k.REGISTER_SIZE / k.MAX_TUPLAS_REGISTER;
 
+  /* Records */
+  k.RECORD_PER_BLOCK = k.BLOCK_SIZE / RECORD_SIZE;
+
   return k;
 }
 

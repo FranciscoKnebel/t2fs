@@ -77,17 +77,12 @@ int readRecord(int block, int index, struct t2fs_record * record) {
 
   int offset = (index * RECORD_SIZE);
   BLOCK_T blockBuffer;
-  char str[2];
 
   if(readBlock(block, &blockBuffer) == FALSE) {
     return FALSE;
   }
 
-  (* record).TypeVal = blockBuffer.at[RECORD_TYPE + offset];
-  memcpy((* record).name, &blockBuffer.at[RECORD_NAME + offset], MAX_FILE_NAME_SIZE * sizeof(char));
-  (* record).blocksFileSize = convertFourBytes(blockBuffer.at, RECORD_BLOCK_FILE_SIZE + offset, str);
-  (* record).bytesFileSize = convertFourBytes(blockBuffer.at, RECORD_BYTES_FILE_SIZE + offset, str);
-  (* record).MFTNumber = convertFourBytes(blockBuffer.at, RECORD_MFT_NUMBER + offset, str);
+  parseRecord(blockBuffer, record, offset);
 
   return TRUE;
 }

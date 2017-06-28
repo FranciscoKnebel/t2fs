@@ -45,6 +45,9 @@
     /* Tupla */
     int MAX_TUPLAS_REGISTER;
     int TUPLA_SIZE;
+
+    /* Records */
+    int RECORD_PER_BLOCK;
   };
 
   struct Configuration {
@@ -54,4 +57,18 @@
 
     int* indexMFT;
   };
+
+  typedef struct {
+    unsigned char at[SECTOR_SIZE];
+  } SECTOR_T;
+
+  typedef struct {
+    unsigned char at[1024]; //[BLOCK_SIZE], precisa virar um ponteiro e alocar dinamicamente
+  } BLOCK_T;
+
+  typedef struct {
+    unsigned char at[SECTOR_SIZE * 2];
+  } REGISTER_T;
+
+  typedef BLOCK_T RECORD_T;
 #endif

@@ -5,7 +5,7 @@
   Módulo desenvolvido por Francisco Knebel
   Funções:
     parseBootBlock, parseVersion, parseBlockSize, parseMFTBlocksSize, parseDiskSectorSize
-    parseRegister_tupla, parseRegister
+    parseRegister_tupla, parseRegister, parseRecord, parseDirectory
 */
 
 #include "libs.h"
@@ -104,12 +104,33 @@ int parseRegister(unsigned char* buffer, struct t2fs_4tupla * tuplas) {
   return TRUE;
 }
 
-void parseDirectory() {
-  //parseRegister();
-  return;
+int parseRecord(BLOCK_T blockBuffer, struct t2fs_record * record, int offset) {
+  char str[2];
+
+  record->TypeVal = blockBuffer.at[RECORD_TYPE + offset];
+  memcpy(record->name, &blockBuffer.at[RECORD_NAME + offset], MAX_FILE_NAME_SIZE * sizeof(char));
+  record->blocksFileSize = convertFourBytes(blockBuffer.at, RECORD_BLOCK_FILE_SIZE + offset, str);
+  record->bytesFileSize = convertFourBytes(blockBuffer.at, RECORD_BYTES_FILE_SIZE + offset, str);
+  record->MFTNumber = convertFourBytes(blockBuffer.at, RECORD_MFT_NUMBER + offset, str);
+
+  return TRUE;
 }
 
-void parseFile() {
+int parseDirectory(BLOCK_T block, struct t2fs_record* records) {
+  int i;
+  int offset;
+
+  for (i = 0; i < constants.RECORD_PER_BLOCK; i++) {
+    offset = (i * RECORD_SIZE);
+
+    parseRecord(block, &records[i], offset);
+  }
+
+  return TRUE;
+}
+
+
+void parseFile(unsigned char* buffer) {
   //parseRegister();
   return;
 };

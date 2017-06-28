@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -g
+CEXTRA=-Wextra
 LIB_DIR=./lib
 INC_DIR=./include
 BIN_DIR=./bin
@@ -73,7 +74,7 @@ $(BIN_DIR)/test_bitmap: all $(TST_DIR)/test_bitmap.c
 $(BIN_DIR)/test_files: all $(TST_DIR)/test_files.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_files $(TST_DIR)/test_files.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/test_files: all $(TST_DIR)/test_mft.c
+$(BIN_DIR)/test_mft: all $(TST_DIR)/test_mft.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_mft $(TST_DIR)/test_mft.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
