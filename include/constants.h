@@ -17,6 +17,8 @@
   #define REGISTER_ADITIONAL 2
   #define REGISTER_FREE -1
 
+  #define REGISTER_READ_ERROR -5
+
   /* Record */
   #define RECORD_SIZE 64
   #define RECORD_TYPE 0
@@ -27,5 +29,11 @@
 
   /* Arquivo */
   #define FILENAME_SIZE_LIMIT 51
+
+  /* Lookup */
+  #define FIND_REGISTER_NOTFOUND -1
+  #define FIND_REGISTER_FIM -2
+  #define FIND_REGISTER_ADITIONAL -3
+  #define FIND_REGISTER_FREE -4
 
 #endif

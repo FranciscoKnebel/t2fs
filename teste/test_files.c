@@ -110,9 +110,33 @@ void test_isFileName() {
   printf("--- Acabou o teste de verificação de filename ---\n");
 }
 
+void return_lookup(int value, struct t2fs_record record, char* pathname) {
+  switch (value) {
+    case REGISTER_READ_ERROR:
+      printf("Erro crítico na leitura de um registro.\n");
+      break;
+    case FIND_REGISTER_ADITIONAL:
+      printf("ERRO! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
+      break;
+    case FIND_REGISTER_NOTFOUND:
+    case FIND_REGISTER_FIM:
+    case FIND_REGISTER_FREE:
+      printf("Arquivo '%s' não encontrado.\n", pathname);
+      break;
+    default:
+      printf("Record do arquivo '%s' encontrado!\n", pathname);
+      printRecord(record);
+      printf("\n");
+      break;
+  }
+
+  getchar();
+}
+
 void test_lookup() {
   printf("\n--- Teste de Lookup ---\n\n");
   struct t2fs_record record1, record2, record3, record4, record5;
+  int return_record1, return_record2, return_record3, return_record4, return_record5;
 
   char path1[30] = "/file2";
   char path2[30] = "/file2/file";
@@ -120,18 +144,18 @@ void test_lookup() {
   char path4[30] = "/file/file/file";
   char path5[30] = "/file1/file";
 
-  lookup(path1, &record1);
-  lookup(path2, &record2);
-  lookup(path3, &record3);
-  lookup(path4, &record4);
-  lookup(path5, &record5);
+  return_record1 = lookup(path1, &record1);
+  return_record2 = lookup(path2, &record2);
+  return_record3 = lookup(path3, &record3);
+  return_record4 = lookup(path4, &record4);
+  return_record5 = lookup(path5, &record5);
 
-  printRecord(record1); printf("\n");
-  printRecord(record2); printf("\n");
-  printRecord(record3); printf("\n");
-  printRecord(record4); printf("\n");
-  printRecord(record5); printf("\n");
-  
+  return_lookup(return_record1, record1, path1);
+  return_lookup(return_record2, record2, path2);
+  return_lookup(return_record3, record3, path3);
+  return_lookup(return_record4, record4, path4);
+  return_lookup(return_record5, record5, path5);
+
   printf("--- Acabou o teste de Lookup ---\n");
 }
 

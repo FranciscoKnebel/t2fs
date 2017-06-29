@@ -81,12 +81,13 @@ int parsePath(char* path, char ** elements) {
     pch = strtok(NULL, "/");
   }
 
-  return i;
+  return i -1;
 }
 
 int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record) {
   BLOCK_T blockBuffer;
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
+  int returnValue = TRUE;
 
   switch (tupla.atributeType) {
     case REGISTER_MAP:
@@ -105,21 +106,22 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
         }
       }
 
-      return foundFile == TRUE ? i : FALSE;
+      returnValue = foundFile == TRUE ? i-1 : FIND_REGISTER_NOTFOUND; // 0 to RECORD_PER_BLOCK-1
 
       break;
     case REGISTER_FIM:
-      return tupla.atributeType;
+      returnValue = FIND_REGISTER_FIM;
       break;
     case REGISTER_ADITIONAL:
-      // find new tupla
+      returnValue = FIND_REGISTER_ADITIONAL;
       break;
     case REGISTER_FREE:
     default:
+      returnValue = FIND_REGISTER_FREE;
       break;
   }
 
-  return TRUE;
+  return returnValue;
 }
 
 int lookup(char* pathname, struct t2fs_record * fileRecord) {
@@ -139,24 +141,61 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   parseRegister(root.at, tuplas);
 
   /* ITERAR NA ÁRVORE ATÉ ACHAR FOLHA */
-  struct t2fs_record record;
+  int i = 0, j = 1;
+  int found = FALSE, endReached = FALSE;
 
-  int i = 0;
-  int j = 1;
-  // olhar todas tuplas para ver se encontra
-  if(findRecord(tuplas[i], parsedPath[j], &record) == FALSE) {
-    // return FALSE; // FILE NOT FOUND
+  while(i < constants.MAX_TUPLAS_REGISTER && endReached != TRUE) {
+    found = findRecord(tuplas[i], parsedPath[j], fileRecord);
+
+    switch (found) {
+      case FIND_REGISTER_FIM:
+      case FIND_REGISTER_FREE:
+        endReached = TRUE;
+        break;
+      case FIND_REGISTER_ADITIONAL:
+        // ler novo MFT Register, indicado pelo número de bloco em tuplas[i].virtualBlockNumber
+        if(readRegister(tuplas[i].virtualBlockNumber, &root) != TRUE) {
+          return REGISTER_READ_ERROR;
+        }
+        parseRegister(root.at, tuplas);
+
+        i = 0; // reset i para 0, começar a ler tuplas novamente
+        break;
+      case FIND_REGISTER_NOTFOUND:
+        i++; // não estava na tupla atual, parte para a próxima tupla
+        break;
+      default:
+        // fileRecord é o arquivo procurado.
+        // i indica a tupla do diretório.
+        // found indica o índice do arquivo dentro da tupla onde foi encontrado.
+
+        if(j >= parseCount) { // Verifica se arquivo é o último procurado.
+          endReached = TRUE;
+        } else {
+          // Não é o último, logo precisa descer mais um nível da árvore, indo para o registro indicado no arquivo encontrado.
+
+          if(fileRecord->TypeVal == TYPEVAL_DIRETORIO) {
+            // Se é um diretório, encontra o registro indicado pelo arquivo, e itera para o novo registro
+            if(readRegister(fileRecord->MFTNumber, &root) != TRUE) {
+              // printf("Erro lendo registro '%d'.\n", fileRecord->MFTNumber);
+              return REGISTER_READ_ERROR;
+            }
+            parseRegister(root.at, tuplas);
+
+            i = 0;
+            j++;
+          } else {
+            // Se não é um arquivo de diretório, volta para a leitura do diretório atual
+            found = FIND_REGISTER_NOTFOUND; // não encontrou o arquivo correto, mas um diretório de mesmo nome.
+            i++;
+          }
+        }
+
+        break;
+    }
   }
-  // se não achar em nenhuma tupla, retorna FALSE
-  // se achar, possuí record do arquivo com nome parsedPath[j]
 
-  // É o último elemento de parsedPath? Se sim e encontrou, retorna TRUE. fileRecord é o record procurado.
-  // Se sim e não encontrou, retorna FALSE.
-  // Se não, fetch do registro do arquivo record, e itera novamente.
-
-  memcpy(fileRecord, &record, RECORD_SIZE);
   free(tuplas);
-  i++;
 
-  return TRUE;
+  return found;
 }
