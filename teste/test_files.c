@@ -16,6 +16,8 @@ void test_validPath() {
   char path4[20] = "/valido/show.dat";
   char path5[20] = "/invalido//inval.bin";
   char path6[60] = "/invalido/invalido/invalido/invalido/invalido/invalido.bin";
+  char path7[70] = "/invalidotestandoporcausadotamanhomaximodeumarquivonosistema/niveis";
+
 
   printf("--- Teste de validação de path ---\n\n");
 
@@ -26,6 +28,7 @@ void test_validPath() {
   test_callValidPath(path4);
   test_callValidPath(path5);
   test_callValidPath(path6);
+  test_callValidPath(path7);
 
   printf("\n--- Acabou o teste de validação de path ---\n");
 }
@@ -90,7 +93,7 @@ void test_isFileName() {
   char path4[30] = "/valido/show/de/bola.dat";
   char path5[60] = "/path/invalida/de/teste/path/invalida/de/teste/invalido.txt";
   char path6[30] = "/";
-  char path7[40] = "/valido/testando/nos/ultimos/niveis.dat";
+  char path7[70] = "/invalidotestandoporcausadotamanhomaximodeumarquivonosistema/niveis";
   char path8[40] = "/valido/testando/nos/ultimos/niveis";
   char path9[40] = "/valido/show.dat";
 
@@ -156,13 +159,14 @@ void test_lookup() {
   return_lookup(return_record4, record4, path4);
   return_lookup(return_record5, record5, path5);
 
-  printf("--- Acabou o teste de Lookup ---\n");
+  printf("--- Encerrando teste de Lookup ---\n");
 }
 
 int main(int argc, char const *argv[]) {
   initConfig();
+
   /* Valid Path */
-  //test_validPath();
+  test_validPath();
 
   /* Parse Path */
   //test_parsePath();
@@ -171,7 +175,7 @@ int main(int argc, char const *argv[]) {
   //test_isFileName();
 
   /* Lookup File */
-  test_lookup();
+  //test_lookup();
 
   return 0;
 }

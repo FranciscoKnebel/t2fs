@@ -2,7 +2,6 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Testes desenvolvidos por Francisco Knebel
 */
 
 #include <stdio.h>

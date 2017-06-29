@@ -1,3 +1,12 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Módulo desenvolvido por Francisco Knebel
+  Funções:
+    validPath, isFileName, parsePath, findRecord, lookup
+*/
+
 #include "libs.h"
 
 int validPath(char* path) {
@@ -5,8 +14,8 @@ int validPath(char* path) {
 
   int length = strlen(path);
 
-  // Min Size || Path não começa no root || Max Size
-  if(length == 0 || path[0] != '/' || length > MAX_FILE_NAME_SIZE) {
+  // Min Size || Path não começa no root
+  if(length == 0 || path[0] != '/') {
     return FALSE;
   }
 
@@ -22,6 +31,19 @@ int validPath(char* path) {
     } else {
       lastWasSlash = FALSE;
     }
+  }
+
+  // Max Size
+  char* temp = malloc(strlen(path));
+  strcpy(temp, path);
+  char * pch = strtok(temp, "/");
+
+  while(pch != NULL) {
+    if(strlen(pch) > MAX_FILE_NAME_SIZE) {
+      return FALSE;
+    }
+    
+    pch = strtok(NULL, "/");
   }
 
   return TRUE;
@@ -58,24 +80,12 @@ int parsePath(char* path, char ** elements) {
   elements[i++] = "/";
 
   while(pch != NULL) {
-    /*
-      Alocação direta no array, e não elemento por elemento.
-
-    if(elementsSize < ((i + 1) * MAX_FILE_NAME_SIZE)) {
-      printf("extendendo tamanho do array\n");
-      int newArraySize = (i * MAX_FILE_NAME_SIZE) * growthFactor;
-
-      char ** temp_Array = realloc(elements, newArraySize);
-      if(temp_Array) {
-        printf("Novo tamanho de array realocado.\n");
-        elements = temp_Array;
-        elementsSize = newArraySize;
-      } else {
-        printf("Erro alocando novo array de paths. You should have done error handling.\n");
-      }
-    } */
+    if(strlen(pch) > MAX_FILE_NAME_SIZE) {
+      return FALSE;
+    }
 
     elements[i] = (char*) malloc((strlen(pch) + 1) * sizeof(char));
+
     strcpy(elements[i++], pch);
 
     pch = strtok(NULL, "/");

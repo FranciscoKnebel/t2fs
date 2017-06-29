@@ -14,6 +14,7 @@ void test_readSector() {
   SECTOR_T sectorBuffer;
   readSector(0, &sectorBuffer);
   printSector(sectorBuffer.at);
+  printf("-- ENCERROU READ SECTOR --\n");
 }
 
 void test_readBlock() {
@@ -21,9 +22,12 @@ void test_readBlock() {
   BLOCK_T blockBuffer;
   readBlock(1, &blockBuffer);
   printBlock(blockBuffer.at);
+  printf("-- ENCERROU READ BLOCK --\n");
 }
 
 void test_showBlock() {
+  printf("-- SHOW BLOCK --\n");
+
   /* Mostrar blocos de importância */
   printf("-- BOOT BLOCK --\n");
   showBlock(constants.BOOT_BLOCK);
@@ -31,9 +35,13 @@ void test_showBlock() {
   showBlock(constants.MFT_BLOCK);
   printf("-- DATA BLOCK --\n");
   showBlock(constants.DATA_BLOCK);
+
+  printf("-- ENCERROU SHOW BLOCK --\n");
 }
 
 void test_writeSector() {
+  printf("-- WRITE SECTOR --\n");
+
   SECTOR_T sectorBuffer2, sectorBufferBackup;
   readSector(0, &sectorBuffer2);
   readSector(1, &sectorBufferBackup);
@@ -48,9 +56,13 @@ void test_writeSector() {
   writeSector(1, &sectorBufferBackup);
   readSector(1, &sectorBuffer2);
   printSector(sectorBuffer2.at);
+
+  printf("-- ENCERROU WRITE SECTOR --\n");
 }
 
 void test_writeBlock() {
+  printf("-- WRITE BLOCK --\n");
+
   BLOCK_T blockBuffer, blockBufferBackup;
   readBlock(0, &blockBuffer);
   readBlock(1, &blockBufferBackup);
@@ -65,9 +77,13 @@ void test_writeBlock() {
   writeBlock(1, &blockBufferBackup);
   readBlock(1, &blockBuffer);
   printBlock(blockBuffer.at);
+
+  printf("-- ENCERROU WRITE BLOCK --\n");
 }
 
 void test_readRegister() {
+  printf("-- READ REGISTER --\n");
+
   REGISTER_T reg;
   int registerIndex = 0;
 
@@ -89,10 +105,14 @@ void test_readRegister() {
   }
 
   printRegister(reg2.at, registerIndex2);
+
+  printf("-- ENCERROU READ REGISTER --\n");
 }
 
 /* READ REGISTER */
 void test_writeRegister() {
+  printf("-- WRITE REGISTER --\n");
+
   REGISTER_T reg;
 
   REGISTER_T registerBefore, registerAfter;
@@ -131,6 +151,8 @@ void test_writeRegister() {
   if(writeRegister(registerWrite, &registerBefore) != TRUE) {
     return;
   };
+
+  printf("-- ENCERROU WRITE REGISTER --\n");
 }
 
 void test_readRecord() {
