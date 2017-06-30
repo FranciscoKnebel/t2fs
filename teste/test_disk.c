@@ -166,9 +166,93 @@ void test_readRecord() {
   printRecord(record1);
   printf("\n");
   printRecord(record2);
+
+  printf("-- ENCERROU READ RECORD --\n");
 }
 
-void old() {
+void test_executeWriteRecord(int block, int index, struct t2fs_record record) {
+  if (writeRecord(block, index, record) == FALSE) {
+    printf("Erro no write record: ");
+
+    if(index >= constants.RECORD_PER_BLOCK) {
+      printf("Index passado maior do que %d. ", constants.RECORD_PER_BLOCK);
+    }
+
+    if(index < 0) {
+      printf("Index passado menor do que %d. ", 0);
+    }
+
+    if(block >= constants.DISK_BLOCKS) {
+      printf("Número de bloco maior do que %d (acima do limite do disco). ", constants.DISK_BLOCKS -1);
+    }
+
+    if(block < constants.DATA_BLOCK) {
+      printf("Número de bloco menor do que %d (antes do bloco de dados). ", constants.DATA_BLOCK);
+    }
+
+    printf("\n");
+  } else {
+    printf("Sucesso no write record.\n");
+  }
+}
+
+void test_writeRecord() {
+  printf("-- WRITE RECORD --\n");
+
+  printf("Lendo records...\n");
+  struct t2fs_record record1, record2;
+  readRecord(2050, 0, &record1);
+  readRecord(2050, 1, &record2);
+
+  printf("Alterando valores para teste...\n");
+  strcpy(record1.name, "file3");
+  record1.MFTNumber = 6;
+
+  strcpy(record2.name, "file4");
+  record2.MFTNumber = 7;
+
+  printf("Backup de records...\n");
+  struct t2fs_record record1_backup, record2_backup;
+  readRecord(3000, 5, &record1_backup);
+  readRecord(3000, 11, &record2_backup);
+
+  printf("Escrevendo records modificados...\n");
+  test_executeWriteRecord(3000, 5, record1);
+  test_executeWriteRecord(3000, 11, record2);
+  test_executeWriteRecord(3000, 15, record2);
+
+  /* Erros */
+  test_executeWriteRecord(3000, 16, record2);
+  test_executeWriteRecord(3000, -1, record2);
+  test_executeWriteRecord(constants.DATA_BLOCK -1, 15, record2);
+  test_executeWriteRecord(constants.DISK_BLOCKS, 15, record2);
+
+  printf("\nImprimindo diretório alterado...\n");
+  BLOCK_T blockBuffer;
+  struct t2fs_record records[constants.RECORD_PER_BLOCK];
+
+  if(readBlock(3000, &blockBuffer) == FALSE) {
+    return;
+  };
+  parseDirectory(blockBuffer, records);
+
+  int i;
+  for (i = 0; i < constants.RECORD_PER_BLOCK; i++) {
+    printRecord(records[i]);
+    printf("\n");
+  }
+
+  printf("Restaurando valores antigos...\n");
+  writeRecord(3000, 5, record1_backup);
+  writeRecord(3000, 11, record2_backup);
+  writeRecord(3000, 15, record2_backup);
+
+  printf("-- ENCERROU WRITE RECORD --\n");
+}
+
+int main(int argc, char const *argv[]) {
+  initConfig();
+
   /* READ SECTOR */
   test_readSector();
 
@@ -194,13 +278,7 @@ void old() {
   test_readRecord();
 
   /* WRITE RECORD */
-
-}
-
-int main(int argc, char const *argv[]) {
-  initConfig();
-
-  test_readRecord();
+  test_writeRecord();
 
   return 0;
 }

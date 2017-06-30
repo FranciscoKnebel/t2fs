@@ -143,7 +143,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   }
 
   REGISTER_T root;
-  struct t2fs_4tupla *tuplas = malloc(sizeof(struct t2fs_4tupla));
+  struct t2fs_4tupla * tuplas = malloc(sizeof(struct t2fs_4tupla));
 
   if(readRegister(REGISTER_ROOT, &root) != TRUE) {
     return FALSE;

@@ -18,4 +18,6 @@
 
   int writeRegister(int registerIndex, REGISTER_T* reg);
 
+  int writeRecord(int block, int index, struct t2fs_record record);
+
 #endif

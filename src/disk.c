@@ -71,7 +71,7 @@ int readRegister(int registerIndex, REGISTER_T* reg) {
 }
 
 int readRecord(int block, int index, struct t2fs_record * record) {
-  if(block < constants.DATA_BLOCK || block > constants.DISK_BLOCKS) {
+  if(block < constants.DATA_BLOCK || block >= constants.DISK_BLOCKS || index < 0 || index >= constants.RECORD_PER_BLOCK) {
     return FALSE;
   }
 
@@ -134,6 +134,27 @@ int writeRegister(int registerIndex, REGISTER_T* reg) {
   if(writeSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
     return FALSE;
   }
+
+  return TRUE;
+}
+
+int writeRecord(int block, int index, struct t2fs_record record) {
+  if(block < constants.DATA_BLOCK || block >= constants.DISK_BLOCKS || index < 0 || index >= constants.RECORD_PER_BLOCK) {
+    return FALSE;
+  }
+
+  int sector_offset = index / constants.SECTOR_PER_BLOCK;
+  int record_offset = index % constants.SECTOR_PER_BLOCK;
+  int sector = block * constants.SECTOR_PER_BLOCK + sector_offset;
+  SECTOR_T sectorBuffer;
+
+  if(readSector(sector, &sectorBuffer) == FALSE) {
+    return FALSE;
+  }
+
+  memcpy(&sectorBuffer.at[RECORD_SIZE * record_offset], &record, RECORD_SIZE);
+
+  writeSector(sector, &sectorBuffer);
 
   return TRUE;
 }
