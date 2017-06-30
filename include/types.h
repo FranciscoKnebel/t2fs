@@ -63,12 +63,11 @@
   } SECTOR_T;
 
   typedef struct {
-    unsigned char at[1024]; //[BLOCK_SIZE], precisa virar um ponteiro e alocar dinamicamente
+    unsigned char * at;
   } BLOCK_T;
 
   typedef struct {
     unsigned char at[SECTOR_SIZE * 2];
   } REGISTER_T;
 
-  typedef BLOCK_T RECORD_T;
 #endif

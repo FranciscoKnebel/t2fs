@@ -14,10 +14,10 @@
 void test_parseBootBlock() {
   printf("\n--- Teste de parsing do bloco de boot ---\n\n");
 
-  BLOCK_T bootBlock;
+  SECTOR_T bootBlock;
   struct BootBlock config;
 
-  readBlock(0, &bootBlock);
+  readSector(0, &bootBlock);
 
   config = parseBootBlock(bootBlock.at);
 
@@ -56,6 +56,7 @@ void test_parseDirectory() {
   printf("\n--- Teste de parsing de diretório ---\n\n");
 
   BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
 
   if(readBlock(2050, &blockBuffer) == FALSE) {

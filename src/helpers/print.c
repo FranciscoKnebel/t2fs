@@ -53,6 +53,7 @@ int printBlock(unsigned char* buffer) {
 
 void showBlock(int block) {
   BLOCK_T buffer;
+  buffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
   readBlock(block, &buffer);
 

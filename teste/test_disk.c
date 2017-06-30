@@ -12,16 +12,21 @@
 void test_readSector() {
   printf("-- READ SECTOR --\n");
   SECTOR_T sectorBuffer;
+
   readSector(0, &sectorBuffer);
   printSector(sectorBuffer.at);
+
   printf("-- ENCERROU READ SECTOR --\n");
 }
 
 void test_readBlock() {
   printf("-- READ BLOCK --\n");
   BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+
   readBlock(1, &blockBuffer);
   printBlock(blockBuffer.at);
+
   printf("-- ENCERROU READ BLOCK --\n");
 }
 
@@ -64,6 +69,9 @@ void test_writeBlock() {
   printf("-- WRITE BLOCK --\n");
 
   BLOCK_T blockBuffer, blockBufferBackup;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+  blockBufferBackup.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+
   readBlock(0, &blockBuffer);
   readBlock(1, &blockBufferBackup);
 
@@ -212,9 +220,10 @@ void test_writeRecord() {
   record2.MFTNumber = 7;
 
   printf("Backup de records...\n");
-  struct t2fs_record record1_backup, record2_backup;
+  struct t2fs_record record1_backup, record2_backup, record3_backup;
   readRecord(3000, 5, &record1_backup);
   readRecord(3000, 11, &record2_backup);
+  readRecord(3000, 15, &record3_backup);
 
   printf("Escrevendo records modificados...\n");
   test_executeWriteRecord(3000, 5, record1);
@@ -229,6 +238,7 @@ void test_writeRecord() {
 
   printf("\nImprimindo diretório alterado...\n");
   BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
 
   if(readBlock(3000, &blockBuffer) == FALSE) {
@@ -245,7 +255,7 @@ void test_writeRecord() {
   printf("Restaurando valores antigos...\n");
   writeRecord(3000, 5, record1_backup);
   writeRecord(3000, 11, record2_backup);
-  writeRecord(3000, 15, record2_backup);
+  writeRecord(3000, 15, record3_backup);
 
   printf("-- ENCERROU WRITE RECORD --\n");
 }

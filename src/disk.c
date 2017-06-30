@@ -63,7 +63,7 @@ int readRegister(int registerIndex, REGISTER_T* reg) {
   }
 
   /* Segundo setor */
-  if(readSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
+  if (readSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
     return FALSE;
   }
 
@@ -77,8 +77,9 @@ int readRecord(int block, int index, struct t2fs_record * record) {
 
   int offset = (index * RECORD_SIZE);
   BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-  if(readBlock(block, &blockBuffer) == FALSE) {
+  if (readBlock(block, &blockBuffer) == FALSE) {
     return FALSE;
   }
 
@@ -131,7 +132,7 @@ int writeRegister(int registerIndex, REGISTER_T* reg) {
   }
 
   /* Segundo setor */
-  if(writeSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
+  if (writeSector(sector + 1, (SECTOR_T*) reg + 1) == FALSE) {
     return FALSE;
   }
 

@@ -42,7 +42,7 @@ int validPath(char* path) {
     if(strlen(pch) > MAX_FILE_NAME_SIZE) {
       return FALSE;
     }
-    
+
     pch = strtok(NULL, "/");
   }
 
@@ -96,6 +96,8 @@ int parsePath(char* path, char ** elements) {
 
 int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record) {
   BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
   int returnValue = TRUE;
 
