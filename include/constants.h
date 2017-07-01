@@ -36,7 +36,7 @@
   #define FIND_REGISTER_ADITIONAL -3
   #define FIND_REGISTER_FREE -4
 
-  /*LDAA*/
-  #define MAX_FILE_OPEN 20
+  /* LDAA */
+  #define MAX_FILES_OPEN 40
 
 #endif

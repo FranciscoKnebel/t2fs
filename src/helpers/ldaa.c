@@ -10,28 +10,36 @@
 
 #include "libs.h"
 
+
+struct descritor resetDescritor() {
+  struct descritor temp;
+
+  temp.flag = 0;
+  temp.currentPointer = -1;
+
+  temp.record.TypeVal = 0;
+  strcpy(temp.record.name, "");
+  temp.record.blocksFileSize = 0;
+  temp.record.bytesFileSize = 0;
+  temp.record.MFTNumber = 0;
+
+  return temp;
+}
+
 void initLDAA(struct descritor* lista){
   int i;
 
-  for (i = 0; i < MAX_FILE_OPEN; ++i)
+  for (i = 0; i < MAX_FILES_OPEN; ++i)
   {
-    lista[i].flag = 0;
-    lista[i].currentPointer = -1;
-
-    lista[i].record.TypeVal = 0;
-    strcpy(lista[i].record.name, "");
-    lista[i].record.blocksFileSize = 0;
-    lista[i].record.bytesFileSize = 0;
-    lista[i].record.MFTNumber = 0;
-    
+    lista[i] = resetDescritor();
   }
 
 }
 
 int getFreeLDAA(struct descritor* lista){
   int i;
-  
-  for (i = 0; i < MAX_FILE_OPEN; ++i){
+
+  for (i = 0; i < MAX_FILES_OPEN; ++i){
     if (lista[i].flag == 0)
     {
       return i;
@@ -43,7 +51,7 @@ int getFreeLDAA(struct descritor* lista){
 
 
 int insertLDAA(struct descritor* lista, struct t2fs_record record){
-  
+
     int i = getFreeLDAA(lista);
 
     if(i < 0)
@@ -53,35 +61,18 @@ int insertLDAA(struct descritor* lista, struct t2fs_record record){
       lista[i].flag = 1;
       lista[i].currentPointer = 0;
 
-      lista[i].record.TypeVal = record.TypeVal;
-      strcpy(lista[i].record.name, record.name);
-      lista[i].record.blocksFileSize = record.blocksFileSize;
-      lista[i].record.bytesFileSize = record.bytesFileSize;
-      lista[i].record.MFTNumber = record.MFTNumber;
+      memcpy(&lista[i].record, &record, RECORD_SIZE);
     }
 
     return TRUE;
 }
 
 int removeLDAA(struct descritor* lista, int handle) {
-  lista[handle].flag = 0;
-  lista[handle].currentPointer = -1;
+  lista[handle] = resetDescritor();
 
-  lista[handle].record.TypeVal = 0;
-  strcpy(lista[handle].record.name, "");
-  lista[handle].record.blocksFileSize = 0;
-  lista[handle].record.bytesFileSize = 0;
-  lista[handle].record.MFTNumber = 0;
-  
-  if (lista[handle].flag == 0)
-    return TRUE;
-  else
-    return FALSE;
+  return lista[handle].flag == 0;
 }
 
 int searchLDAA(struct descritor* lista, int handle, int type){
-  if(lista[handle].flag == 1 && lista[handle].record.TypeVal == type)
-    return TRUE;
-  else
-    return FALSE;
+  return lista[handle].flag == 1 && lista[handle].record.TypeVal == type;
 }

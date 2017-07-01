@@ -1,10 +1,10 @@
 #ifndef __ldaa__
 #define	__ldaa__
+  #include "declarations.h"
 
-  struct descritor 
-  {
+  struct descritor {
   	int flag;
-  	int currentPointer;	
+  	int currentPointer;
   	struct t2fs_record record;
   };
 

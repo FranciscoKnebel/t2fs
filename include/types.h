@@ -1,5 +1,6 @@
 #ifndef __types__
 #define	__types__
+  #include "declarations.h"
   #include "t2fs.h"
 
   struct BootBlock {
@@ -57,7 +58,7 @@
 
     int* indexMFT;
 
-    struct descritor* LDAA;
+    struct descritor LDAA[MAX_FILES_OPEN];
   };
 
   typedef struct {
