@@ -56,6 +56,8 @@
     struct BootBlock bootBlock;
 
     int* indexMFT;
+
+    struct descritor* LDAA;
   };
 
   typedef struct {

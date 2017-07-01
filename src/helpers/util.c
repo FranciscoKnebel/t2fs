@@ -66,6 +66,10 @@ int initConfig() {
   config.indexMFT = MFT;
   initMFT();
 
+  struct descritor * LDAA = malloc(sizeof(struct descritor) * MAX_FILE_OPEN);
+  config.LDAA = LDAA;
+  initLDAA(config.LDAA);
+
   return TRUE;
 }
 

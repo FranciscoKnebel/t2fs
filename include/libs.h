@@ -13,6 +13,7 @@
 #include "helpers/util.h"
 #include "helpers/files.h"
 #include "helpers/mft.h"
+#include "helpers/ldaa.h"
 
 #include "disk.h"
 #include "parse.h"
