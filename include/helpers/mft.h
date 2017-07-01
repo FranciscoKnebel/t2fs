@@ -1,5 +1,5 @@
-#ifndef __mft__
-#define	__mft__
+#ifndef __helpermft__
+#define	__helpermft__
 
   void initMFT();
 

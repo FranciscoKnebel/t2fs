@@ -28,7 +28,7 @@
   #define RECORD_MFT_NUMBER 60
 
   /* Arquivo */
-  #define FILENAME_SIZE_LIMIT 51
+  #define MAX_FILE_NAME_SIZE 51
 
   /* Lookup */
   #define FIND_REGISTER_NOTFOUND -1
@@ -39,4 +39,11 @@
   /* LDAA */
   #define MAX_FILES_OPEN 40
 
+  /* Bitmap */
+  #define BM_LIVRE 0
+  #define BM_OCUPADO 1
+
+  /* MFT Bitmap */
+  #define MFT_BM_LIVRE 0
+  #define MFT_BM_OCUPADO 1
 #endif

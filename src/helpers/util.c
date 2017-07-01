@@ -53,6 +53,8 @@ struct Constants initConstants(struct BootBlock bootBlock) {
 
 
 int initConfig() {
+  printf("Inicializando file system..."); fflush(stdout);
+
   SECTOR_T bootBlock;
 
   if(readBootBlock(&bootBlock) == FALSE) {
@@ -68,6 +70,9 @@ int initConfig() {
 
   initLDAA(config.LDAA);
 
+  config.initiated = TRUE;
+
+  printf("\tInicialização encerrada.\n");
   return TRUE;
 }
 

@@ -16,7 +16,7 @@ void initMFT() {
   int i;
 
   for (i = 0; i < REGISTER_REGULAR; i++) { //primeiros resgistros reservados
-    config.indexMFT[i] = 1;
+    config.indexMFT[i] = MFT_BM_OCUPADO;
   }
 
   for (i = REGISTER_REGULAR; i < constants.MAX_REGISTERS; i++) {
@@ -24,13 +24,13 @@ void initMFT() {
       return;
     }
 
-    struct t2fs_4tupla *tuplas = malloc(sizeof(struct t2fs_4tupla));
+    struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
     parseRegister(reg.at, tuplas);
 
     if(tuplas[0].atributeType == -1){
-      config.indexMFT[i] = 0; //livre
+      config.indexMFT[i] = MFT_BM_LIVRE; //livre
     } else {
-      config.indexMFT[i] = 1; //ocupado
+      config.indexMFT[i] = MFT_BM_OCUPADO; //ocupado
     }
   }
 }
@@ -39,7 +39,7 @@ void printMFT(int begin, int end){
   int i;
   for (i = begin; i < end; ++i)
   {
-    if (config.indexMFT[i] == 0)
+    if (config.indexMFT[i] == MFT_BM_LIVRE)
       printf("Index MFT [%d] =  LIVRE \n",i);
     else
       printf("Index MFT [%d] =  OCUPADO \n",i);

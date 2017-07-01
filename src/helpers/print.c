@@ -83,13 +83,13 @@ void printTuplaBinary(unsigned char* buffer, int tupla) {
   int j, num = 0;
 
   for (j = 0; j < constants.TUPLA_SIZE; j += 4) {
-    printf("%02X ", buffer[tupla + j     ]&0xFF);
-    printf("%02X ", buffer[tupla + j + 1 ]&0xFF);
-    printf("%02X ", buffer[tupla + j + 2 ]&0xFF);
-    printf("%02X ", buffer[tupla + j + 3 ]&0xFF);
+    printf("%02X ", buffer[(constants.TUPLA_SIZE * tupla) + j     ]&0xFF);
+    printf("%02X ", buffer[(constants.TUPLA_SIZE * tupla) + j + 1 ]&0xFF);
+    printf("%02X ", buffer[(constants.TUPLA_SIZE * tupla) + j + 2 ]&0xFF);
+    printf("%02X ", buffer[(constants.TUPLA_SIZE * tupla) + j + 3 ]&0xFF);
     printf("---");
 
-    sprintf(temp, "%02X%02X%02X%02X", buffer[tupla + j + 3], buffer[tupla + j + 2], buffer[tupla + j + 1], buffer[tupla + j]);
+    sprintf(temp, "%02X%02X%02X%02X", buffer[(constants.TUPLA_SIZE * tupla) + j + 3], buffer[(constants.TUPLA_SIZE * tupla) + j + 2], buffer[(constants.TUPLA_SIZE * tupla) + j + 1], buffer[(constants.TUPLA_SIZE * tupla) + j]);
     sscanf(temp, "%x", &num);
 
     printf(" %s ", temp);

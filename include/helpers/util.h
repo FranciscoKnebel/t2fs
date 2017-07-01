@@ -1,5 +1,5 @@
-#ifndef __util__
-#define	__util__
+#ifndef __helperutil__
+#define	__helperutil__
 
   int initConfig();
 

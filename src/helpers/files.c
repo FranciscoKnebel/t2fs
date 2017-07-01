@@ -145,7 +145,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   }
 
   REGISTER_T root;
-  struct t2fs_4tupla * tuplas = malloc(sizeof(struct t2fs_4tupla));
+  struct t2fs_4tupla * tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
 
   if(readRegister(REGISTER_ROOT, &root) != TRUE) {
     return FALSE;
@@ -169,6 +169,9 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
         if(readRegister(tuplas[i].virtualBlockNumber, &root) != TRUE) {
           return REGISTER_READ_ERROR;
         }
+        free(tuplas);
+        tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+
         parseRegister(root.at, tuplas);
 
         i = 0; // reset i para 0, começar a ler tuplas novamente
@@ -192,6 +195,8 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
               // printf("Erro lendo registro '%d'.\n", fileRecord->MFTNumber);
               return REGISTER_READ_ERROR;
             }
+            free(tuplas);
+            tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
             parseRegister(root.at, tuplas);
 
             i = 0;
@@ -208,6 +213,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   }
 
   free(tuplas);
+  tuplas = NULL;
 
   return found;
 }

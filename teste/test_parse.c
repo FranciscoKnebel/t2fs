@@ -40,7 +40,7 @@ void test_parseRegister() {
     return;
   }
 
-  struct t2fs_4tupla *tuplas = malloc(sizeof(struct t2fs_4tupla));
+  struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
   parseRegister(reg.at, tuplas);
 
   int i;
@@ -79,10 +79,10 @@ int main(int argc, char const *argv[]) {
   //test_parseBootBlock();
 
   /* Parse Register */
-  //test_parseRegister();
+  test_parseRegister();
 
   /* Parse Directory */
-  test_parseDirectory();
+  //test_parseDirectory();
 
   return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef __files__
-#define	__files__
+#ifndef __helperfiles__
+#define	__helperfiles__
 
   int validPath(char* path);
 

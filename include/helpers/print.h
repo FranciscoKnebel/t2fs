@@ -1,5 +1,5 @@
-#ifndef __aux__
-#define	__aux__
+#ifndef __helperaux__
+#define	__helperaux__
 
   int printSector(unsigned char* buffer);
 
