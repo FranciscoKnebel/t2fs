@@ -2,10 +2,8 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Módulo desenvolvido por Francisco Knebel
-  Funções:
-    readSector, readBlock, readBootBlock, writeSector, writeBlock, readRegister, writeRegister
-    readRecord,
+  Douglas Lazaro
+  Francisco Knebel
 */
 
 #include "libs.h"
