@@ -162,11 +162,30 @@ void test_lookup() {
   printf("--- Encerrando teste de Lookup ---\n");
 }
 
+void test_execGetFileDirectory(char * path) {
+  char directory[200];
+
+  getFileDirectory(path, directory);
+  printf("Path: %s ||| Directory: %s\n", path, directory);
+}
+
+void test_getFileDirectory() {
+  char path1[50] = "/1/2/3/4/5/6/7/NAME";
+  char path2[50] = "/1/2/3/4/5/NAME";
+  char path3[50] = "/1/NAME";
+  char path4[50] = "/NAME";
+
+  test_execGetFileDirectory(path1);
+  test_execGetFileDirectory(path2);
+  test_execGetFileDirectory(path3);
+  test_execGetFileDirectory(path4);
+}
+
 int main(int argc, char const *argv[]) {
-  initConfig();
+  //initConfig();
 
   /* Valid Path */
-  test_validPath();
+  //test_validPath();
 
   /* Parse Path */
   //test_parsePath();
@@ -176,6 +195,9 @@ int main(int argc, char const *argv[]) {
 
   /* Lookup File */
   //test_lookup();
+
+  /* getFileDirectory */
+  test_getFileDirectory();
 
   return 0;
 }

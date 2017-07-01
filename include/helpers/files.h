@@ -5,6 +5,8 @@
 
   int isFileName(char* path);
 
+  int getFileDirectory(char* path, char* directory);
+
   int parsePath(char* path, char ** elements);
 
   int lookup(char* pathname, struct t2fs_record * fileRecord);

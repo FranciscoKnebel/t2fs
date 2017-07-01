@@ -66,6 +66,23 @@ int isFileName(char* filename) {
   return TRUE; // is a directory
 }
 
+int getFileDirectory(char* path, char* directory) {
+  char ** elements = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
+
+  int count = parsePath(path, elements);
+  if(count >= 2) {
+    int i;
+    sprintf(directory, "/%s", elements[1]);
+    for (i = 2; i < count; i++) {
+      sprintf(directory, "%s/%s", directory, elements[i]);
+    }
+  } else {
+    strcpy(directory, "/");
+  }
+
+  return TRUE;
+}
+
 int parsePath(char* path, char ** elements) {
   if(validPath(path) == FALSE) {
     return FALSE;
