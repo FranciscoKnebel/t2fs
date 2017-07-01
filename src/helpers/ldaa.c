@@ -48,7 +48,12 @@ int getFreeLDAA(){
   return -1;
 }
 
-
+int isFreeLDAA(){
+  if(getFreeLDAA() != -1)
+    return TRUE;
+  else
+    return FALSE;
+}
 
 int insertLDAA(struct t2fs_record record){
 
@@ -71,6 +76,12 @@ int removeLDAA(int handle) {
   return config.LDAA[handle].flag == 0;
 }
 
-int searchLDAA(int handle, int type){
-  return config.LDAA[handle].flag == 1 && config.LDAA[handle].record.TypeVal == type;
+int searchLDAA(int handle, int type, struct descritor* descritor){
+  if (config.LDAA[handle].flag == 1 && config.LDAA[handle].record.TypeVal == type){
+    *descritor = config.LDAA[handle];
+    return TRUE;
+  }
+  else
+    return FALSE;
+   
 }
