@@ -26,21 +26,21 @@ struct descritor resetDescritor() {
   return temp;
 }
 
-void initLDAA(struct descritor* lista){
+void initLDAA(){
   int i;
 
   for (i = 0; i < MAX_FILES_OPEN; ++i)
   {
-    lista[i] = resetDescritor();
+    config.LDAA[i] = resetDescritor();
   }
 
 }
 
-int getFreeLDAA(struct descritor* lista){
+int getFreeLDAA(){
   int i;
 
   for (i = 0; i < MAX_FILES_OPEN; ++i){
-    if (lista[i].flag == 0)
+    if (config.LDAA[i].flag == 0)
     {
       return i;
     }
@@ -50,29 +50,27 @@ int getFreeLDAA(struct descritor* lista){
 
 
 
-int insertLDAA(struct descritor* lista, struct t2fs_record record){
+int insertLDAA(struct t2fs_record record){
 
-    int i = getFreeLDAA(lista);
+    int i = getFreeLDAA();
 
     if(i < 0)
-      return FALSE;
-    else
-    {
-      lista[i].flag = 1;
-      lista[i].currentPointer = 0;
+      return -1;
 
-      memcpy(&lista[i].record, &record, RECORD_SIZE);
-    }
+    config.LDAA[i].flag = 1;
+    config.LDAA[i].currentPointer = 0;
 
-    return TRUE;
+    memcpy(&config.LDAA[i].record, &record, RECORD_SIZE);
+
+    return i;
 }
 
-int removeLDAA(struct descritor* lista, int handle) {
-  lista[handle] = resetDescritor();
+int removeLDAA(int handle) {
+  config.LDAA[handle] = resetDescritor();
 
-  return lista[handle].flag == 0;
+  return config.LDAA[handle].flag == 0;
 }
 
-int searchLDAA(struct descritor* lista, int handle, int type){
-  return lista[handle].flag == 1 && lista[handle].record.TypeVal == type;
+int searchLDAA(int handle, int type){
+  return config.LDAA[handle].flag == 1 && config.LDAA[handle].record.TypeVal == type;
 }

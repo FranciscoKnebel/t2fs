@@ -68,7 +68,7 @@ int initConfig() {
   config.indexMFT = MFT;
   initMFT();
 
-  initLDAA(config.LDAA);
+  initLDAA();
 
   config.initiated = TRUE;
 
