@@ -9,7 +9,7 @@ TST_DIR=./teste
 
 # GERAÇÂO DO T2FS #
 LIB_OBJECTS=$(LIB_GENERATED_OBJECTS) $(LIB_DIR)/apidisk.o $(LIB_DIR)/bitmap2.o
-LIB_GENERATED_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o $(HELPER_OBJECTS)
+LIB_GENERATED_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o $(LIB_DIR)/files.o $(HELPER_OBJECTS)
 
 all: $(LIB_OBJECTS) $(LIB_DIR)/helpers
 	ar rcs $(LIB_DIR)/libt2fs.a $(LIB_OBJECTS)
@@ -22,6 +22,9 @@ $(LIB_DIR)/disk.o: $(SRC_DIR)/disk.c
 
 $(LIB_DIR)/parse.o: $(SRC_DIR)/parse.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/parse.o -I$(INC_DIR) $(SRC_DIR)/parse.c
+
+$(LIB_DIR)/files.o: $(SRC_DIR)/files.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files.o -I$(INC_DIR) $(SRC_DIR)/files.c
 
 ## HELPERS ##
 HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o $(LIB_DIR)/helpers/ldaa.o

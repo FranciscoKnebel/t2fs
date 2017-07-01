@@ -20,4 +20,6 @@
 
   int writeRecord(int block, int index, struct t2fs_record record);
 
+  void* writeTupla(unsigned char* buffer, struct t2fs_4tupla* tupla, int index);
+
 #endif

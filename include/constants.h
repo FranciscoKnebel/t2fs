@@ -46,4 +46,9 @@
   /* MFT Bitmap */
   #define MFT_BM_LIVRE 0
   #define MFT_BM_OCUPADO 1
+
+  /* API */
+  #define FOUND_FILE_ERROR -1
+  #define DIRECTORY_NOT_FOUND -7
+
 #endif

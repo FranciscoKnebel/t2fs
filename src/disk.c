@@ -159,3 +159,7 @@ int writeRecord(int block, int index, struct t2fs_record record) {
 
   return TRUE;
 }
+
+void* writeTupla(unsigned char* buffer, struct t2fs_4tupla* tupla, int index) {
+  return memcpy(&buffer[constants.TUPLA_SIZE * index], tupla, sizeof(struct t2fs_4tupla));
+}

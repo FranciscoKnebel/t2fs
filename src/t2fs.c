@@ -35,7 +35,37 @@ FILE2 create2 (char *filename) {
     initConfig();
   }
 
-  return -1;
+  struct t2fs_record file;
+  int return_value = lookup(filename, &file);
+
+  switch (return_value) {
+    case REGISTER_READ_ERROR:
+      printf("Erro crítico na leitura de um registro no lookup.\n");
+      break;
+    case FIND_REGISTER_ADITIONAL:
+      printf("Erro! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
+      break;
+    default:
+      if(return_value >= 0) {
+        return_value = FOUND_FILE_ERROR;
+      } else if (return_value != DIRECTORY_NOT_FOUND) {
+        if(getFreeLDAA() < 0) { // Possível abrir mais um arquivo?
+          // Arquivo não encontrado, logo pode criar.
+          file = createRecord(filename);
+
+          /* salvar record no diretório */
+          addRecord(file, filename);
+
+          /* adicionar para LDAA, e retornar valor do handle */
+          int handle = insertLDAA(file);
+
+          return_value = handle;
+        }
+      }
+      break;
+  }
+
+  return return_value;
 };
 
 int delete2 (char *filename) {

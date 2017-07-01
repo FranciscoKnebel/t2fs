@@ -17,6 +17,7 @@
 
 #include "disk.h"
 #include "parse.h"
+#include "files.h"
 
 extern struct Configuration config;
 extern struct Constants constants;

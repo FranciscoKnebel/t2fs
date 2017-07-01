@@ -163,6 +163,11 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
       case FIND_REGISTER_FIM:
       case FIND_REGISTER_FREE:
         endReached = TRUE;
+
+        if(j < parseCount) {
+          found = DIRECTORY_NOT_FOUND;
+        }
+
         break;
       case FIND_REGISTER_ADITIONAL:
         // ler novo MFT Register, indicado pelo número de bloco em tuplas[i].virtualBlockNumber
