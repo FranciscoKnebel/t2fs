@@ -52,5 +52,6 @@
   #define DIRECTORY_NOT_FOUND -7
   #define FILE_LIMIT_REACHED -8
   #define PARSED_PATH_ERROR -9
+  #define RECORD_WRITE_ERROR -10
 
 #endif

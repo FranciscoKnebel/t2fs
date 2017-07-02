@@ -43,10 +43,12 @@ struct t2fs_record createRecord(char* pathname) {
   char ** parsedPath = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
   int parseCount = parsePath(pathname, parsedPath);
 
+  memset(&newFile, 0, sizeof(newFile));
+
   newFile.TypeVal = TYPEVAL_REGULAR;
   strcpy(newFile.name, parsedPath[parseCount]); //name é o último elemento parseado: /directory/directory/file1 -> name = file1
   newFile.blocksFileSize = 1;
-  newFile.bytesFileSize = RECORD_SIZE;
+  newFile.bytesFileSize = 0;
 
   /* Encontrar registro do MFT livre, escrever registro e associar ao arquivo. */
   int fileVBN = searchBitmap2(BM_LIVRE); // Encontra bloco de dados para o arquivo
@@ -54,6 +56,7 @@ struct t2fs_record createRecord(char* pathname) {
 
   int registro = searchMFT(MFT_BM_LIVRE);
   initFileRegister(registro, fileVBN); // Inicializa registro no MFT do arquivo
+  setMFT(registro, MFT_BM_OCUPADO);    // seta registro como ocupado no bitmap.
 
   newFile.MFTNumber = registro; // Associa arquivo ao registro criado
 
@@ -88,7 +91,12 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
         for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
           if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
             // ADICIONAR RECORD PARA O DIRETÓRIO
+            if(writeRecord(tuplas[i].logicalBlockNumber, j, record) == FALSE) {
+              return RECORD_WRITE_ERROR;
+            };
+
             foundSpaceToAdd = TRUE;
+            return_value = i;
           }
         }
 
@@ -153,7 +161,7 @@ int addRecordToDirectory(struct t2fs_record record, char * filename) {
 
   getFileDirectory(filename, directoryname);
 
-  if(strcmp("/", directoryname)) { // adicionar para a root
+  if(strcmp("/", directoryname) == 0) { // adicionar para a root
     return_value = addToDirectory(REGISTER_ROOT, record);
 
     return return_value;
