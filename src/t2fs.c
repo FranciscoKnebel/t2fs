@@ -54,7 +54,8 @@ FILE2 create2 (char *filename) {
           file = createRecord(filename);
 
           /* salvar record no diretório */
-          addRecord(file, filename);
+          addRecordToDirectory(file, filename);
+          //checks pra verificar que tudo deu certo ao adicionar
 
           /* adicionar para LDAA, e retornar valor do handle */
           int handle = insertLDAA(file);

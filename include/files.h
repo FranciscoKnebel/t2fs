@@ -6,4 +6,6 @@
 
   struct t2fs_record createRecord(char* pathname);
 
+  int addRecordToDirectory(struct t2fs_record record, char * filename);
+
 #endif
