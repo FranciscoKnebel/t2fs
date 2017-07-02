@@ -73,8 +73,9 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
 
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
   BLOCK_T blockBuffer;
-  int i, foundSpaceToAdd = FALSE;
-  for (i = 0; i < constants.MAX_TUPLAS_REGISTER || foundSpaceToAdd != TRUE; i++) {
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+  int i = 0, foundSpaceToAdd = FALSE;
+  while (i < constants.MAX_TUPLAS_REGISTER && foundSpaceToAdd != TRUE) {
     switch (tuplas[i].atributeType) {
       case REGISTER_MAP:
         if(readBlock(tuplas[i].logicalBlockNumber, &blockBuffer) == FALSE) {
@@ -84,11 +85,15 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
         parseDirectory(blockBuffer, records);
 
         int j;
-        for (j = 0; i < constants.RECORD_PER_BLOCK; j++) {
+        for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
           if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
             // ADICIONAR RECORD PARA O DIRETÓRIO
             foundSpaceToAdd = TRUE;
           }
+        }
+
+        if(foundSpaceToAdd != TRUE) {
+          i++;
         }
 
         break;
@@ -119,8 +124,7 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
             adiciona o record no novo bloco
         */
         break;
-      case REGISTER_ADITIONAL:
-        // LER NOVO REGISTRO E RECOMEÇAR LEITURA
+      case REGISTER_ADITIONAL: // LER NOVO REGISTRO E RECOMEÇAR LEITURA
         if(readRegister(tuplas[i].virtualBlockNumber, &reg) != TRUE) {
           return FALSE;
         }
@@ -128,25 +132,24 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
         tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
 
         parseRegister(reg.at, tuplas);
-        i = -1; // reset i para -1 (0 após o ++ do for), começar a ler tuplas novamente
+        i = 0; // reset i para 0, começar a ler tuplas novamente
 
         break;
       case REGISTER_FREE:
       default:
         return_value = FIND_REGISTER_FREE;
+        i++;
         break;
     }
   }
-
 
   return return_value;
 }
 
 int addRecordToDirectory(struct t2fs_record record, char * filename) {
-  // adicionar record para o diretório
   struct t2fs_record directory;
   char * directoryname = malloc(strlen(filename));
-  int return_value;
+  int return_value = FALSE;
 
   getFileDirectory(filename, directoryname);
 

@@ -115,6 +115,9 @@ void test_isFileName() {
 
 void return_lookup(int value, struct t2fs_record record, char* pathname) {
   switch (value) {
+    case PARSED_PATH_ERROR:
+      printf("Path inválido.\n");
+      break;
     case REGISTER_READ_ERROR:
       printf("Erro crítico na leitura de um registro.\n");
       break;

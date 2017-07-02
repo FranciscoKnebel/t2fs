@@ -45,6 +45,9 @@ FILE2 create2 (char *filename) {
     case FIND_REGISTER_ADITIONAL:
       printf("Erro! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
       break;
+    case PARSED_PATH_ERROR:
+      printf("Path '%s' inválida.\n", filename);
+      break;
     default:
       if(return_value >= 0) {
         return_value = FOUND_FILE_ERROR;

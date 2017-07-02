@@ -22,6 +22,9 @@ FILE2 test_executeCreate2(char * filename) {
     printf("Erro no create2: ");
 
     switch (handle) {
+      case PARSED_PATH_ERROR:
+        printf("Path '%s' inválida.\n", filename);
+        break;
       case FOUND_FILE_ERROR:
         printf("Arquivo '%s' já existe.\n", filename);
         break;

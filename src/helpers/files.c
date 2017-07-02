@@ -158,7 +158,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   int parseCount = parsePath(pathname, parsedPath);
 
   if(parseCount == FALSE) {
-    return FALSE;
+    return PARSED_PATH_ERROR;
   }
 
   REGISTER_T root;
@@ -196,7 +196,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
 
         parseRegister(root.at, tuplas);
 
-        i = -1; // reset i para -1 (0 após o ++ do for), começar a ler tuplas novamente
+        i = 0; // reset i para 0, começar a ler tuplas novamente
         break;
       case FIND_REGISTER_NOTFOUND:
         i++; // não estava na tupla atual, parte para a próxima tupla
