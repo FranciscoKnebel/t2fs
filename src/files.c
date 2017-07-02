@@ -65,9 +65,10 @@ struct t2fs_record createRecord(char* pathname) {
 
 int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
   int return_value;
+  int registerIndex = directoryMFTNumber;
 
   REGISTER_T reg;
-  if(readRegister(directoryMFTNumber, &reg) != TRUE) {
+  if(readRegister(registerIndex, &reg) != TRUE) {
     return FALSE;
   }
 
@@ -77,26 +78,32 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
-  int i = 0, foundSpaceToAdd = FALSE;
+
+  int i = 0, amountOfBlocksRead = 0, foundSpaceToAdd = FALSE, block, allocated;
   while (i < constants.MAX_TUPLAS_REGISTER && foundSpaceToAdd != TRUE) {
     switch (tuplas[i].atributeType) {
       case REGISTER_MAP:
-        if(readBlock(tuplas[i].logicalBlockNumber, &blockBuffer) == FALSE) {
-          return FALSE;
-        };
+        while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && foundSpaceToAdd != TRUE) {
+          block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
+          amountOfBlocksRead++;
 
-        parseDirectory(blockBuffer, records);
+          if(readBlock(block, &blockBuffer) == FALSE) {
+            return FALSE;
+          };
 
-        int j;
-        for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
-          if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
-            // ADICIONAR RECORD PARA O DIRETÓRIO
-            if(writeRecord(tuplas[i].logicalBlockNumber, j, record) == FALSE) {
-              return RECORD_WRITE_ERROR;
-            };
+          parseDirectory(blockBuffer, records);
 
-            foundSpaceToAdd = TRUE;
-            return_value = i;
+          int j;
+          for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
+            if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
+              // ADICIONAR RECORD PARA O DIRETÓRIO
+              if(writeRecord(tuplas[i].logicalBlockNumber, j, record) == FALSE) {
+                return RECORD_WRITE_ERROR;
+              };
+
+              foundSpaceToAdd = TRUE;
+              return_value = i;
+            }
           }
         }
 
@@ -106,34 +113,49 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
 
         break;
       case REGISTER_FIM:
-        // CHEGOU AO FIM, CRIAR NOVO BLOCO
-        // VERIFICAR SE POSSÌVEL ADICIONAR MAIS UM BLOCO CONTIGUO PARA A TUPLA
-        // SE SIM,
-        /*
-          numberOfContiguosBlocks +1 e atualizar valor da tupla no disco
-          setBitmap2 para o novo bloco ocupado
-          adicionar record para o novo bloco
-        */
-        // SE NÂO,
-        /*
-          Verificar se i+1 == máximo de tuplas (significa que a tupla fica no final do registro)
-          Se sim,
-            tupla[i] vira REGISTER_ADITIONAL
-            encontrar registro livre com o Bitmap MFT.
-            passar registro para tupla[i]
-            setar registro como ocupado.
+        // CHEGOU AO FIM DAS TUPLAS
+        block = tuplas[i-1].logicalBlockNumber + tuplas[i-1].numberOfContiguosBlocks;
+        allocated = getBitmap2(block);
 
-            criar novo registro, verificando blocos livres e setando ocupação.
-            no novo bloco da primeira nova tupla, adicionar o record.
-          Se não
-            setar tupla[i+1] como REGISTER_FIM
-            tupla[i] vira REGISTER_MAP
-            encontra bloco de dados livre e seta como ocupado.
-            adiciona o record no novo bloco
-        */
+        if(allocated < 0) {
+          return BM_ERROR;
+        }
+
+        // Possível adicionar mais um bloco contiguo para a tupla
+        if(allocated == BM_LIVRE) {
+          tuplas[i-1].numberOfContiguosBlocks += 1;
+          writeTupla(reg.at, &tuplas[i-1], i-1);
+          setBitmap2(block, BM_OCUPADO);
+
+          writeRegister(registerIndex, &reg);
+
+          if(writeRecord(block, 0, record) == FALSE) {
+            return RECORD_WRITE_ERROR;
+          };
+        } else {
+          /*
+            Verificar se i+1 == máximo de tuplas (significa que a tupla fica no final do registro)
+            Se sim,
+              tupla[i] vira REGISTER_ADITIONAL
+              encontrar registro livre com o Bitmap MFT.
+              passar registro para tupla[i]
+              setar registro como ocupado.
+
+              criar novo registro, verificando blocos livres e setando ocupação.
+              no novo bloco da primeira nova tupla, adicionar o record.
+            Se não
+              setar tupla[i+1] como REGISTER_FIM
+              tupla[i] vira REGISTER_MAP
+              encontra bloco de dados livre e seta como ocupado.
+              adiciona o record no novo bloco
+          */
+        }
+
         break;
       case REGISTER_ADITIONAL: // LER NOVO REGISTRO E RECOMEÇAR LEITURA
-        if(readRegister(tuplas[i].virtualBlockNumber, &reg) != TRUE) {
+        registerIndex = tuplas[i].virtualBlockNumber;
+
+        if(readRegister(registerIndex, &reg) != TRUE) {
           return FALSE;
         }
         free(tuplas);

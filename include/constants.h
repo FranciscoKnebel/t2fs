@@ -42,6 +42,7 @@
   /* Bitmap */
   #define BM_LIVRE 0
   #define BM_OCUPADO 1
+  #define BM_ERROR -100
 
   /* MFT Bitmap */
   #define MFT_BM_LIVRE 0

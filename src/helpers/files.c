@@ -116,22 +116,27 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
-  int returnValue = TRUE;
+  int returnValue = TRUE, foundFile = FALSE, amountOfBlocksRead = 0;
+  int currentBlock, i = 0;
 
   switch (tupla.atributeType) {
     case REGISTER_MAP:
-      if(readBlock(tupla.logicalBlockNumber, &blockBuffer) == FALSE) {
-        return FALSE;
-      };
+      while(amountOfBlocksRead < tupla.numberOfContiguosBlocks && foundFile != TRUE) {
+        currentBlock = tupla.logicalBlockNumber + amountOfBlocksRead;
+        amountOfBlocksRead++;
 
-      parseDirectory(blockBuffer, records);
+        if(readBlock(currentBlock, &blockBuffer) == FALSE) {
+          return FALSE;
+        };
 
-      int i, foundFile = FALSE;
-      for (i = 0; i < constants.RECORD_PER_BLOCK && foundFile != TRUE; i++) {
-        if(strcmp(records[i].name, name) == 0) { // FILE NAME FOUND
-          memcpy((void*) record, (void*) &records[i], RECORD_SIZE);
+        parseDirectory(blockBuffer, records);
 
-          foundFile = TRUE;
+        for (i = 0; i < constants.RECORD_PER_BLOCK && foundFile != TRUE; i++) {
+          if(strcmp(records[i].name, name) == 0) { // FILE NAME FOUND
+            memcpy((void*) record, (void*) &records[i], RECORD_SIZE);
+
+            foundFile = TRUE;
+          }
         }
       }
 
