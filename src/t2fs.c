@@ -86,16 +86,51 @@ FILE2 open2 (char *filename) {
   if (!config.initiated) {
     initConfig();
   }
+  struct t2fs_record file;
+  int return_value = lookup(filename, &file);
 
-  return -1;
+  switch (return_value) {
+    case REGISTER_READ_ERROR:
+      printf("Erro crítico na leitura de um registro no lookup.\n");
+      break;
+    case FIND_REGISTER_ADITIONAL:
+      printf("Erro! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
+      break;
+    case PARSED_PATH_ERROR:
+      printf("Path '%s' inválida.\n", filename);
+      break;
+    default:
+      if(return_value >= 0) {
+        return_value = FOUND_FILE_ERROR;
+      }
+      else if (return_value != DIRECTORY_NOT_FOUND) {
+        if(isFreeLDAA() == TRUE) {
+          return_value = insertLDAA(file);
+        }
+        else {
+          return_value = FILE_LIMIT_REACHED;
+        }
+      }
+      break;
+  }
+
+  return return_value;
+
 };
 
 int close2 (FILE2 handle) {
   if (!config.initiated) {
     initConfig();
   }
-
-  return -1;
+  struct descritor result;
+  if(searchLDAA(handle, 1, &result) == TRUE){
+    if (removeLDAA(handle) == TRUE)
+      return 0;
+    else
+      return ERRO_REMOVE_LDAA;
+  }
+  else
+    return NO_FIND_LDAA;
 };
 
 int read2 (FILE2 handle, char *buffer, int size) {
@@ -151,15 +186,48 @@ DIR2 opendir2 (char *pathname) {
     initConfig();
   }
 
-  return -1;
+  struct t2fs_record file;
+  int return_value = lookup(pathname, &file);
+
+  switch (return_value) {
+    case REGISTER_READ_ERROR:
+      printf("Erro crítico na leitura de um registro no lookup.\n");
+      break;
+    case FIND_REGISTER_ADITIONAL:
+      printf("Erro! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
+      break;
+    case PARSED_PATH_ERROR:
+      printf("Path '%s' inválida.\n", pathname);
+      break;
+    default:
+      if(return_value >= 0) {
+        return_value = FOUND_FILE_ERROR;
+      }
+      else if (return_value != DIRECTORY_NOT_FOUND) {
+        if(isFreeLDAA() == TRUE) {
+          return_value = insertLDAA(file);
+        }
+        else {
+          return_value = FILE_LIMIT_REACHED;
+        }
+      }
+      break;
+  }
+
+  return return_value;
+
 };
 
 int readdir2 (DIR2 handle, DIRENT2 *dentry) {
   if (!config.initiated) {
     initConfig();
   }
-
-  return -1;
+  struct descritor result;
+  if(searchLDAA(handle, 2, &result) == TRUE){
+    return -1;/*TO DO*/
+  }
+  else
+    return NO_FIND_LDAA;
 };
 
 int closedir2 (DIR2 handle) {
@@ -167,5 +235,14 @@ int closedir2 (DIR2 handle) {
     initConfig();
   }
 
-  return -1;
+  struct descritor result;
+  if(searchLDAA(handle, 2, &result) == TRUE){
+    if (removeLDAA(handle) == TRUE)
+      return 0;
+    else
+      return ERRO_REMOVE_LDAA;
+  }
+  else
+    return NO_FIND_LDAA;
+
 };

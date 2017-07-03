@@ -20,7 +20,7 @@ int main(int argc, char const *argv[]) {
 
   struct t2fs_record record = {1, "Teste", 1, 1, 10 };
 
-  if(insertLDAA(record) >= 0)
+  if(insertLDAA(record) != -1)
 	printf("Inserido com sucesso \n");
   else
   	printf("Erro ao inserir \n");

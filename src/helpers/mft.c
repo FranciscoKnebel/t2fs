@@ -68,5 +68,5 @@ int searchMFT(int allocated){
     if (config.indexMFT[i] == allocated)
       return i;
   }
-  return FALSE;
+  return -1;
 }

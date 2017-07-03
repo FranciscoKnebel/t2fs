@@ -65,9 +65,7 @@ Entra:
 		“0” (zero), se deve procurar por um índice MFT desalocado (LIVRE)
 		outros valores, se deve procurar por um índice MFT alocado (ALOCADO)
 Retorna
-	Sucesso
-		Achou um índice MFT: numero do índice MFT encontrado (número positivo)
-		Não achou: ZERO
+	Sucesso: número do índice MFT encontrado (número >= 0)
 	Erro: número negativo
 
 Responsável: Douglas Lázaro		

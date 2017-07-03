@@ -38,6 +38,8 @@
 
   /* LDAA */
   #define MAX_FILES_OPEN 40
+  #define NO_FIND_LDAA -1
+  #define ERRO_REMOVE_LDAA -2
 
   /* Bitmap */
   #define BM_LIVRE 0
