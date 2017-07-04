@@ -8,4 +8,8 @@
 
   int addRecordToDirectory(struct t2fs_record record, char * filename);
 
+  int openFile(char* filename);
+
+  int closeFile(int handle, BYTE TypeVal);
+
 #endif

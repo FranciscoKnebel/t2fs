@@ -35,10 +35,11 @@
   #define FIND_REGISTER_FIM -2
   #define FIND_REGISTER_ADITIONAL -3
   #define FIND_REGISTER_FREE -4
+  #define FILE_NOT_FOUND -1
 
   /* LDAA */
   #define MAX_FILES_OPEN 40
-  #define NO_FIND_LDAA -1
+  #define NOT_FOUND_LDAA -1
   #define ERRO_REMOVE_LDAA -2
 
   /* Bitmap */
@@ -49,6 +50,7 @@
   /* MFT Bitmap */
   #define MFT_BM_LIVRE 0
   #define MFT_BM_OCUPADO 1
+  #define MFT_BM_ERROR -100
 
   /* API */
   #define FOUND_FILE_ERROR -1

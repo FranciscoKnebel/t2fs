@@ -21,4 +21,6 @@
 
   void printRecord(struct t2fs_record record);
 
+  void printDescritor(struct descritor file);
+
 #endif

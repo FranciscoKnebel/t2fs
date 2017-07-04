@@ -112,3 +112,10 @@ void printRecord(struct t2fs_record record) {
   printf("Bytes: %d\n", record.bytesFileSize);
   printf("MFT Number: %d\n", record.MFTNumber);
 }
+
+void printDescritor(struct descritor file) {
+  printf("FLAG: %d\n", file.flag);
+  printf("Current Pointer: %d\n", file.currentPointer);
+
+  printRecord(file.record);
+}

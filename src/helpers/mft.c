@@ -58,7 +58,7 @@ int setMFT(int registerIndex, int allocated){
     if (config.indexMFT[registerIndex] == allocated)
       return TRUE;
     else
-      return FALSE;
+      return -1;
 }
 
 int searchMFT(int allocated){
