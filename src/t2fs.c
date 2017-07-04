@@ -160,14 +160,79 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
   if (!config.initiated) {
     initConfig();
   }
+  struct descritor descritorDir;
+  if(searchLDAA(handle, 2, &descritorDir) == TRUE){
+    REGISTER_T reg;
+      if(readRegister(descritorDir.record.MFTNumber, &reg) != TRUE) {
+      return -1;
+      }
+      else{
+        struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+        parseRegister(reg.at, tuplas);
+        
+        int i = 0;
+        int j = 0;
+        struct t2fs_record tempRecord;
+        DIRENT2 dentryTemp;
 
-  struct descritor result;
-  if(searchLDAA(handle, TYPEVAL_DIRETORIO, &result) == TRUE) {
-    /*TO DO*/
-    return -1;
-  } else {
-    return NOT_FOUND_LDAA;
+        for (i = 0; i < constants.MAX_TUPLAS_REGISTER; ++i){
+          int atributeType = tuplas[i].atributeType;
+          switch(atributeType){
+          case 2: //MFT adicional
+              // ler novo MFT Register, indicado pelo número de bloco em tuplas[i].virtualBlockNumber
+              if(readRegister(tuplas[i].virtualBlockNumber, &reg) != TRUE) {
+                return REGISTER_READ_ERROR;
+              }
+              free(tuplas);
+              tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+
+              parseRegister(reg.at, tuplas);
+              i = 0;
+              break;
+            case 1: //VBN-LBN
+              for (j = 0; j < constants.RECORD_PER_BLOCK; ++j)
+              {
+                readRecord(tuplas[i].atributeType, j, &tempRecord);
+                int typeVal = tempRecord.TypeVal;
+
+                switch(typeVal){
+
+                  case 1: //arquivo ou subdiretório
+                  case 2:
+
+                    strcpy(dentryTemp.name, tempRecord.name);
+                    dentryTemp.fileType = tempRecord.TypeVal;
+                    dentryTemp.fileSize = tempRecord.bytesFileSize;
+
+                    memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
+                    descritorDir.currentPointer += RECORD_SIZE;
+
+                    break;
+
+                  case 0: //invalido => erro?
+                  default:
+                    j = constants.RECORD_PER_BLOCK;
+                    break;
+
+                }
+              }
+              break;
+            case 0: //FIM
+              i = constants.MAX_TUPLAS_REGISTER;
+              break;
+            default:
+            case -1: //LIVRE => ERRO 
+              // -END_OF_DIR;
+              return -1;
+              break;
+          }
+        }
+        return 0;
+      }
+
   }
+  else
+    return NOT_FOUND_LDAA;
 };
 
 int closedir2 (DIR2 handle) {
