@@ -47,7 +47,12 @@ $(LIB_DIR)/helpers/ldaa.o: $(SRC_DIR)/helpers/ldaa.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/ldaa.o -I$(INC_DIR) $(SRC_DIR)/helpers/ldaa.c
 
 # COMANDOS DE TESTE #
+## código de avaliação testing program
+avaliacao: all $(TST_DIR)/avaliacao.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/avaliacao $(TST_DIR)/avaliacao.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+	$(BIN_DIR)/avaliacao
 
+## arquivos de teste
 ifeq (teste,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
