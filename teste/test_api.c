@@ -130,12 +130,43 @@ void test_create_open2_close2(BYTE TypeVal, char * path) {
           if(searchLDAA(handle, TypeVal, &file) == TRUE) {
             printDescritor(file);
           }
+        } else {
+          printf("Falhou ao abrir diretório.\n");
         }
+      } else {
+        printf("Falhou ao fechar diretório.\n");
       }
     }
   }
 
   printf("--- ENCERRANDO OPEN2 e CLOSE2 ---\n");
+}
+
+void test_open_close_root() {
+  printf("--- OPENDIR2 -ROOT- CLOSEDIR2 ---\n");
+
+  char path[50] = "/";
+  struct descritor file;
+
+  int handle = opendir2(path);
+  printf("Abrindo diretório root.\n");
+  if(handle >= 0) {
+    printf("Diretório aberto normalmente.\n");
+    if(searchLDAA(handle, TYPEVAL_DIRETORIO, &file) == TRUE) {
+      printDescritor(file);
+    }
+  } else {
+    printf("Falhou ao abrir diretório.\n");
+  }
+
+  printf("Fechando diretório de root.\n");
+  if(closedir2(handle) == 0) {
+    printf("Diretório fechado corretamente.\n");
+  } else {
+    printf("Falhou ao fechar diretório.\n");
+  }
+
+  printf("--- OPENDIR2 -ROOT- CLOSEDIR2 ---\n");
 }
 
 int main(int argc, char const *argv[]) {
@@ -146,9 +177,11 @@ int main(int argc, char const *argv[]) {
 
   //test_create2();
 
-  test_create_open2_close2(TYPEVAL_REGULAR, "/file3");
+  //test_create_open2_close2(TYPEVAL_REGULAR, "/test3");
 
-  //test_create_open2_close2(TYPEVAL_DIRETORIO, "/directory");
+  //test_create_open2_close2(TYPEVAL_DIRETORIO, "/");
+
+  test_open_close_root();
 
   return 0;
 }

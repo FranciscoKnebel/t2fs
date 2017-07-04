@@ -248,7 +248,32 @@ int addRecordToDirectory(struct t2fs_record record, char * filename) {
   return return_value;
 }
 
+int openRoot(char* filename) {
+  int return_value;
+  struct t2fs_record root;
+
+  memset(&root, 0, sizeof(root));
+
+  root.TypeVal = TYPEVAL_DIRETORIO;
+  strcpy(root.name, filename);
+  root.blocksFileSize = -1;
+  root.bytesFileSize = -1;
+  root.MFTNumber = REGISTER_ROOT;
+
+  if (isFreeLDAA() == TRUE) {
+    return_value = insertLDAA(root);
+  } else {
+    return_value = FILE_LIMIT_REACHED;
+  }
+
+  return return_value;
+}
+
 int openFile(char* filename) {
+  if(strcmp(filename, "/") == 0) {
+    return openRoot(filename);
+  }
+
   struct t2fs_record file;
   int return_value = lookup(filename, &file);
 
