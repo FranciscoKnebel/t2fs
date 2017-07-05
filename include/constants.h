@@ -58,5 +58,6 @@
   #define FILE_LIMIT_REACHED -8
   #define PARSED_PATH_ERROR -9
   #define RECORD_WRITE_ERROR -10
+  #define READDIR_ERROR -11
 
 #endif

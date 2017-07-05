@@ -64,7 +64,7 @@ int initConfig() {
   struct BootBlock boot = parseBootBlock(bootBlock.at);
   constants = initConstants(boot);
 
-  int * MFT = malloc(sizeof(int) * constants.MAX_REGISTERS);
+  BYTE * MFT = malloc(sizeof(BYTE) * constants.MAX_REGISTERS);
   config.indexMFT = MFT;
   initMFT();
 

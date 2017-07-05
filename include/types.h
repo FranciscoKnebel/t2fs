@@ -56,7 +56,7 @@
 
     struct BootBlock bootBlock;
 
-    int* indexMFT;
+    BYTE* indexMFT;
 
     struct descritor LDAA[MAX_FILES_OPEN];
   };

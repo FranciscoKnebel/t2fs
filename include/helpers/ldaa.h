@@ -29,7 +29,7 @@ Entra: void
 Saída: Sucesso -> TRUE
 	   Erro -> FALSE
 
-Responsável: Douglas Lázaro	   
+Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
   int getFreeLDAA(); //test_ldaa
   int isFreeLDAA();
@@ -42,7 +42,7 @@ Entra: t2fs_record record -> registro de arquivo ou diretório aberto
 Saída: Sucesso -> retorna o inteiro correspondente ao índice da LDAA onde foi inserido o record (HANDLE)
 	   Erro -> valor negativo
 
-Responsável: Douglas Lázaro	   
+Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
   int insertLDAA(struct t2fs_record record);
 
@@ -54,7 +54,7 @@ Entra: int handle -> índice do arquivo na LDAA
 Saída: Sucesso -> TRUE
 	   Erro -> FALSE
 
-Responsável: Douglas Lázaro	   
+Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
   int removeLDAA(int handle);
 
@@ -66,10 +66,14 @@ Entra:  int Handle -> índice do arquivo na LDAA
 		int Type -> tipo do arquivo (1 = file | 2 = diretory)
 
 Saída:  Sucesso -> TRUE e struct descritor
-		Erro -> valor negativo 
+		Erro -> valor negativo
 
-Responsável: Douglas Lázaro		
+Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
   int searchLDAA(int handle, int type, struct descritor* descritor);
+
+/*-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------*/
+  int updateLDAA(int handle, int type, struct descritor descritor);
 
 #endif
