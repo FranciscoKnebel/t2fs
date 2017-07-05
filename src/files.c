@@ -8,45 +8,6 @@
 
 #include "libs.h"
 
-DIRENT2 initDentry(struct t2fs_record record) {
-  DIRENT2 dentry;
-
-  strcpy(dentry.name, record.name);
-  dentry.fileType = record.TypeVal;
-  dentry.fileSize = record.bytesFileSize;
-
-  return dentry;
-}
-
-struct t2fs_4tupla initTupla(DWORD atributeType, DWORD VBN, DWORD LBN, DWORD numberOfContiguosBlocks) {
-  struct t2fs_4tupla tupla;
-
-  tupla.atributeType = REGISTER_MAP;
-  tupla.virtualBlockNumber = VBN;
-  tupla.logicalBlockNumber = LBN;
-  tupla.numberOfContiguosBlocks = numberOfContiguosBlocks;
-
-  return tupla;
-}
-
-int initFileRegister(int registerIndex, int LBN) {
-  struct t2fs_4tupla tupla, tuplaFim;
-
-  tupla     = initTupla(REGISTER_MAP, 0, LBN, 1);
-  tuplaFim  = initTupla(REGISTER_FIM, 0, 0, 0);
-
-  REGISTER_T reg;
-  memset(reg.at, 0, sizeof(reg.at));
-  //readRegister(registerIndex, &reg);
-
-  writeTupla(reg.at, &tupla,    0);
-  writeTupla(reg.at, &tuplaFim, 1);
-
-  writeRegister(registerIndex, &reg);
-
-  return 1;
-}
-
 struct t2fs_record createRecord(char* pathname) {
   struct t2fs_record newFile;
 
