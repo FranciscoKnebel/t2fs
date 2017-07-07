@@ -17,6 +17,8 @@
 
   struct t2fs_4tupla initTupla(DWORD atributeType, DWORD VBN, DWORD LBN, DWORD numberOfContiguosBlocks);
 
+  int initNewRegister(int registerIndex, int VBN, int LBN);
+
   int initFileRegister(int registerIndex, int LBN);
 
   DIRENT2 initDentry(struct t2fs_record record);

@@ -60,4 +60,9 @@
   #define RECORD_WRITE_ERROR -10
   #define READDIR_ERROR -11
 
+  /* Add to Directory */
+  #define ADDDIR_CONTIGUOUS 200
+  #define ADDDIR_ADITIONAL 201
+  #define ADDDIR_MAP 202
+
 #endif

@@ -270,10 +270,10 @@ struct t2fs_4tupla initTupla(DWORD atributeType, DWORD VBN, DWORD LBN, DWORD num
   return tupla;
 }
 
-int initFileRegister(int registerIndex, int LBN) {
+int initNewRegister(int registerIndex, int VBN, int LBN) {
   struct t2fs_4tupla tupla, tuplaFim;
 
-  tupla     = initTupla(REGISTER_MAP, 0, LBN, 1);
+  tupla     = initTupla(REGISTER_MAP, VBN, LBN, 1);
   tuplaFim  = initTupla(REGISTER_FIM, 0, 0, 0);
 
   REGISTER_T reg;
@@ -286,6 +286,10 @@ int initFileRegister(int registerIndex, int LBN) {
   writeRegister(registerIndex, &reg);
 
   return 1;
+}
+
+int initFileRegister(int registerIndex, int LBN) {
+  return initNewRegister(registerIndex, 0, LBN);
 }
 
 DIRENT2 initDentry(struct t2fs_record record) {

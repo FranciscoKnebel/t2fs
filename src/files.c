@@ -113,22 +113,45 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
           if(writeRecord(block, 0, record) == FALSE) {
             return RECORD_WRITE_ERROR;
           };
-        } else if(i == constants.MAX_TUPLAS_REGISTER - 1) { // tupla atual no final do registro?
-          /*
-            Se sim,
-              tupla[i] vira REGISTER_ADITIONAL
-              encontrar registro livre com o Bitmap MFT.
-              passar registro para tupla[i]
-              setar registro como ocupado.
 
-              criar novo registro MAP, verificando blocos livres e setando ocupação.
-              no novo bloco da primeira nova tupla, adicionar o record.
-          */
+          foundSpaceToAdd = TRUE;
+          return_value = ADDDIR_CONTIGUOUS;
+        } else if(i == constants.MAX_TUPLAS_REGISTER - 1) { // tupla atual no final do registro?
+          /* Encontra indice para o novo registro. */
+          int novoRegisterIndex = searchMFT(MFT_BM_LIVRE);
+          int check = setMFT(novoRegisterIndex, MFT_BM_OCUPADO); // seta registro como ocupado no bitmap.
+          if (check < 0) {
+            return MFT_BM_ERROR;
+          }
+
+          // Tupla atual vira um REGISTER_ADITIONAL, para indicar o novo registro do arquivo, encontrado no indice novoRegisterIndex
+          tuplas[i] = initTupla(REGISTER_ADITIONAL, novoRegisterIndex, 0, 0);
+          writeTupla(reg.at, &tuplas[i], i);
+          writeRegister(registerIndex, &reg);
+
+          /* Operações no novo registro */
+          int fileLBN;
+
+          fileLBN = searchBitmap2(BM_LIVRE); // Encontra bloco de dados para o arquivo
+          check = setBitmap2(fileLBN, BM_OCUPADO);
+          if (check < 0) {
+            return BM_ERROR;
+          }
+
+          // Inicializa o novo registro.
+          initNewRegister(novoRegisterIndex, fileBlocksCounter, fileLBN);
+
+          // Adiciona record para o inicio do bloco, do novo registro.
+          if(writeRecord(fileLBN, 0, record) == FALSE) {
+            return RECORD_WRITE_ERROR;
+          };
+
+          foundSpaceToAdd = TRUE;
+          return_value = ADDDIR_ADITIONAL;
         } else {
           /* Não está no final, logo a tupla atual vira REGISTRO_MAP para novos blocos do arquivo. */
 
           /* ATUALIZAÇÃO DO REGISTRO */
-          REGISTER_T reg;
           readRegister(registerIndex, &reg);
 
           int newLBN = searchBitmap2(BM_LIVRE); // Encontra bloco de dados para o arquivo
@@ -152,8 +175,10 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
           if(writeRecord(tuplas[i].logicalBlockNumber, 0, record) == FALSE) {
             return RECORD_WRITE_ERROR;
           };
-        }
 
+          foundSpaceToAdd = TRUE;
+          return_value = ADDDIR_MAP;
+        }
         break;
       case REGISTER_ADITIONAL: // LER NOVO REGISTRO E RECOMEÇAR LEITURA
         registerIndex = tuplas[i].virtualBlockNumber;
@@ -208,7 +233,6 @@ int addRecordToDirectory(struct t2fs_record record, char * filename) {
       break;
     default:
       return_value = addToDirectory(directory.MFTNumber, record);
-
       break;
   }
 
