@@ -16,6 +16,7 @@ struct descritor resetDescritor() {
 
   temp.flag = 0;
   temp.currentPointer = -1;
+  strcpy(temp.name, "");
 
   temp.record.TypeVal = 0;
   strcpy(temp.record.name, "");
@@ -55,7 +56,7 @@ int isFreeLDAA(){
     return FALSE;
 }
 
-int insertLDAA(struct t2fs_record record){
+int insertLDAA(struct t2fs_record record, char* pathname){
 
     int i = getFreeLDAA();
 
@@ -64,6 +65,7 @@ int insertLDAA(struct t2fs_record record){
 
     config.LDAA[i].flag = 1;
     config.LDAA[i].currentPointer = 0;
+    strcpy(config.LDAA[i].name, pathname);
 
     memcpy(&config.LDAA[i].record, &record, RECORD_SIZE);
 
@@ -83,5 +85,17 @@ int searchLDAA(int handle, int type, struct descritor* descritor){
   }
   else
     return FALSE;
-   
+}
+
+int findByNameLDAA(char * name) {
+  int i, return_value = -1;
+
+  for (i = 0; i < MAX_FILES_OPEN; i++) {
+    if (config.LDAA[i].flag == 1 && strcmp(config.LDAA[i].name, name) == 0){
+      return_value = i;
+      break;
+    }
+  }
+
+  return return_value;
 }

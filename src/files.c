@@ -14,12 +14,7 @@ struct t2fs_record createRecord(char* pathname) {
   char ** parsedPath = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
   int parseCount = parsePath(pathname, parsedPath);
 
-  memset(&newFile, 0, sizeof(newFile));
-
-  newFile.TypeVal = TYPEVAL_REGULAR;
-  strcpy(newFile.name, parsedPath[parseCount]); // name é o último elemento parseado: /directory/directory/file1 -> name = file1
-  newFile.blocksFileSize = 1;
-  newFile.bytesFileSize = 0;
+  newFile = initRecord(TYPEVAL_REGULAR, parsedPath[parseCount], 1, 0, -1);
 
   /* Encontrar registro do MFT livre, escrever registro e associar ao arquivo. */
   int check;
@@ -233,7 +228,7 @@ int openRoot(char* filename) {
   root.MFTNumber = REGISTER_ROOT;
 
   if (isFreeLDAA() == TRUE) {
-    return_value = insertLDAA(root);
+    return_value = insertLDAA(root, "/");
   } else {
     return_value = FILE_LIMIT_REACHED;
   }
@@ -262,7 +257,7 @@ int openFile(char* filename) {
     default:
       if(return_value >= 0) {
         if (isFreeLDAA() == TRUE) {
-          return_value = insertLDAA(file);
+          return_value = insertLDAA(file, filename);
         } else {
           return_value = FILE_LIMIT_REACHED;
         }

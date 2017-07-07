@@ -63,7 +63,7 @@ FILE2 create2 (char *filename) {
           //checks pra verificar que tudo deu certo ao adicionar
 
           /* adicionar para LDAA, e retornar valor do handle */
-          int handle = insertLDAA(file);
+          int handle = insertLDAA(file, filename);
 
           return_value = handle;
         } else {

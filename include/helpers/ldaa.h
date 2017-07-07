@@ -6,6 +6,7 @@
   struct descritor {
   	int flag;
   	DWORD currentPointer;
+    char name[MAX_FILE_NAME_SIZE*20];
   	struct t2fs_record record;
   };
 
@@ -44,7 +45,7 @@ Saída: Sucesso -> retorna o inteiro correspondente ao índice da LDAA onde foi 
 
 Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
-  int insertLDAA(struct t2fs_record record);
+  int insertLDAA(struct t2fs_record record, char* pathname);
 
 /*-----------------------------------------------------------------------------
 Função: Usada para remover descritor na LDAA
@@ -75,5 +76,20 @@ Responsável: Douglas Lázaro
 /*-----------------------------------------------------------------------------
 -----------------------------------------------------------------------------*/
   int updateLDAA(int handle, int type, struct descritor descritor);
+
+/*-----------------------------------------------------------------------------
+Função: pesquisa por pathname na LDAA.
+  Essa função pesquisa na LDAA se existe um descritor com pathname "name"
+  atualmente válido na estrutura.
+
+Entra: char* name -> String de até MAX_FILE_NAME_SIZE*20 para indicar a path.
+
+Saída: Sucesso -> handle do descritor, para uso na função searchLDAA.
+    Erro -> valor negativo
+
+Responsável: Francisco Knebel
+-----------------------------------------------------------------------------*/
+  int findByNameLDAA(char * name);
+
 
 #endif

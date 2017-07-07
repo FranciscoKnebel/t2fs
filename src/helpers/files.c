@@ -245,14 +245,18 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   return found;
 }
 
-DIRENT2 initDentry(struct t2fs_record record) {
-  DIRENT2 dentry;
+struct t2fs_record initRecord(BYTE typeVal, char* name, DWORD blocksFileSize, DWORD bytesFileSize, DWORD MFTNumber) {
+  struct t2fs_record record;
 
-  strcpy(dentry.name, record.name);
-  dentry.fileType = record.TypeVal;
-  dentry.fileSize = record.bytesFileSize;
+  memset(&record, 0, sizeof(record));
 
-  return dentry;
+  record.TypeVal = typeVal;
+  strcpy(record.name, name); // name é o último elemento parseado: /directory/directory/file1 -> name = file1
+  record.blocksFileSize = blocksFileSize;
+  record.bytesFileSize = bytesFileSize;
+  record.MFTNumber = MFTNumber;
+
+  return record;
 }
 
 struct t2fs_4tupla initTupla(DWORD atributeType, DWORD VBN, DWORD LBN, DWORD numberOfContiguosBlocks) {
@@ -282,4 +286,14 @@ int initFileRegister(int registerIndex, int LBN) {
   writeRegister(registerIndex, &reg);
 
   return 1;
+}
+
+DIRENT2 initDentry(struct t2fs_record record) {
+  DIRENT2 dentry;
+
+  strcpy(dentry.name, record.name);
+  dentry.fileType = record.TypeVal;
+  dentry.fileSize = record.bytesFileSize;
+
+  return dentry;
 }
