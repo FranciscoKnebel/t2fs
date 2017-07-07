@@ -8,13 +8,13 @@
 
 #include "libs.h"
 
-struct t2fs_record createRecord(char* pathname) {
+struct t2fs_record createRecord(char* pathname, BYTE typeVal) {
   struct t2fs_record newFile;
 
   char ** parsedPath = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
   int parseCount = parsePath(pathname, parsedPath);
 
-  newFile = initRecord(TYPEVAL_REGULAR, parsedPath[parseCount], 1, 0, -1);
+  newFile = initRecord(typeVal, parsedPath[parseCount], 1, 0, -1);
 
   /* Encontrar registro do MFT livre, escrever registro e associar ao arquivo. */
   int check;
@@ -39,6 +39,53 @@ struct t2fs_record createRecord(char* pathname) {
   newFile.MFTNumber = registro; // Associa arquivo ao registro criado
 
   return newFile;
+}
+
+int createNewFile(char * filename, BYTE typeVal) {
+  struct t2fs_record file;
+  int return_value = lookup(filename, &file);
+  int check;
+
+  switch (return_value) {
+    case REGISTER_READ_ERROR:
+      printf("Erro crítico na leitura de um registro no lookup.\n");
+      break;
+    case FIND_REGISTER_ADITIONAL:
+      printf("Erro! Valor de retorno de lookup nunca deve ser FIND_REGISTER_ADITIONAL.\n");
+      break;
+    case PARSED_PATH_ERROR:
+      printf("Path '%s' inválida.\n", filename);
+      break;
+    default:
+      if(return_value >= 0) {
+        return_value = FOUND_FILE_ERROR;
+      } else if (return_value != DIRECTORY_NOT_FOUND) {
+        if(canAddToLDAA(filename)) { // Possível criar mais um arquivo?
+          /* Arquivo não encontrado, logo pode criar. */
+          file = createRecord(filename, typeVal);
+
+          /* salvar record no diretório */
+          check = addRecordToDirectory(file, filename);
+          if(check < 0) {
+            return check;
+          }
+
+          /* adicionar para LDAA, e retornar valor do handle */
+          int handle = insertLDAA(file, filename);
+
+          return_value = handle;
+        } else {
+          if(isFreeLDAA() == TRUE) {
+            return_value = FILE_LIMIT_REACHED;
+          } else {
+            return_value = NOT_FOUND_LDAA;
+          }
+        }
+      }
+      break;
+  }
+
+  return return_value;
 }
 
 int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
@@ -301,4 +348,16 @@ int closeFile(int handle, BYTE TypeVal) {
   }
 
   return return_value;
+}
+
+int deleteFileFromDisk(struct t2fs_record file, char* filename) {
+  /* Remover record do diretório */
+
+  /* Iterar sobre todas as tuplas do arquivo */
+    /* Desalocando os blocos ocupados. */
+    /* Invalidando cada tupla após desalocar blocos */
+
+  /* Desalocar registros do MFT usados. */
+
+  return 0;
 }

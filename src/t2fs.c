@@ -37,8 +37,18 @@ FILE2 create2 (char *filename) {
     initConfig();
   }
 
+  return createNewFile(filename, TYPEVAL_REGULAR);
+};
+
+int delete2 (char *filename) {
+  if (!config.initiated) {
+    initConfig();
+  }
+
   struct t2fs_record file;
   int return_value = lookup(filename, &file);
+
+  int handle, check;
 
   switch (return_value) {
     case REGISTER_READ_ERROR:
@@ -52,40 +62,24 @@ FILE2 create2 (char *filename) {
       break;
     default:
       if(return_value >= 0) {
-        return_value = FOUND_FILE_ERROR;
-      } else if (return_value != DIRECTORY_NOT_FOUND) {
-        if(canAddToLDAA(filename)) { // Possível criar mais um arquivo?
-          /* Arquivo não encontrado, logo pode criar. */
-          file = createRecord(filename);
-
-          /* salvar record no diretório */
-          addRecordToDirectory(file, filename);
-          //checks pra verificar que tudo deu certo ao adicionar
-
-          /* adicionar para LDAA, e retornar valor do handle */
-          int handle = insertLDAA(file, filename);
-
-          return_value = handle;
-        } else {
-          if(isFreeLDAA() == TRUE) {
-            return_value = FILE_LIMIT_REACHED;
-          } else {
-            return_value = NOT_FOUND_LDAA;
-          }
+        // Remover da lista de arquivos abertos
+        handle = findByNameLDAA(filename);
+        if(handle >= 0) {
+          removeLDAA(handle);
         }
+
+        // Remover arquivo do disco
+        check = deleteFileFromDisk(file, filename);
+        if(check < 0) {
+          return_value = check;
+        }
+
+        return_value = 0;
       }
       break;
   }
 
   return return_value;
-};
-
-int delete2 (char *filename) {
-  if (!config.initiated) {
-    initConfig();
-  }
-
-  return -1;
 };
 
 FILE2 open2 (char *filename) {
@@ -141,6 +135,9 @@ int mkdir2 (char *pathname) {
     initConfig();
   }
 
+  if(createNewFile(pathname, TYPEVAL_DIRETORIO) >= 0) {
+    return 0;
+  }
   return -1;
 };
 
@@ -149,6 +146,9 @@ int rmdir2 (char *pathname) {
     initConfig();
   }
 
+  if(delete2(pathname) == 0) {
+    return 0;
+  }
   return -1;
 };
 
