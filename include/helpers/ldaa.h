@@ -64,7 +64,7 @@ Função: Usada para pesquisar na LDAA
 	Essa função pesquisa na LDAA se determinado descritor se encontra na lista.
 
 Entra:  int Handle -> índice do arquivo na LDAA
-		int Type -> tipo do arquivo (1 = file | 2 = diretory)
+		    int Type -> tipo do arquivo (1 = file | 2 = diretory)
 
 Saída:  Sucesso -> TRUE e struct descritor
 		Erro -> valor negativo
@@ -74,6 +74,17 @@ Responsável: Douglas Lázaro
   int searchLDAA(int handle, int type, struct descritor* descritor);
 
 /*-----------------------------------------------------------------------------
+Função: Usada para atulizar descritor na LDAA
+  Essa função atualiza as informações de um descritor caso ele se encontre na LDAA.
+
+Entra:  int Handle -> índice do arquivo na LDAA
+        int Type -> tipo do arquivo (1 = file | 2 = diretory)
+        struct descritor
+
+Saída:  Sucesso -> 0 e informações do config.LDAA[Handle] atualizadas
+    Erro -> valor negativo
+
+Responsável: Douglas Lázaro
 -----------------------------------------------------------------------------*/
   int updateLDAA(int handle, int type, struct descritor descritor);
 

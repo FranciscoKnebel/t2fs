@@ -87,12 +87,40 @@ void test_insertSearch() {
   printf("Erro ao encontrar \n");
 }
 
+void test_insertUpdate() {
+  int i = getFreeLDAA();
+  struct t2fs_record record = {1, "Teste", 1, 1, 10 };
+
+
+  printf("Inserindo no LDAA \n");
+  if(insertLDAA(record, "Teste") != -1)
+    printf("\t Inserido com sucesso \n");
+  else
+    printf("\t Erro ao inserir \n");
+
+  printf("\t Original: \n");
+  printf("typeVal = %d \n name = %s \n MFT = %d \n", config.LDAA[i].record.TypeVal, config.LDAA[i].record.name, config.LDAA[i].record.MFTNumber);
+  
+  struct descritor update = {1, 5, "Teste", {1, "TesteEDIT", 1, 1, 10 }};
+  printf("UPDATE no LDAA \n");
+
+  if(updateLDAA(i, 1, update) != -1){
+    printf("\t Atualizado: \n");
+    printf("typeVal = %d \n name = %s \n MFT = %d \n", config.LDAA[i].record.TypeVal, config.LDAA[i].record.name, config.LDAA[i].record.MFTNumber);  
+  }
+  else
+    printf("\t Erro ao atualizar \n");
+
+}
+
 int main(int argc, char const *argv[]) {
   initConfig();
 
-  test_insertSearch();
+  // test_insertSearch();
 
-  test_findByName();
+  // test_findByName();
+
+  test_insertUpdate();
 
   return 0;
 }

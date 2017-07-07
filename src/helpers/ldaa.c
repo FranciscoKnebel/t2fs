@@ -86,6 +86,17 @@ int searchLDAA(int handle, int type, struct descritor* descritor){
   else
     return FALSE;
 }
+int updateLDAA(int handle, int type, struct descritor descritor){
+  struct descritor temp;
+
+  if (searchLDAA(handle, type, &temp) == TRUE)
+  {
+    memcpy(&config.LDAA[handle], &descritor, sizeof(struct descritor));
+    return 0;
+  }
+  else
+    return -1;
+}
 
 int findByNameLDAA(char * name) {
   int i, return_value = -1;
