@@ -219,14 +219,7 @@ int openRoot(char* filename) {
   int return_value;
   struct t2fs_record root;
 
-  memset(&root, 0, sizeof(root));
-
-  root.TypeVal = TYPEVAL_DIRETORIO;
-  strcpy(root.name, filename);
-  root.blocksFileSize = -1;
-  root.bytesFileSize = -1;
-  root.MFTNumber = REGISTER_ROOT;
-
+  root = initRecord(TYPEVAL_DIRETORIO, filename, -1, -1, REGISTER_ROOT);
   if (isFreeLDAA() == TRUE) {
     return_value = insertLDAA(root, "/");
   } else {

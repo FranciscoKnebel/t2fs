@@ -99,3 +99,10 @@ int findByNameLDAA(char * name) {
 
   return return_value;
 }
+
+int canAddToLDAA(char * name) {
+  int hasSpace = isFreeLDAA() == TRUE;
+  int fileIsNotOpen = findByNameLDAA(name) < 0;
+
+  return hasSpace && fileIsNotOpen;
+}

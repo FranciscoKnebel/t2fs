@@ -54,7 +54,7 @@ FILE2 create2 (char *filename) {
       if(return_value >= 0) {
         return_value = FOUND_FILE_ERROR;
       } else if (return_value != DIRECTORY_NOT_FOUND) {
-        if(isFreeLDAA() == TRUE) { // Possível abrir mais um arquivo?
+        if(canAddToLDAA(filename)) { // Possível criar mais um arquivo?
           /* Arquivo não encontrado, logo pode criar. */
           file = createRecord(filename);
 
@@ -67,7 +67,11 @@ FILE2 create2 (char *filename) {
 
           return_value = handle;
         } else {
-          return_value = FILE_LIMIT_REACHED;
+          if(isFreeLDAA() == TRUE) {
+            return_value = FILE_LIMIT_REACHED;
+          } else {
+            return_value = NOT_FOUND_LDAA;
+          }
         }
       }
       break;

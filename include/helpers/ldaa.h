@@ -85,11 +85,21 @@ Função: pesquisa por pathname na LDAA.
 Entra: char* name -> String de até MAX_FILE_NAME_SIZE*20 para indicar a path.
 
 Saída: Sucesso -> handle do descritor, para uso na função searchLDAA.
-    Erro -> valor negativo
+    Não encontrado -> valor negativo
 
 Responsável: Francisco Knebel
 -----------------------------------------------------------------------------*/
   int findByNameLDAA(char * name);
 
+/*-----------------------------------------------------------------------------
+Função: retorna se é possível adicionar um arquivo para a LDAA.
+
+Entra: char* name -> Path do arquivo que deve ser aberto.
+
+Saida: TRUE se pode adicionar, FALSE se não pode.
+
+Responsável: Francisco Knebel
+-----------------------------------------------------------------------------*/
+  int canAddToLDAA(char * name);
 
 #endif
