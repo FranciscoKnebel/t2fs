@@ -262,7 +262,7 @@ struct t2fs_record initRecord(BYTE typeVal, char* name, DWORD blocksFileSize, DW
 struct t2fs_4tupla initTupla(DWORD atributeType, DWORD VBN, DWORD LBN, DWORD numberOfContiguosBlocks) {
   struct t2fs_4tupla tupla;
 
-  tupla.atributeType = REGISTER_MAP;
+  tupla.atributeType = atributeType;
   tupla.virtualBlockNumber = VBN;
   tupla.logicalBlockNumber = LBN;
   tupla.numberOfContiguosBlocks = numberOfContiguosBlocks;

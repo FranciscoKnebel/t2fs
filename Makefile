@@ -58,8 +58,7 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_api $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa
-
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa
 # make teste _NOME_
 teste: $(TEST_FILES)
 	$(BIN_DIR)/$(RUN_ARGS)
@@ -69,9 +68,6 @@ $(BIN_DIR)/test_display: all $(TST_DIR)/test_display.c
 
 $(BIN_DIR)/test_disk: all $(TST_DIR)/test_disk.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_disk $(TST_DIR)/test_disk.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
-
-$(BIN_DIR)/test_api: all $(TST_DIR)/test_api.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api $(TST_DIR)/test_api.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 $(BIN_DIR)/test_parse: all $(TST_DIR)/test_parse.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_parse $(TST_DIR)/test_parse.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
@@ -91,8 +87,29 @@ $(BIN_DIR)/test_mft: all $(TST_DIR)/test_mft.c
 $(BIN_DIR)/test_ldaa: all $(TST_DIR)/test_ldaa.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_ldaa $(TST_DIR)/test_ldaa.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
+## API ##
+ifeq (api,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
+API=$(BIN_DIR)/test_api_
+API_FILES=$(API)create $(API)openclose
+API_SRC=$(TST_DIR)/test_api_
+
+api: $(API_FILES)
+	$(API)$(RUN_ARGS)
+
+$(API)create: all $(API_SRC)create.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_create $(API_SRC)create.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)openclose: all $(API_SRC)openclose.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_openclose $(API_SRC)openclose.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
 # LIMPEZA #
 clean:
 	rm -rf $(LIB_DIR)/*.a $(BIN_DIR)/*.o $(SRC_DIR)/*~ $(INC_DIR)/*~ *~
 	rm -rf $(LIB_GENERATED_OBJECTS)
 	rm -rf $(TEST_FILES)
+	rm -rf $(API_FILES)
+	rm -rf $(BIN_DIR)/avaliacao
