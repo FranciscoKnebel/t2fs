@@ -180,13 +180,21 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
       /* usar current pointer para definir valores de i e j */
       /* precisa condição pra ler as tuplas adicionais */
 
-      struct t2fs_record records[constants.RECORD_PER_BLOCK];
+      struct t2fs_record records[constants.RECORD_PER_BLOCK]; //loop
+      struct t2fs_record record;
       BLOCK_T blockBuffer;
       blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-      int i = 0, amountOfBlocksRead = 0, fimDir = FALSE, block, fileBlocksCounter = 0;
+      int i = 0, j = 0, indexRecord = 0, amountOfBlocksRead = 0, fimDir = FALSE, block, fileBlocksCounter = 0;
 
-      while (i < constants.MAX_TUPLAS_REGISTER && fimDir != TRUE) {
+      int entry = descritorDir.currentPointer/RECORD_SIZE;
+
+      if(entry > constants.RECORD_PER_BLOCK) // > OU >=
+        indexRecord = constants.RECORD_PER_BLOCK - (entry % constants.RECORD_PER_BLOCK);
+      else 
+        indexRecord = entry;
+
+      // while (i < constants.MAX_TUPLAS_REGISTER && fimDir != TRUE) {
         switch(tuplas[i].atributeType) {
           case REGISTER_ADITIONAL:
               // ler novo MFT Register, indicado pelo número de bloco em tuplas[i].virtualBlockNumber
@@ -204,40 +212,63 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
           case REGISTER_MAP: // VBN-LBN
             /* TO DO */
             /* Uso do current pointer para indicar qual arquivo deve retornar */
-
             /* Leitura de blocos contíguos */
-            while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && fimDir != TRUE) {
-              block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
-              amountOfBlocksRead++;
 
-              if(readBlock(block, &blockBuffer) == FALSE) {
-                return FALSE;
-              };
+             readRecord(tuplas[i].logicalBlockNumber, j, &record);
+             DIRENT2 dentryTemp;
 
-              parseDirectory(blockBuffer, records);
+             switch(record.TypeVal) {
+                case TYPEVAL_REGULAR:
+                case TYPEVAL_DIRETORIO:
+                  dentryTemp = initDentry(record);
 
-              int j;
-              DIRENT2 dentryTemp;
-              for (j = 0; j < constants.RECORD_PER_BLOCK && fimDir != TRUE; j++) {
-                switch(records[j].TypeVal) {
-                  case TYPEVAL_REGULAR:
-                  case TYPEVAL_DIRETORIO:
-                    dentryTemp = initDentry(records[j]);
+                  descritorDir.currentPointer += RECORD_SIZE;
+                  memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
+                  updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
 
-                    descritorDir.currentPointer += RECORD_SIZE;
-                    memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
-                    updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
+                  return 0;
+                  break;
+                case TYPEVAL_INVALIDO:
+                default:
+                while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && fimDir != TRUE) {
+                  block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
+                  amountOfBlocksRead++;
 
-                    // return 0; /*Não faz sendido retornar AQUI */
-                    break;
-                  case TYPEVAL_INVALIDO:
-                  default:
-                    // Passa para o proximo record
-                    break;
+                  if(readBlock(block, &blockBuffer) == FALSE) {
+                    return FALSE;
+                  };
+
+                  parseDirectory(blockBuffer, records);
+
+                  entry = descritorDir.currentPointer/RECORD_SIZE;
+
+                  if(entry > constants.RECORD_PER_BLOCK) // > OU >=
+                    indexRecord = constants.RECORD_PER_BLOCK - (entry % constants.RECORD_PER_BLOCK);
+                  else 
+                    indexRecord = entry;
+
+                  for (j=indexRecord; j < constants.RECORD_PER_BLOCK && fimDir != TRUE; j++) {
+                    switch(records[j].TypeVal) {
+                      case TYPEVAL_REGULAR:
+                      case TYPEVAL_DIRETORIO:
+                        dentryTemp = initDentry(records[j]);
+
+                        descritorDir.currentPointer += RECORD_SIZE *j+1;
+                        memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
+                        updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
+
+                        return 0;
+                        break;
+                      case TYPEVAL_INVALIDO:
+                      default:
+                        // Passa para o proximo record
+                        break;
+                    }
+                  }
+                  fileBlocksCounter = amountOfBlocksRead;
                 }
               }
-              fileBlocksCounter = amountOfBlocksRead;
-            }
+            
             break;
           case REGISTER_FIM:
           case REGISTER_FREE:
@@ -247,8 +278,8 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
             break;
       }
 
-      i++; /*incrementa contador de tuplas*/
-    }
+     /* i++; incrementa contador de tuplas
+    }*/
     return READDIR_ERROR;
   } 
 }
