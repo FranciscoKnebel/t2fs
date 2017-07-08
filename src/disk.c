@@ -166,7 +166,14 @@ int resetBlock(int block) {
   BLOCK_T tempBlock;
 
   tempBlock.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
-  memset(&tempBlock, 0, sizeof(unsigned char) * constants.BLOCK_SIZE);
-  
+  memset(tempBlock.at, 0, sizeof(unsigned char) * constants.BLOCK_SIZE);
+
   return writeBlock(block, &tempBlock);
+}
+
+int freeRegister(int registerIndex) {
+  REGISTER_T reg;
+  memset(reg.at, -1, sizeof(reg.at));
+
+  return writeRegister(registerIndex, &reg);
 }

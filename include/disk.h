@@ -169,7 +169,6 @@
   -----------------------------------------------------------------------------*/
   void* writeTupla(unsigned char* buffer, struct t2fs_4tupla* tupla, int index);
 
-
   /*-----------------------------------------------------------------------------
   Função: resetBlock
     Reset de um bloco no disco com 0's.
@@ -185,4 +184,19 @@
   -----------------------------------------------------------------------------*/
   int resetBlock(int block);
 
+  /*-----------------------------------------------------------------------------
+  Função: freeRegister
+    Libera um registro do MFT, para uso por outras operações.
+
+  Entrada:
+    registerIndex: indice do registro que deve ser invalidado.
+
+  Saida:
+    Retorna TRUE se o registro foi escrito corretamente.
+    Retorna FALSE se houve um problema de escrita ou se o número do registor é inválido.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
+  int freeRegister(int registerIndex);
+  
 #endif

@@ -260,6 +260,22 @@ void test_writeRecord() {
   printf("-- ENCERROU WRITE RECORD --\n");
 }
 
+void test_freeRegister() {
+  printf("-- FREE REGISTER --\n");
+
+  REGISTER_T reg;
+  readRegister(REGISTER_ROOT, &reg);
+  printRegister(reg.at, 0);
+
+  getchar();
+
+  freeRegister(REGISTER_ROOT);
+  readRegister(REGISTER_ROOT, &reg);
+  printRegister(reg.at, 0);
+
+  printf("-- ENCERROU FREE REGISTER --\n");
+}
+
 int main(int argc, char const *argv[]) {
   initConfig();
 
@@ -289,6 +305,9 @@ int main(int argc, char const *argv[]) {
 
   /* WRITE RECORD */
   test_writeRecord();
+
+  /* FREE REGISTER */
+  test_freeRegister();
 
   return 0;
 }
