@@ -103,7 +103,17 @@ int read2 (FILE2 handle, char *buffer, int size) {
     initConfig();
   }
 
-  return -1;
+  int check, return_value;
+  struct descritor descritor;
+
+  check = searchLDAA(handle, TYPEVAL_REGULAR, &descritor);
+  if(check == FALSE) {
+    return_value = -1;
+  } else {
+    return_value = readFile(handle, descritor, buffer, size);
+  }
+
+  return return_value;
 };
 
 int write2 (FILE2 handle, char *buffer, int size) {
@@ -171,7 +181,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
     REGISTER_T reg;
     if(readRegister(descritorDir.record.MFTNumber, &reg) != TRUE) {
       return REGISTER_READ_ERROR;
-    } 
+    }
     else {
       struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
       parseRegister(reg.at, tuplas);
@@ -281,7 +291,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
      /* i++; incrementa contador de tuplas
     }*/
     return READDIR_ERROR;
-  } 
+  }
 }
   else {
     return NOT_FOUND_LDAA;

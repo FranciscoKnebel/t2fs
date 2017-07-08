@@ -26,4 +26,7 @@
   /* Close */
   int closeFile(int handle, BYTE TypeVal);
 
+  /* Read */
+  int readFile(int handle, struct descritor descritor, char * buffer, int size);
+
 #endif
