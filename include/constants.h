@@ -1,3 +1,13 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Douglas Lazaro
+  Francisco Knebel
+
+  Declarações de constantes usadas por todo o T2FS.
+*/
+
 #ifndef __constants__
 #define	__constants__
 

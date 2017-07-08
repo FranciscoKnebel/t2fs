@@ -1,3 +1,13 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Douglas Lazaro
+  Francisco Knebel
+
+  Header para simplificar o include dentro dos arquivos.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

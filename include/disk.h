@@ -1,3 +1,13 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Douglas Lazaro
+  Francisco Knebel
+
+  Funções para leitura, escrita e reset de estruturas do disco.
+*/
+
 #ifndef __disk__
 #define	__disk__
   #include "declarations.h"
@@ -198,5 +208,5 @@
   Responsável: Francisco Knebel
   -----------------------------------------------------------------------------*/
   int freeRegister(int registerIndex);
-  
+
 #endif

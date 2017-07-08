@@ -7,7 +7,6 @@
   Desenvolvido por Francisco Knebel
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

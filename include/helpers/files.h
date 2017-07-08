@@ -1,3 +1,11 @@
+/*
+  INF01142 - Sistemas Operacionais I
+  T2FS - 2017/1
+
+  Douglas Lazaro
+  Francisco Knebel
+*/
+
 #ifndef __helperfiles__
 #define	__helperfiles__
   #include "declarations.h"
