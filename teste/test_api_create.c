@@ -2,7 +2,11 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
+  Testes dos métodos de API: create
+
+  Desenvolvido por Francisco Knebel
 */
+
 
 #include <stdio.h>
 #include <stdlib.h>

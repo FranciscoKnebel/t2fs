@@ -161,3 +161,12 @@ int writeRecord(int block, int index, struct t2fs_record record) {
 void* writeTupla(unsigned char* buffer, struct t2fs_4tupla* tupla, int index) {
   return memcpy(&buffer[constants.TUPLA_SIZE * index], tupla, sizeof(struct t2fs_4tupla));
 }
+
+int resetBlock(int block) {
+  BLOCK_T tempBlock;
+
+  tempBlock.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+  memset(&tempBlock, 0, sizeof(unsigned char) * constants.BLOCK_SIZE);
+  
+  return writeBlock(block, &tempBlock);
+}

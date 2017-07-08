@@ -169,4 +169,20 @@
   -----------------------------------------------------------------------------*/
   void* writeTupla(unsigned char* buffer, struct t2fs_4tupla* tupla, int index);
 
+
+  /*-----------------------------------------------------------------------------
+  Função: resetBlock
+    Reset de um bloco no disco com 0's.
+
+  Entrada:
+    block: indice do bloco que deve ser resetado.
+
+  Saida:
+    Retorna TRUE se o bloco foi escrito corretamente.
+    Retorna FALSE se houve um problema de escrita ou se o número do bloco é inválido.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
+  int resetBlock(int block);
+
 #endif

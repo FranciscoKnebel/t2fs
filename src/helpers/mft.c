@@ -27,7 +27,7 @@ void initMFT() {
     struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
     parseRegister(reg.at, tuplas);
 
-    if(tuplas[0].atributeType == -1){
+    if(tuplas[0].atributeType == REGISTER_FREE){
       config.indexMFT[i] = MFT_BM_LIVRE; //livre
     } else {
       config.indexMFT[i] = MFT_BM_OCUPADO; //ocupado

@@ -94,7 +94,7 @@ ifeq (api,$(firstword $(MAKECMDGOALS)))
 endif
 
 API=$(BIN_DIR)/test_api_
-API_FILES=$(API)create $(API)openclose
+API_FILES=$(API)create $(API)openclose $(API)delete
 API_SRC=$(TST_DIR)/test_api_
 
 api: $(API_FILES)
@@ -105,6 +105,9 @@ $(API)create: all $(API_SRC)create.c
 
 $(API)openclose: all $(API_SRC)openclose.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_openclose $(API_SRC)openclose.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)delete: all $(API_SRC)delete.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_delete $(API_SRC)delete.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
 clean:

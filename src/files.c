@@ -155,6 +155,8 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
           writeTupla(reg.at, &tuplas[i-1], i-1);
           setBitmap2(block, BM_OCUPADO);
 
+          resetBlock(block);
+
           writeRegister(registerIndex, &reg);
 
           if(writeRecord(block, 0, record) == FALSE) {
@@ -206,6 +208,8 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
           if (check < 0) {
             return BM_ERROR;
           }
+
+          resetBlock(newLBN);
 
           // Tupla atual vira um MAP, para os novos blocos do arquivo.
           tuplas[i] = initTupla(REGISTER_MAP, fileBlocksCounter, newLBN, 1);
@@ -367,6 +371,7 @@ int removeFileFromDirectory(DWORD directoryMFTNumber, struct t2fs_record file) {
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
   int i = 0, amountOfBlocksRead = 0, removedFile = FALSE, block, fileBlocksCounter = 0;
+
   while (i < constants.MAX_TUPLAS_REGISTER && removedFile != TRUE) {
     switch (tuplas[i].atributeType) {
       case REGISTER_MAP:
@@ -406,7 +411,7 @@ int removeFileFromDirectory(DWORD directoryMFTNumber, struct t2fs_record file) {
       break;
     case REGISTER_FIM:
       // CHEGOU AO FIM DAS TUPLAS E NÃO ACHOU
-      return_value = REGISTER_FIM;
+      return REGISTER_FIM;
       break;
     case REGISTER_ADITIONAL:
       // Ler novo registro e recomeçar a leitura.
@@ -426,6 +431,98 @@ int removeFileFromDirectory(DWORD directoryMFTNumber, struct t2fs_record file) {
       return_value = FIND_REGISTER_FREE;
       i++;
       break;
+    }
+  }
+
+  return return_value;
+}
+
+int removeFileFromMFT(struct t2fs_record file) {
+  int registerIndex = file.MFTNumber;
+  int check, return_value;
+  DWORD temp;
+  BLOCK_T blockBuffer;
+  blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
+
+  REGISTER_T reg;
+  if(readRegister(registerIndex, &reg) != TRUE) {
+    return FALSE;
+  }
+
+  struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+  parseRegister(reg.at, tuplas);
+
+
+  /* Desalocando registro do MFT usado. */
+  check = setMFT(registerIndex, MFT_BM_LIVRE);
+  if (check < 0) {
+    return MFT_BM_ERROR;
+  }
+
+  // Marca registro como livre, para uso das funções de MFT.
+  /* TO DO */
+  /* função única para isso, passando indice do registro */
+  /* não deve ser preciso reescrever apenas para mudar um número */
+  temp = tuplas[0].atributeType;
+  tuplas[0].atributeType = REGISTER_FREE;
+  writeTupla(reg.at, &tuplas[0], 0);
+  writeRegister(registerIndex, &reg);
+  tuplas[0].atributeType = temp; // Restaura para poder iterar
+
+  /* Desalocar blocos indicados pelas tuplas */
+  int i = 0, amountOfBlocksRead = 0, fileBlocksCounter = 0, block;
+  while (i < constants.MAX_TUPLAS_REGISTER) {
+    switch (tuplas[i].atributeType) {
+      case REGISTER_MAP:
+        while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks) {
+          block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
+          amountOfBlocksRead++;
+
+          check = setBitmap2(block, BM_LIVRE);
+          if (check < 0) {
+            return BM_ERROR;
+          }
+        }
+
+        fileBlocksCounter += amountOfBlocksRead;
+        amountOfBlocksRead = 0;
+
+        i++;
+        break;
+      case REGISTER_ADITIONAL:
+        registerIndex = tuplas[i].virtualBlockNumber;
+
+        if(readRegister(registerIndex, &reg) != TRUE) {
+          return FALSE;
+        }
+
+        /* Desalocando registro do MFT usado. */
+        check = setMFT(registerIndex, MFT_BM_LIVRE);
+        if (check < 0) {
+          return MFT_BM_ERROR;
+        }
+
+        free(tuplas);
+        tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+
+        parseRegister(reg.at, tuplas);
+        i = 0; // reset i para 0, começar a ler tuplas novamente
+
+        // Marca registro como livre, para uso das funções de MFT.
+        temp = tuplas[0].atributeType;
+        tuplas[0].atributeType = REGISTER_FREE;
+        writeTupla(reg.at, &tuplas[0], 0);
+        writeRegister(registerIndex, &reg);
+        tuplas[0].atributeType = temp; // Restaura para poder iterar
+
+        break;
+      case REGISTER_FIM:
+        return REGISTER_FIM;
+        break;
+      default:
+        return_value = tuplas[i].atributeType;
+        i++;
+        break;
     }
   }
 
@@ -464,13 +561,8 @@ int deleteFileFromDisk(struct t2fs_record file, char* filename) {
     }
   }
 
-
-
-  /* Iterar sobre todas as tuplas do arquivo */
-    /* Desalocando os blocos ocupados. */
-    /* Invalidando cada tupla após desalocar blocos */
-
-  /* Desalocar registros do MFT usados. */
+  /* Desalocar blocos e registros do arquivo */
+  removeFileFromMFT(file);
 
   return 0;
 }
