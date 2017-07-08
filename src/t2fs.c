@@ -176,14 +176,15 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
       parseRegister(reg.at, tuplas);
 
       /* TO DO */
-      /* usar current pointer para definir valores de i e j */
-      /* precisa condição pra ler as tuplas adicionais */
+      /* usar current pointer para definir valores de i e j */ // ---------- (?)
+      /* precisa condição pra ler as tuplas adicionais */ // ---------- (?)
 
       int i = 0, j = 0;
       struct t2fs_record record;
 
       //for (i = 0; i < constants.MAX_TUPLAS_REGISTER; ++i) {
         int atributeType = tuplas[i].atributeType;
+        int numberOfContiguosBlocks = tuplas[i].numberOfContiguosBlocks;
 
         switch(atributeType) {
           case REGISTER_ADITIONAL:
@@ -196,13 +197,13 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
 
               parseRegister(reg.at, tuplas);
               i = 0;
-              // break; /* Tirando esse break, depois de ele ler o registro adicional ele vai executar o comportamento esperado, que é de MAP, na primeira tupla */
+              // break; 
+              /* Tirando esse break, depois de ele ler o registro adicional ele vai executar o comportamento esperado, que é de MAP, na primeira tupla */ // --------- Entendi
 
           case REGISTER_MAP: // VBN-LBN
             /* TO DO */
-            /* Uso do current pointer para indicar qual arquivo deve retornar */
-            /* Desnecessário ambos loops FOR, pois só retornamos um arquivo por vez, e sabemos qual arquivo deve ser lido devido ao current pointer. */
-
+            /* Uso do current pointer para indicar qual arquivo deve retornar */ // ---------- (?) 
+            /* Desnecessário ambos loops FOR, pois só retornamos um arquivo por vez, e sabemos qual arquivo deve ser lido devido ao current pointer. */ // ---------- Entendi
             /* Leitura de blocos contíguos */
 
             //for (j = 0; j < constants.RECORD_PER_BLOCK; ++j) {
@@ -217,12 +218,9 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
 
                   descritorDir.currentPointer += RECORD_SIZE;
                   memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
-                  /* TO DO */
-                  /* update current pointer na lista */
-                  /* criar função de update na LDAA */
-                  /* já deixei a declaração da função no ldaa.h, e o uso está comentado abaixo. */
 
-                  //updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
+                  /* update current pointer na lista */
+                  updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
 
                   return 0;
                   break;
@@ -230,10 +228,30 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
                 default:
                   /* TO DO */
                   /* Ler o restante do bloco (aqui precisa de um loop) até achar algum válido. */
+                    while(typeVal == TYPEVAL_INVALIDO && j < constants.RECORD_PER_BLOCK){ 
+                      readRecord(tuplas[i].logicalBlockNumber, j, &record);
+                      typeVal = record.TypeVal;
+                      j += 1;   
+                    }
                   /*  Se existir, retornar o dentry e atualizar o current pointer até esse arquivo. */
+                    if (typeVal == TYPEVAL_REGULAR || typeVal == TYPEVAL_DIRETORIO)
+                    {
+                      dentryTemp = initDentry(record);
+                      descritorDir.currentPointer += RECORD_SIZE  * j; // ---------- (?)
+                      memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
+
+                      /* update current pointer na lista */
+                      updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
+                    }
                   /*  Se não, verificar se possuí blocos contiguos. */
-                  /*    Se sim, ler novo bloco e procurar por record, com a mesma lógica acima. */
-                  /*    Se não, chegou ao final do diretório e retornar -END_OF_DIR. */
+                    else if(numberOfContiguosBlocks > 1){ 
+                      numberOfContiguosBlocks -= 1;
+                  /*  Se sim, ler novo bloco e procurar por record, com a mesma lógica acima. */
+                  // ---------- (?) parece recursivo                            
+                    }
+                  /*Se não, chegou ao final do diretório e retornar -END_OF_DIR. */
+                    else
+                      return -END_OF_DIR;
                   break;
               }
             //}
