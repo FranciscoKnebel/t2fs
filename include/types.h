@@ -1,5 +1,6 @@
 #ifndef __types__
 #define	__types__
+
   #include "declarations.h"
   #include "t2fs.h"
 

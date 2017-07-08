@@ -72,9 +72,9 @@ int delete2 (char *filename) {
         check = deleteFileFromDisk(file, filename);
         if(check < 0) {
           return_value = check;
+        } else {
+          return_value = 0;
         }
-
-        return_value = 0;
       }
       break;
   }
