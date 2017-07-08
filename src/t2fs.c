@@ -171,102 +171,88 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
     REGISTER_T reg;
     if(readRegister(descritorDir.record.MFTNumber, &reg) != TRUE) {
       return REGISTER_READ_ERROR;
-    } else {
+    } 
+    else {
       struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
       parseRegister(reg.at, tuplas);
 
       /* TO DO */
-      /* usar current pointer para definir valores de i e j */ // ---------- (?)
-      /* precisa condição pra ler as tuplas adicionais */ // ---------- (?)
+      /* usar current pointer para definir valores de i e j */
+      /* precisa condição pra ler as tuplas adicionais */
 
-      int i = 0, j = 0;
-      struct t2fs_record record;
+      struct t2fs_record records[constants.RECORD_PER_BLOCK];
+      BLOCK_T blockBuffer;
+      blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-      //for (i = 0; i < constants.MAX_TUPLAS_REGISTER; ++i) {
-        int atributeType = tuplas[i].atributeType;
-        int numberOfContiguosBlocks = tuplas[i].numberOfContiguosBlocks;
+      int i = 0, amountOfBlocksRead = 0, fimDir = FALSE, block, fileBlocksCounter = 0;
 
-        switch(atributeType) {
+      while (i < constants.MAX_TUPLAS_REGISTER && fimDir != TRUE) {
+        switch(tuplas[i].atributeType) {
           case REGISTER_ADITIONAL:
               // ler novo MFT Register, indicado pelo número de bloco em tuplas[i].virtualBlockNumber
               if(readRegister(tuplas[i].virtualBlockNumber, &reg) != TRUE) {
                 return REGISTER_READ_ERROR;
               }
+
               free(tuplas);
               tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
 
               parseRegister(reg.at, tuplas);
               i = 0;
-              // break; 
-              /* Tirando esse break, depois de ele ler o registro adicional ele vai executar o comportamento esperado, que é de MAP, na primeira tupla */ // --------- Entendi
+              // break; /* Tirando esse break, depois de ele ler o registro adicional ele vai executar o comportamento esperado, que é de MAP, na primeira tupla */
 
           case REGISTER_MAP: // VBN-LBN
             /* TO DO */
-            /* Uso do current pointer para indicar qual arquivo deve retornar */ // ---------- (?) 
-            /* Desnecessário ambos loops FOR, pois só retornamos um arquivo por vez, e sabemos qual arquivo deve ser lido devido ao current pointer. */ // ---------- Entendi
+            /* Uso do current pointer para indicar qual arquivo deve retornar */
+
             /* Leitura de blocos contíguos */
+            while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && fimDir != TRUE) {
+              block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
+              amountOfBlocksRead++;
 
-            //for (j = 0; j < constants.RECORD_PER_BLOCK; ++j) {
-              readRecord(tuplas[i].logicalBlockNumber, j, &record);
-              int typeVal = record.TypeVal;
+              if(readBlock(block, &blockBuffer) == FALSE) {
+                return FALSE;
+              };
+
+              parseDirectory(blockBuffer, records);
+
+              int j;
               DIRENT2 dentryTemp;
+              for (j = 0; j < constants.RECORD_PER_BLOCK && fimDir != TRUE; j++) {
+                switch(records[j].TypeVal) {
+                  case TYPEVAL_REGULAR:
+                  case TYPEVAL_DIRETORIO:
+                    dentryTemp = initDentry(records[j]);
 
-              switch(typeVal) {
-                case TYPEVAL_REGULAR:
-                case TYPEVAL_DIRETORIO:
-                  dentryTemp = initDentry(record);
+                    descritorDir.currentPointer += RECORD_SIZE;
+                    memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
+                    updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
 
-                  descritorDir.currentPointer += RECORD_SIZE;
-                  memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
-
-                  /* update current pointer na lista */
-                  updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
-
-                  return 0;
-                  break;
-                case TYPEVAL_INVALIDO:
-                default:
-                  /* TO DO */
-                  /* Ler o restante do bloco (aqui precisa de um loop) até achar algum válido. */
-                    while(typeVal == TYPEVAL_INVALIDO && j < constants.RECORD_PER_BLOCK){ 
-                      readRecord(tuplas[i].logicalBlockNumber, j, &record);
-                      typeVal = record.TypeVal;
-                      j += 1;   
-                    }
-                  /*  Se existir, retornar o dentry e atualizar o current pointer até esse arquivo. */
-                    if (typeVal == TYPEVAL_REGULAR || typeVal == TYPEVAL_DIRETORIO)
-                    {
-                      dentryTemp = initDentry(record);
-                      descritorDir.currentPointer += RECORD_SIZE  * j; // ---------- (?)
-                      memcpy(dentry, &dentryTemp, sizeof(DIRENT2));
-
-                      /* update current pointer na lista */
-                      updateLDAA(handle, TYPEVAL_DIRETORIO, descritorDir);
-                    }
-                  /*  Se não, verificar se possuí blocos contiguos. */
-                    else if(numberOfContiguosBlocks > 1){ 
-                      numberOfContiguosBlocks -= 1;
-                  /*  Se sim, ler novo bloco e procurar por record, com a mesma lógica acima. */
-                  // ---------- (?) parece recursivo                            
-                    }
-                  /*Se não, chegou ao final do diretório e retornar -END_OF_DIR. */
-                    else
-                      return -END_OF_DIR;
-                  break;
+                    // return 0; /*Não faz sendido retornar AQUI */
+                    break;
+                  case TYPEVAL_INVALIDO:
+                  default:
+                    // Passa para o proximo record
+                    break;
+                }
               }
-            //}
+              fileBlocksCounter = amountOfBlocksRead;
+            }
             break;
           case REGISTER_FIM:
           case REGISTER_FREE:
           default:
+            fimDir = TRUE;
             return -END_OF_DIR;
             break;
-        }
-      //}
-    }
+      }
 
+      i++; /*incrementa contador de tuplas*/
+    }
     return READDIR_ERROR;
-  } else {
+  } 
+}
+  else {
     return NOT_FOUND_LDAA;
   }
 };
