@@ -136,8 +136,17 @@ int seek2 (FILE2 handle, DWORD offset) {
   if (!config.initiated) {
     initConfig();
   }
+  struct descritor descritor;
+  if(searchLDAA(handle, TYPEVAL_REGULAR, &descritor) == TRUE) {
+    if (offset == -1)
+      descritor.currentPointer = descritor.record.bytesFileSize +1;
+    else
+      descritor.currentPointer = offset;
 
-  return -1;
+  return updateLDAA(handle, TYPEVAL_REGULAR, descritor);
+  }
+  else
+    return NOT_FOUND_LDAA;
 };
 
 int mkdir2 (char *pathname) {
