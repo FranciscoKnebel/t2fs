@@ -8,10 +8,14 @@ SRC_DIR=./src
 TST_DIR=./teste
 
 # GERAÇÂO DO T2FS #
-LIB_OBJECTS=$(LIB_GENERATED_OBJECTS) $(LIB_DIR)/apidisk.o $(LIB_DIR)/bitmap2.o
-LIB_GENERATED_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o $(LIB_DIR)/files.o $(HELPER_OBJECTS)
+FILES_OBJECTS=$(LIB_DIR)/files/create.o $(LIB_DIR)/files/delete.o $(LIB_DIR)/files/open.o $(LIB_DIR)/files/close.o
+HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o $(LIB_DIR)/helpers/ldaa.o
+SRC_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o
 
-all: $(LIB_OBJECTS) $(LIB_DIR)/helpers
+LIB_GENERATED_OBJECTS=$(SRC_OBJECTS) $(FILES_OBJECTS) $(HELPER_OBJECTS)
+LIB_OBJECTS=$(LIB_GENERATED_OBJECTS) $(LIB_DIR)/apidisk.o $(LIB_DIR)/bitmap2.o
+
+all: $(LIB_OBJECTS)
 	ar rcs $(LIB_DIR)/libt2fs.a $(LIB_OBJECTS)
 
 $(LIB_DIR)/t2fs.o: $(SRC_DIR)/t2fs.c
@@ -23,14 +27,20 @@ $(LIB_DIR)/disk.o: $(SRC_DIR)/disk.c
 $(LIB_DIR)/parse.o: $(SRC_DIR)/parse.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/parse.o -I$(INC_DIR) $(SRC_DIR)/parse.c
 
-$(LIB_DIR)/files.o: $(SRC_DIR)/files.c
-	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files.o -I$(INC_DIR) $(SRC_DIR)/files.c
+## FILES ##
+$(LIB_DIR)/files/create.o: $(SRC_DIR)/files/create.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/create.o -I$(INC_DIR) $(SRC_DIR)/files/create.c
+
+$(LIB_DIR)/files/delete.o: $(SRC_DIR)/files/delete.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/delete.o -I$(INC_DIR) $(SRC_DIR)/files/delete.c
+
+$(LIB_DIR)/files/open.o: $(SRC_DIR)/files/open.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/open.o -I$(INC_DIR) $(SRC_DIR)/files/open.c
+
+$(LIB_DIR)/files/close.o: $(SRC_DIR)/files/close.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/close.o -I$(INC_DIR) $(SRC_DIR)/files/close.c
 
 ## HELPERS ##
-HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o $(LIB_DIR)/helpers/ldaa.o
-
-$(LIB_DIR)/helpers: $(HELPER_OBJECTS)
-
 $(LIB_DIR)/helpers/print.o: $(SRC_DIR)/helpers/print.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/helpers/print.o -I$(INC_DIR) $(SRC_DIR)/helpers/print.c
 
