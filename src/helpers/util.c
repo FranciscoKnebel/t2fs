@@ -36,12 +36,13 @@ struct Constants initConstants(struct BootBlock bootBlock) {
   k.MFT_BLOCK = k.BOOT_BLOCK + 1;
   k.DATA_BLOCK = k.MFT_BLOCK_SIZE + 1;
 
-  /* Tuplas */
+  /* Registros */
   k.REGISTER_SIZE = 512;
   k.REGISTER_PER_BLOCK = k.BLOCK_SIZE / k.REGISTER_SIZE;
   k.MAX_REGISTERS = (k.MFT_SECTOR_SIZE / k.REGISTER_PER_BLOCK);
+  k.MAX_SECTORS_REGISTER = k.MAX_REGISTERS * 2;
 
-  /* Registro */
+  /* Tuplas */
   k.MAX_TUPLAS_REGISTER = 32;
   k.TUPLA_SIZE = k.REGISTER_SIZE / k.MAX_TUPLAS_REGISTER;
 

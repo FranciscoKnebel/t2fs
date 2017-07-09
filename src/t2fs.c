@@ -121,7 +121,17 @@ int write2 (FILE2 handle, char *buffer, int size) {
     initConfig();
   }
 
-  return -1;
+  int check, return_value;
+  struct descritor descritor;
+
+  check = searchLDAA(handle, TYPEVAL_REGULAR, &descritor);
+  if(check == FALSE) {
+    return_value = -1;
+  } else {
+    return_value = writeFile(handle, descritor, buffer, size);
+  }
+
+  return return_value;
 };
 
 int truncate2 (FILE2 handle) {
@@ -210,7 +220,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
 
       if(entry > constants.RECORD_PER_BLOCK) // > OU >=
         indexRecord = constants.RECORD_PER_BLOCK - (entry % constants.RECORD_PER_BLOCK);
-      else 
+      else
         indexRecord = entry;
 
       // while (i < constants.MAX_TUPLAS_REGISTER && fimDir != TRUE) {
@@ -263,7 +273,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
 
                   if(entry > constants.RECORD_PER_BLOCK) // > OU >=
                     indexRecord = constants.RECORD_PER_BLOCK - (entry % constants.RECORD_PER_BLOCK);
-                  else 
+                  else
                     indexRecord = entry;
 
                   for (j=indexRecord; j < constants.RECORD_PER_BLOCK && fimDir != TRUE; j++) {
@@ -287,7 +297,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
                   fileBlocksCounter = amountOfBlocksRead;
                 }
               }
-            
+
             break;
           case REGISTER_FIM:
           case REGISTER_FREE:

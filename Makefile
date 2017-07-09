@@ -74,8 +74,7 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa $(BIN_DIR)/test_api_seek
-# make teste _NOME_
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa
 teste: $(TEST_FILES)
 	$(BIN_DIR)/$(RUN_ARGS)
 
@@ -103,33 +102,36 @@ $(BIN_DIR)/test_mft: all $(TST_DIR)/test_mft.c
 $(BIN_DIR)/test_ldaa: all $(TST_DIR)/test_ldaa.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_ldaa $(TST_DIR)/test_ldaa.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(BIN_DIR)/test_api_seek: all $(TST_DIR)/test_api_seek.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_seek $(TST_DIR)/test_api_seek.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
-
 ## API ##
 ifeq (api,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-API=$(BIN_DIR)/test_api_
-API_FILES=$(API)create $(API)openclose $(API)delete $(API)read
-API_SRC=$(TST_DIR)/test_api_
+API=$(BIN_DIR)/api
+API_FILES=$(API)/create $(API)/openclose $(API)/delete $(API)/read $(API)/write $(API)/seek
+API_SRC=$(TST_DIR)/api
 
 api: $(API_FILES)
-	$(API)$(RUN_ARGS)
+	$(API)/$(RUN_ARGS)
 
-$(API)create: all $(API_SRC)create.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_create $(API_SRC)create.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(API)/create: all $(API_SRC)/create.c
+	$(CC) $(CFLAGS) -o $(API)/create $(API_SRC)/create.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(API)openclose: all $(API_SRC)openclose.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_openclose $(API_SRC)openclose.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(API)/openclose: all $(API_SRC)/openclose.c
+	$(CC) $(CFLAGS) -o $(API)/openclose $(API_SRC)/openclose.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(API)delete: all $(API_SRC)delete.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_delete $(API_SRC)delete.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(API)/delete: all $(API_SRC)/delete.c
+	$(CC) $(CFLAGS) -o $(API)/delete $(API_SRC)/delete.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
-$(API)read: all $(API_SRC)read.c
-	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_read $(API_SRC)read.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+$(API)/read: all $(API_SRC)/read.c
+	$(CC) $(CFLAGS) -o $(API)/read $(API_SRC)/read.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)/write: all $(API_SRC)/write.c
+	$(CC) $(CFLAGS) -o $(API)/write $(API_SRC)/write.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)/seek: all $(API_SRC)/seek.c
+	$(CC) $(CFLAGS) -o $(API)/seek $(API_SRC)/seek.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
 clean:

@@ -3,31 +3,29 @@
   T2FS - 2017/1
 
   Módulo desenvolvido por Douglas Lázaro
-  Funções:
-    initMFT, printMFT, getMFT, setMFT, searchMFT
-
 */
 
 #include "libs.h"
 
 
 void initMFT() {
-  REGISTER_T reg;
-  int i;
+  SECTOR_T reg;
+  int i, j;
 
   for (i = 0; i < REGISTER_REGULAR; i++) { //primeiros resgistros reservados
     config.indexMFT[i] = MFT_BM_OCUPADO;
   }
 
-  for (i = REGISTER_REGULAR; i < constants.MAX_REGISTERS; i++) {
-    if(readRegister(i, &reg) != TRUE) {
+  for (i = REGISTER_REGULAR, j = REGISTER_REGULAR*2; j < constants.MAX_SECTORS_REGISTER; i++, j += 2) {
+    int sector = constants.MFT_SECTOR + j;
+
+    if(readSector(sector, &reg) != TRUE) {
       return;
     }
 
-    struct t2fs_4tupla *tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
-    parseRegister(reg.at, tuplas);
+    struct t2fs_4tupla tuplaInicial = parseRegister_tupla(reg.at, 0);
 
-    if(tuplas[0].atributeType == REGISTER_FREE){
+    if(tuplaInicial.atributeType == REGISTER_FREE) {
       config.indexMFT[i] = MFT_BM_LIVRE; //livre
     } else {
       config.indexMFT[i] = MFT_BM_OCUPADO; //ocupado

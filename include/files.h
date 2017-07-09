@@ -29,4 +29,7 @@
   /* Read */
   int readFile(int handle, struct descritor descritor, char * buffer, int size);
 
+  /* Write */
+  int writeFile(int handle, struct descritor descritor, char * buffer, int size);
+
 #endif

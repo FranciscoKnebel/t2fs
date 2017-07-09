@@ -40,6 +40,21 @@
   int parseRegister(unsigned char* buffer, struct t2fs_4tupla * tuplas);
 
   /*-----------------------------------------------------------------------------
+  Função: parseRegister_tupla
+    Parsing de um buffer de registro e conversão para t2fs_4tupla
+
+  Entrada:
+    buffer: valor lido diretamente do registro.
+    tuplaIndex: qual tupla, de 0 até MAX_TUPLAS_REGISTER-1, será convertida.
+
+  Saida:
+    Retorna estrutura convertida t2fs_4tupla.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
+  struct t2fs_4tupla parseRegister_tupla(unsigned char* buffer, int tuplaIndex);
+
+  /*-----------------------------------------------------------------------------
   Função: parseRecord
     Parsing de um buffer de bloco e conversão para um t2fs_record.
 

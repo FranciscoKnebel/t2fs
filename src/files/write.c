@@ -7,3 +7,7 @@
 */
 
 #include "libs.h"
+
+int writeFile(int handle, struct descritor descritor, char * buffer, int size) {
+  return -1;
+}

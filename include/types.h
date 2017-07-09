@@ -51,6 +51,7 @@
     int REGISTER_SIZE;
     int REGISTER_PER_BLOCK;
     int MAX_REGISTERS;
+    int MAX_SECTORS_REGISTER;
 
     /* Tupla */
     int MAX_TUPLAS_REGISTER;

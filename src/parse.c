@@ -88,20 +88,6 @@ struct BootBlock parseBootBlock(unsigned char* bootBlock) {
   return config;
 }
 
-
-/*-----------------------------------------------------------------------------
-Função: parseRegister_tupla
-  Parsing de um buffer de registro e conversão para t2fs_4tupla
-
-Entrada:
-  buffer: valor lido diretamente do registro.
-  tuplaIndex: qual tupla, de 0 até MAX_TUPLAS_REGISTER-1, será convertida.
-
-Saida:
-  Retorna estrutura convertida t2fs_4tupla.
-
-Responsável: Francisco Knebel
------------------------------------------------------------------------------*/
 struct t2fs_4tupla parseRegister_tupla(unsigned char* buffer, int tuplaIndex) {
   struct t2fs_4tupla tupla;
   char temp[8];
