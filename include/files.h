@@ -27,9 +27,9 @@
   int closeFile(int handle, BYTE TypeVal);
 
   /* Read */
-  int readFile(int handle, struct descritor descritor, char * buffer, int size);
+  int readFile(int handle, struct descritor descritor, char * buffer, unsigned int size);
 
   /* Write */
-  int writeFile(int handle, struct descritor descritor, char * buffer, int size);
+  int writeFile(int handle, struct descritor descritor, char * buffer, unsigned int size);
 
 #endif

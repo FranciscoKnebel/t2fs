@@ -2,10 +2,8 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Módulo desenvolvido por Francisco Knebel
-  Funções:
-    printSector, printSector2, printBlock, showBlock, printBootBlock, printRegister, printTuplaBinary, printTupla, printRecord
-
+  Douglas Lazaro
+  Francisco Knebel
 */
 
 #include "libs.h"
@@ -15,13 +13,13 @@ int printSector(unsigned char* buffer) {
 }
 
 int printSector2(unsigned char* buffer, int currentSector) {
-  int i, j;
+  unsigned int i, j;
   char str[20];
 
   for (i = 0; i < 16; ++i) {
     printf("%04X  ", (SECTOR_SIZE * currentSector) + 16 * i);
     for (j = 0; j < 16; ++j) {
-      int index = 16*i+j;
+      unsigned int index = 16*i+j;
       char c = buffer[index];
 
       if (c>=' ' && c<='z') {
@@ -41,7 +39,7 @@ int printSector2(unsigned char* buffer, int currentSector) {
 }
 
 int printBlock(unsigned char* buffer) {
-  int i;
+  unsigned int i;
 
   for(i = 0; i < constants.SECTOR_PER_BLOCK; i++) {
     printSector2(&buffer[i * SECTOR_SIZE], i);
@@ -71,7 +69,7 @@ void printBootBlock() {
 }
 
 void printRegister(unsigned char* buffer, int sector) {
-  int i;
+  unsigned int i;
 
   for (i = 0; i < 2; i++) {
     printSector2(&buffer[i * SECTOR_SIZE], sector + i);
@@ -80,7 +78,7 @@ void printRegister(unsigned char* buffer, int sector) {
 
 void printTuplaBinary(unsigned char* buffer, int tupla) {
   char temp[8] = "";
-  int j, num = 0;
+  unsigned int j, num = 0;
 
   for (j = 0; j < constants.TUPLA_SIZE; j += 4) {
     printf("%02X ", buffer[(constants.TUPLA_SIZE * tupla) + j     ]&0xFF);

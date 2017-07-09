@@ -24,7 +24,7 @@ int removeFileFromDirectory(DWORD directoryMFTNumber, struct t2fs_record file) {
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-  int i = 0, amountOfBlocksRead = 0, removedFile = FALSE, block;
+  unsigned int i = 0, amountOfBlocksRead = 0, removedFile = FALSE, block;
 
   while (i < constants.MAX_TUPLAS_REGISTER && removedFile != TRUE) {
     switch (tuplas[i].atributeType) {
@@ -39,7 +39,7 @@ int removeFileFromDirectory(DWORD directoryMFTNumber, struct t2fs_record file) {
 
           parseDirectory(blockBuffer, records);
 
-          int j;
+          unsigned int j;
           for (j = 0; j < constants.RECORD_PER_BLOCK && removedFile != TRUE; j++) {
             if(strcmp(records[j].name, file.name) == 0 && (records[j].TypeVal == TYPEVAL_REGULAR || records[j].TypeVal == TYPEVAL_DIRETORIO)) {
               // Achou arquivo válido com o mesmo nome
@@ -115,7 +115,7 @@ int removeFileFromMFT(struct t2fs_record file) {
   freeRegister(registerIndex);
 
   /* Desalocar blocos indicados pelas tuplas */
-  int i = 0, amountOfBlocksRead = 0, block;
+  unsigned int i = 0, amountOfBlocksRead = 0, block;
   while (i < constants.MAX_TUPLAS_REGISTER) {
     switch (tuplas[i].atributeType) {
       case REGISTER_MAP:

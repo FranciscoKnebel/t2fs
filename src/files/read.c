@@ -8,7 +8,7 @@
 
 #include "libs.h"
 
-int readFile(int handle, struct descritor descritor, char * buffer, int size) {
+int readFile(int handle, struct descritor descritor, char * buffer, unsigned int size) {
   int return_value = -1;
   int registerIndex = descritor.record.MFTNumber;
   char * tempBuffer;
@@ -24,8 +24,9 @@ int readFile(int handle, struct descritor descritor, char * buffer, int size) {
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-  int i = 0, bytesRead = 0, amountOfBlocksRead = 0, block;
-  int bytesLeft;
+  unsigned int i = 0, bytesRead = 0, block;
+  unsigned int bytesLeft;
+  unsigned int amountOfBlocksRead = 0;
 
   if(size > descritor.record.bytesFileSize) {
     bytesLeft = descritor.record.bytesFileSize;
@@ -34,7 +35,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, int size) {
   }
   tempBuffer = malloc(sizeof(char) * bytesLeft);
 
-  while (i < constants.MAX_TUPLAS_REGISTER && bytesLeft > 0) {
+  while (i < constants.MAX_TUPLAS_REGISTER && bytesLeft > (unsigned int) 0) {
     switch(tuplas[i].atributeType) {
       case REGISTER_MAP:
         while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks) {

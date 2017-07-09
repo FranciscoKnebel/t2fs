@@ -104,7 +104,8 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
-  int i = 0, amountOfBlocksRead = 0, foundSpaceToAdd = FALSE, block, allocated, fileBlocksCounter = 0;
+  unsigned int i = 0, amountOfBlocksRead = 0, foundSpaceToAdd = FALSE, block, fileBlocksCounter = 0;
+  int allocated;
   while (i < constants.MAX_TUPLAS_REGISTER && foundSpaceToAdd != TRUE) {
     switch (tuplas[i].atributeType) {
       case REGISTER_MAP:
@@ -118,7 +119,7 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
 
           parseDirectory(blockBuffer, records);
 
-          int j;
+          unsigned int j;
           for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
             if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
               // ADICIONAR RECORD PARA O DIRETÓRIO

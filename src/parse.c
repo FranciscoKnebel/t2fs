@@ -101,7 +101,7 @@ struct t2fs_4tupla parseRegister_tupla(unsigned char* buffer, int tuplaIndex) {
 }
 
 int parseRegister(unsigned char* buffer, struct t2fs_4tupla * tuplas) {
-  int i, offset;
+  unsigned int i, offset;
 
   for (i = 0; i < constants.MAX_TUPLAS_REGISTER; ++i) {
     offset = constants.TUPLA_SIZE * i;
@@ -125,8 +125,8 @@ int parseRecord(BLOCK_T blockBuffer, struct t2fs_record * record, int offset) {
 }
 
 int parseDirectory(BLOCK_T block, struct t2fs_record* records) {
-  int i;
-  int offset;
+  unsigned int i;
+  unsigned int offset;
 
   for (i = 0; i < constants.RECORD_PER_BLOCK; i++) {
     offset = (i * RECORD_SIZE);
@@ -136,9 +136,3 @@ int parseDirectory(BLOCK_T block, struct t2fs_record* records) {
 
   return TRUE;
 }
-
-
-void parseFile(unsigned char* buffer) {
-  //parseRegister();
-  return;
-};

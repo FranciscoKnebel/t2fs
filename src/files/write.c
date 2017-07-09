@@ -8,6 +8,6 @@
 
 #include "libs.h"
 
-int writeFile(int handle, struct descritor descritor, char * buffer, int size) {
+int writeFile(int handle, struct descritor descritor, char * buffer, unsigned int size) {
   return -1;
 }

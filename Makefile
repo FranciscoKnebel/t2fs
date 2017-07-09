@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -g
 CEXTRA=-Wextra
+CFLAGS=-Wall -g
 LIB_DIR=./lib
 INC_DIR=./include
 BIN_DIR=./bin

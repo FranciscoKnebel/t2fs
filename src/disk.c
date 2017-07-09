@@ -9,7 +9,7 @@
 #include "libs.h"
 
 int readSector(int sector, SECTOR_T* buffer) {
-  if(sector < 0 || sector > constants.DISK_SECTORS) {
+  if(sector < 0 || sector > (int) constants.DISK_SECTORS) {
     return FALSE;
   }
 
@@ -21,9 +21,9 @@ int readSector(int sector, SECTOR_T* buffer) {
 }
 
 int readBlock(int block, BLOCK_T* buffer) {
-  int i, sector;
+  unsigned int i, sector;
 
-  if (block < 0 || block > constants.DISK_BLOCKS) {
+  if (block < 0 || block > (int) constants.DISK_BLOCKS) {
     return FALSE;
   }
 
@@ -49,7 +49,7 @@ int readBootBlock(SECTOR_T* buffer) {
 }
 
 int readRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex < 0 || registerIndex > constants.MAX_REGISTERS) {
+  if(registerIndex < 0 || registerIndex > (int) constants.MAX_REGISTERS) {
     return -1;
   }
 
@@ -69,7 +69,7 @@ int readRegister(int registerIndex, REGISTER_T* reg) {
 }
 
 int readRecord(int block, int index, struct t2fs_record * record) {
-  if(block < constants.DATA_BLOCK || block >= constants.DISK_BLOCKS || index < 0 || index >= constants.RECORD_PER_BLOCK) {
+  if(block < (int) constants.DATA_BLOCK || block >= (int) constants.DISK_BLOCKS || index < 0 || index >= (int) constants.RECORD_PER_BLOCK) {
     return FALSE;
   }
 
@@ -87,7 +87,7 @@ int readRecord(int block, int index, struct t2fs_record * record) {
 }
 
 int writeSector(int sector, SECTOR_T* buffer) {
-  if (sector < 0 || sector > constants.DISK_SECTORS) {
+  if (sector < 0 || sector > (int) constants.DISK_SECTORS) {
     return FALSE;
   }
 
@@ -99,9 +99,9 @@ int writeSector(int sector, SECTOR_T* buffer) {
 }
 
 int writeBlock(int block, BLOCK_T* buffer) {
-  int i, sector;
+  unsigned int i, sector;
 
-  if (block < 0 || block > constants.DISK_BLOCKS) {
+  if (block < 0 || block > (int) constants.DISK_BLOCKS) {
     return FALSE;
   }
 
@@ -117,7 +117,7 @@ int writeBlock(int block, BLOCK_T* buffer) {
 }
 
 int writeRegister(int registerIndex, REGISTER_T* reg) {
-  if(registerIndex < 0 || registerIndex > constants.MAX_REGISTERS) {
+  if(registerIndex < 0 || registerIndex > (int) constants.MAX_REGISTERS) {
     return -1;
   }
 
@@ -138,7 +138,7 @@ int writeRegister(int registerIndex, REGISTER_T* reg) {
 }
 
 int writeRecord(int block, int index, struct t2fs_record record) {
-  if(block < constants.DATA_BLOCK || block >= constants.DISK_BLOCKS || index < 0 || index >= constants.RECORD_PER_BLOCK) {
+  if(block < (int) constants.DATA_BLOCK || block >= (int) constants.DISK_BLOCKS || index < 0 || index >= (int) constants.RECORD_PER_BLOCK) {
     return FALSE;
   }
 

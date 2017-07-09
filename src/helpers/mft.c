@@ -2,7 +2,8 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Módulo desenvolvido por Douglas Lázaro
+  Douglas Lazaro
+  Francisco Knebel
 */
 
 #include "libs.h"
@@ -10,7 +11,7 @@
 
 void initMFT() {
   SECTOR_T reg;
-  int i, j;
+  unsigned int i, j;
 
   for (i = 0; i < REGISTER_REGULAR; i++) { //primeiros resgistros reservados
     config.indexMFT[i] = MFT_BM_OCUPADO;
@@ -25,7 +26,7 @@ void initMFT() {
 
     struct t2fs_4tupla tuplaInicial = parseRegister_tupla(reg.at, 0);
 
-    if(tuplaInicial.atributeType == REGISTER_FREE) {
+    if(tuplaInicial.atributeType == (unsigned int) REGISTER_FREE) {
       config.indexMFT[i] = MFT_BM_LIVRE; //livre
     } else {
       config.indexMFT[i] = MFT_BM_OCUPADO; //ocupado
@@ -60,7 +61,7 @@ int setMFT(int registerIndex, int allocated){
 }
 
 int searchMFT(int allocated){
-  int i;
+  unsigned int i;
   for (i = REGISTER_REGULAR; i < constants.MAX_REGISTERS; ++i)
   {
     if (config.indexMFT[i] == allocated)

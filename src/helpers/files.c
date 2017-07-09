@@ -2,9 +2,8 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Módulo desenvolvido por Francisco Knebel
-  Funções:
-    validPath, isFileName, parsePath, findRecord, lookup
+  Douglas Lazaro
+  Francisco Knebel
 */
 
 #include "libs.h"
@@ -116,8 +115,10 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
-  int returnValue = TRUE, foundFile = FALSE, amountOfBlocksRead = 0;
-  int currentBlock, i = 0;
+  int returnValue = TRUE;
+  int foundFile = FALSE;
+  unsigned int amountOfBlocksRead = 0;
+  unsigned int currentBlock, i = 0;
 
   switch (tupla.atributeType) {
     case REGISTER_MAP:
@@ -140,7 +141,7 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
         }
       }
 
-      returnValue = foundFile == TRUE ? i-1 : FIND_REGISTER_NOTFOUND; // 0 to RECORD_PER_BLOCK-1
+      returnValue = foundFile == TRUE ? (int) i-1 : FIND_REGISTER_NOTFOUND; // 0 to RECORD_PER_BLOCK-1
 
       break;
     case REGISTER_FIM:
@@ -160,7 +161,7 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
 
 int lookup(char* pathname, struct t2fs_record * fileRecord) {
   char ** parsedPath = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
-  int parseCount = parsePath(pathname, parsedPath);
+  unsigned int parseCount = parsePath(pathname, parsedPath);
 
   if(parseCount == FALSE) {
     return PARSED_PATH_ERROR;
@@ -175,7 +176,7 @@ int lookup(char* pathname, struct t2fs_record * fileRecord) {
   parseRegister(root.at, tuplas);
 
   /* ITERAR NA ÁRVORE ATÉ ACHAR FOLHA */
-  int i = 0, j = 1;
+  unsigned int i = 0, j = 1;
   int found = FALSE, endReached = FALSE;
 
   while(i < constants.MAX_TUPLAS_REGISTER && endReached != TRUE) {

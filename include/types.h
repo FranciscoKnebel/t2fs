@@ -21,44 +21,44 @@
   };
 
   struct Constants {
-    int SECTOR_PER_BLOCK;
-    int BLOCK_SIZE;
+    unsigned int SECTOR_PER_BLOCK;
+    unsigned int BLOCK_SIZE;
 
-    int DISK_SECTORS;
-    int DISK_BLOCKS;
+    unsigned int DISK_SECTORS;
+    unsigned int DISK_BLOCKS;
 
     /* Partições do disco */
-    int BOOT_BLOCK_SIZE;
-    int BOOT_SECTOR_SIZE;
+    unsigned int BOOT_BLOCK_SIZE;
+    unsigned int BOOT_SECTOR_SIZE;
 
-    int MFT_BLOCK_SIZE;
-    int MFT_SECTOR_SIZE;
+    unsigned int MFT_BLOCK_SIZE;
+    unsigned int MFT_SECTOR_SIZE;
 
-    int DATA_BLOCK_SIZE;
-    int DATA_SECTOR_SIZE;
-
-    /* Blocos do disco */
-    int BOOT_BLOCK;
-    int MFT_BLOCK;
-    int DATA_BLOCK;
+    unsigned int DATA_BLOCK_SIZE;
+    unsigned int DATA_SECTOR_SIZE;
 
     /* Blocos do disco */
-    int BOOT_SECTOR;
-    int MFT_SECTOR;
-    int DATA_SECTOR;
+    unsigned int BOOT_BLOCK;
+    unsigned int MFT_BLOCK;
+    unsigned int DATA_BLOCK;
+
+    /* Blocos do disco */
+    unsigned int BOOT_SECTOR;
+    unsigned int MFT_SECTOR;
+    unsigned int DATA_SECTOR;
 
     /* Registro */
-    int REGISTER_SIZE;
-    int REGISTER_PER_BLOCK;
-    int MAX_REGISTERS;
-    int MAX_SECTORS_REGISTER;
+    unsigned int REGISTER_SIZE;
+    unsigned int REGISTER_PER_BLOCK;
+    unsigned int MAX_REGISTERS;
+    unsigned int MAX_SECTORS_REGISTER;
 
     /* Tupla */
-    int MAX_TUPLAS_REGISTER;
-    int TUPLA_SIZE;
+    unsigned int MAX_TUPLAS_REGISTER;
+    unsigned int TUPLA_SIZE;
 
     /* Records */
-    int RECORD_PER_BLOCK;
+    unsigned int RECORD_PER_BLOCK;
   };
 
   struct Configuration {
