@@ -24,15 +24,17 @@ void test_readRoot() {
     return;
   }
 
-  char buffer[50];
-  int check;
+  int check, size = 100;
+  char *buffer = malloc(sizeof(char) * size);
 
-  check = read2(handle, buffer, 20);
+  check = read2(handle, buffer, size);
   if(check < 0) {
     printf("%d: Erro lendo arquivo.\n", check);
     return;
   }
+  close2(handle);
 
+  printf("Total de bytes lidos: '%d'.\n", check);
   printf("Imprimindo arquivo lido:\n");
   printf("%s", buffer);
   printf("\n -- Print encerrado -- \n");
