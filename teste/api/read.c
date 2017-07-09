@@ -42,15 +42,15 @@ void test_readRoot(char* path, int size) {
   printf("%s", buffer);
 }
 
-void test_currentPointer(char* path, int size) {
+void test_currentPointer(char* path, int bytesPerRead) {
   int amountOfBytesRead;
   int offset = 0;
-  char* buffer = malloc(sizeof(char) * size);
-  char* fileContent = malloc(sizeof(char) * size * 100);
+  char* buffer = malloc(sizeof(char) * bytesPerRead);
+  char* fileContent = malloc(sizeof(char) * bytesPerRead * 100);
 
   int handle = open2(path);
   do {
-    amountOfBytesRead = read(handle, size, buffer);
+    amountOfBytesRead = read(handle, bytesPerRead, buffer);
 
     if(amountOfBytesRead > 0) {
       memcpy(&fileContent[offset], buffer, amountOfBytesRead);

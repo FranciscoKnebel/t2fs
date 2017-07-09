@@ -302,3 +302,41 @@ DIRENT2 initDentry(struct t2fs_record record) {
 
   return dentry;
 }
+
+int findOffsetTupla(struct t2fs_4tupla * tuplas, unsigned int initialBlock, REGISTER_T* reg) {
+  unsigned int i = 0, foundStart = FALSE, amountOfBlocksRead = 0;
+
+  while (i < constants.MAX_TUPLAS_REGISTER && foundStart != TRUE) {
+    switch(tuplas[i].atributeType) {
+      case REGISTER_MAP:
+        amountOfBlocksRead += tuplas[i].numberOfContiguosBlocks;
+
+        if(initialBlock < amountOfBlocksRead) {
+          foundStart = TRUE;
+        } else {
+          i++;
+        }
+
+        break;
+      case REGISTER_ADITIONAL:
+        // Ler novo registro e recomeçar a leitura.
+        if(readRegister(tuplas[i].virtualBlockNumber, reg) != TRUE) {
+          return FALSE;
+        }
+        free(tuplas);
+        tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+
+        parseRegister(reg->at, tuplas);
+        i = 0; // reset i para 0, começar a ler tuplas novamente
+
+        break;
+        case REGISTER_FIM:
+        default:
+          // Current pointer está depois do final do arquivo
+          return 0;
+          break;
+    }
+  }
+
+  return i;
+}

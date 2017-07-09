@@ -31,4 +31,7 @@
 
   DIRENT2 initDentry(struct t2fs_record record);
 
+
+  int findOffsetTupla(struct t2fs_4tupla * tuplas, unsigned int initialBlock, REGISTER_T* reg);
+
 #endif
