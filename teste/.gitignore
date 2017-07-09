@@ -1,0 +1,8 @@
+*
+*/
+
+!/api
+!.gitignore
+!Makefile
+!*.c
+!*.dat
