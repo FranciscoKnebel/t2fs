@@ -64,6 +64,7 @@
 
   /* API */
   #define FOUND_FILE_ERROR -1
+  #define EOF_OFFSET -1
   #define DIRECTORY_NOT_FOUND -7
   #define FILE_LIMIT_REACHED -8
   #define PARSED_PATH_ERROR -9

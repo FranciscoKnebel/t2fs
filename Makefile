@@ -74,7 +74,7 @@ ifeq (teste,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa
+TEST_FILES=$(BIN_DIR)/test_display $(BIN_DIR)/test_disk $(BIN_DIR)/test_parse $(BIN_DIR)/test_util $(BIN_DIR)/test_bitmap $(BIN_DIR)/test_files $(BIN_DIR)/test_mft $(BIN_DIR)/test_ldaa $(BIN_DIR)/test_api_seek
 # make teste _NOME_
 teste: $(TEST_FILES)
 	$(BIN_DIR)/$(RUN_ARGS)
@@ -102,6 +102,9 @@ $(BIN_DIR)/test_mft: all $(TST_DIR)/test_mft.c
 
 $(BIN_DIR)/test_ldaa: all $(TST_DIR)/test_ldaa.c
 	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_ldaa $(TST_DIR)/test_ldaa.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(BIN_DIR)/test_api_seek: all $(TST_DIR)/test_api_seek.c
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/test_api_seek $(TST_DIR)/test_api_seek.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 ## API ##
 ifeq (api,$(firstword $(MAKECMDGOALS)))
