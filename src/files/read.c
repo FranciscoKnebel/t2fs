@@ -39,7 +39,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
     bytesLeft = size;
   }
   cpySize = bytesLeft;
-  tempBuffer = malloc(sizeof(char) * bytesLeft);
+  tempBuffer = malloc(sizeof(char) * cpySize);
 
   // Achar tupla, bloco e offset inicial, de acordo com currentPointer.
   unsigned int initialBlock = descritor.currentPointer / constants.BLOCK_SIZE;
@@ -64,7 +64,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
              // Caso de borda, se leitura vai estrapolar tamanho do arquivo.
              // Se sim, bytes lidos apenas até o final do arquivo.
             if(initialOffset + bytesLeft > descritor.record.bytesFileSize) {
-              bytes = (initialOffset + bytesLeft) % descritor.record.bytesFileSize;
+              bytes = bytesLeft - (initialOffset + bytesLeft) % descritor.record.bytesFileSize;
             }
 
             memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, bytes);
@@ -73,7 +73,6 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
             updateLDAA(handle, TYPEVAL_REGULAR, descritor);
 
             memcpy(buffer, tempBuffer, sizeof(char) * cpySize);
-
             bytesLeft = 0;
             return_value = bytesRead;
           } else {
