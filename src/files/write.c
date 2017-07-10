@@ -47,7 +47,7 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
 
           if(bytesLeft <= constants.BLOCK_SIZE) {
             // Escreve dados no buffer do bloco, e depois escreve no disco.
-            memcpy(blockBuffer.at + initialOffset, &buffer[bytesWritten], bytesLeft);
+            memcpy(&blockBuffer.at[initialOffset], &buffer[bytesWritten], bytesLeft);
             writeBlock(block, &blockBuffer);
 
             // Chegou no final da escrita
@@ -55,17 +55,16 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
             bytesLeft = 0;
 
             // Atualiza descritor e record na LDAA
-
             // Se o ponteiro estiver antes do final, não deve incrementar o tamanho do arquivo, e sim apenas sobreescrever
             if(descritor.currentPointer < descritor.record.bytesFileSize) {
               unsigned int offBW = descritor.record.bytesFileSize - descritor.currentPointer;
+
               if(offBW < bytesWritten) {
                 descritor.record.bytesFileSize += bytesWritten - offBW;
               }
             } else {
               descritor.record.bytesFileSize += bytesWritten;
             }
-
             descritor.currentPointer += bytesWritten;
             descritor.record.blocksFileSize = (descritor.record.bytesFileSize / constants.BLOCK_SIZE) + 1;
             updateLDAA(handle, TYPEVAL_REGULAR, descritor);
@@ -76,17 +75,42 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
             return_value = bytesWritten;
           } else {
             // Escreve dados no buffer do bloco, e depois escreve no disco.
-            memcpy(blockBuffer.at + initialOffset, &buffer[bytesWritten], constants.BLOCK_SIZE - initialOffset);
-            //writeBlock(block, &blockBuffer);
+            memcpy(&blockBuffer.at[initialOffset], &buffer[bytesWritten], constants.BLOCK_SIZE);
+            writeBlock(block, &blockBuffer);
 
-
+            bytesWritten += constants.BLOCK_SIZE;
+            bytesLeft -= constants.BLOCK_SIZE;
           }
-
 
           initialOffset = 0;
         }
 
         if(bytesLeft > 0) {
+          // verifica se a próxima tupla é REGISTER_FIM
+          // se sim
+            // verificar se é possivel criar bloco contiguo na tupla atual
+            // se sim
+              //numberOfContiguosBlocks++
+              //seta bloco como ocupado
+              //initialBlock = numberOfContiguosBlocks
+              //e manter i igual, refará o loop na mesma tupla,
+              //e com o initialBlock indicando o bloco certo
+
+            // se não
+              // verificar se a próxima tupla (que é REGISTER_FIM) está no final do registro
+              // se sim, próxima tupla vira uma REGISTER_ADITIONAL
+                // alocar novo registro para o arquivo, setar como ocupado
+                // inicializar novo registro
+                // setar novo bloco como ocupado,
+                // i = 0, e reiniciar o loop
+              // se não. próxima tupla vira um REGISTER_MAP
+                // alocar novo bloco, setar como ocupado
+                // i++, e na próxima iteração do loop ira escrever no novo bloco
+
+          // se não
+            // indica que o arquivo tem outras tuplas já alocadas
+            // i++, indo para a próxima tupla
+
           i++;
         }
 

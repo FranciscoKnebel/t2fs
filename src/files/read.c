@@ -67,7 +67,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
               bytes = bytesLeft - (initialOffset + bytesLeft) % descritor.record.bytesFileSize;
             }
 
-            memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, bytes);
+            memcpy(&tempBuffer[bytesRead], &blockBuffer.at[initialOffset], bytes);
             bytesRead += bytes;
             descritor.currentPointer += bytesRead;
             updateLDAA(handle, TYPEVAL_REGULAR, descritor);
@@ -76,7 +76,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
             bytesLeft = 0;
             return_value = bytesRead;
           } else {
-            memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, constants.BLOCK_SIZE);
+            memcpy(&tempBuffer[bytesRead], &blockBuffer.at[initialOffset], constants.BLOCK_SIZE);
             bytesRead += constants.BLOCK_SIZE;
             bytesLeft -= constants.BLOCK_SIZE;
 
