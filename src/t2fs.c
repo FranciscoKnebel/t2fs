@@ -149,7 +149,7 @@ int seek2 (FILE2 handle, DWORD offset) {
   struct descritor descritor;
   if(searchLDAA(handle, TYPEVAL_REGULAR, &descritor) == TRUE) {
     if (offset == (unsigned int) EOF_OFFSET || offset > descritor.record.bytesFileSize)
-      descritor.currentPointer = descritor.record.bytesFileSize +1;
+      descritor.currentPointer = descritor.record.bytesFileSize;
     else
       descritor.currentPointer = offset;
 

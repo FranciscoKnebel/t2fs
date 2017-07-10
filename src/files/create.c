@@ -65,7 +65,7 @@ int createNewFile(char * filename, BYTE typeVal) {
           file = createRecord(filename, typeVal);
 
           /* salvar record no diretório */
-          check = addRecordToDirectory(file, filename);
+          check = addRecordToDirectory(file, filename, FALSE);
           if(check < 0) {
             return check;
           }
@@ -88,7 +88,7 @@ int createNewFile(char * filename, BYTE typeVal) {
   return return_value;
 }
 
-int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
+int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record, int updatingRecord) {
   int return_value;
   int registerIndex = directoryMFTNumber;
 
@@ -121,7 +121,7 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
 
           unsigned int j;
           for (j = 0; j < constants.RECORD_PER_BLOCK && foundSpaceToAdd != TRUE; j++) {
-            if(records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) {
+            if((records[j].TypeVal != TYPEVAL_REGULAR && records[j].TypeVal != TYPEVAL_DIRETORIO) || (updatingRecord == TRUE && strcmp(record.name, records[j].name) == 0)){
               // ADICIONAR RECORD PARA O DIRETÓRIO
               if(writeRecord(tuplas[i].logicalBlockNumber, j, record) == FALSE) {
                 return RECORD_WRITE_ERROR;
@@ -256,7 +256,7 @@ int addToDirectory(DWORD directoryMFTNumber, struct t2fs_record record) {
   return return_value;
 }
 
-int addRecordToDirectory(struct t2fs_record record, char * filename) {
+int addRecordToDirectory(struct t2fs_record record, char * filename, int updatingRecord) {
   struct t2fs_record directory;
   char * directoryname = malloc(strlen(filename));
   int return_value = FALSE;
@@ -264,7 +264,7 @@ int addRecordToDirectory(struct t2fs_record record, char * filename) {
   getFileDirectory(filename, directoryname);
 
   if(strcmp("/", directoryname) == 0) { // adicionar para a root
-    return_value = addToDirectory(REGISTER_ROOT, record);
+    return_value = addToDirectory(REGISTER_ROOT, record, updatingRecord);
 
     return return_value;
   }
@@ -284,7 +284,7 @@ int addRecordToDirectory(struct t2fs_record record, char * filename) {
       printf("Diretório '%s' não encontrado.\n", directoryname);
       break;
     default:
-      return_value = addToDirectory(directory.MFTNumber, record);
+      return_value = addToDirectory(directory.MFTNumber, record, updatingRecord);
       break;
   }
 

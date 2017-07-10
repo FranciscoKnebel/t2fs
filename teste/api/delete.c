@@ -52,7 +52,7 @@ void test_create2_showfiles_parseandprint(int block) {
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
   struct t2fs_record records[constants.RECORD_PER_BLOCK];
-  int i;
+  unsigned int i;
 
   if(readBlock(block, &blockBuffer) == FALSE) {
     return;
@@ -80,6 +80,7 @@ void test_knownfile() {
 
   // Remove arquivo "/file2"
   executeDelete(path);
+  // test_create2_showfiles_parseandprint(2050);
 
   // Criar outro arquivo, que deve ser escrito no mesmo local onde estava "/file2"
   test_executeCreate2("/file3");
@@ -97,7 +98,7 @@ void test_delete2() {
   return;
 }
 
-int main(int argc, char const *argv[]) {
+int main() {
   char identify[IDENTIFY_SIZE];
 
   identify2(identify, IDENTIFY_SIZE);

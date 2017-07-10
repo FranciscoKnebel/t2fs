@@ -15,7 +15,7 @@
 
   int createNewFile(char * filename, BYTE typeVal);
 
-  int addRecordToDirectory(struct t2fs_record record, char * filename);
+  int addRecordToDirectory(struct t2fs_record record, char * filename, int updatingRecord);
 
   /* Delete */
   int deleteFileFromDisk(struct t2fs_record file, char* filename);

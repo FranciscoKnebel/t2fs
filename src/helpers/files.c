@@ -133,7 +133,7 @@ int findRecord(struct t2fs_4tupla tupla, char* name, struct t2fs_record * record
         parseDirectory(blockBuffer, records);
 
         for (i = 0; i < constants.RECORD_PER_BLOCK && foundFile != TRUE; i++) {
-          if(strcmp(records[i].name, name) == 0) { // FILE NAME FOUND
+          if(strcmp(records[i].name, name) == 0 && (records[i].TypeVal == TYPEVAL_REGULAR || records[i].TypeVal == TYPEVAL_DIRETORIO)) { // FILE NAME FOUND
             memcpy((void*) record, (void*) &records[i], RECORD_SIZE);
 
             foundFile = TRUE;
