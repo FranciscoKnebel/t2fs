@@ -58,7 +58,7 @@ void test_currentPointer(char* path, int bytesPerRead) {
       printf("\nArquivo lido até EOF.\n");
     }
     offset += amountOfBytesRead;
-  } while(amountOfBytesRead != 0);
+  } while(amountOfBytesRead > 0);
   close2(handle);
 
   printf("\nImprimindo arquivo '%s', de '%d' bytes:\n", path, offset);
@@ -72,7 +72,7 @@ void test_read2() {
   //test_readRoot("/file1", 30);
   //test_readRoot("/file2", 30);
 
-  test_currentPointer("/file1", 10);
+  test_currentPointer("/file1", 3);
 
   printf("\n--- ENCERRANDO READ2 ---\n");
   return;

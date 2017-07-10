@@ -30,7 +30,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
   unsigned int i = 0, bytesRead = 0, block;
-  unsigned int bytesLeft;
+  unsigned int bytesLeft, cpySize;
   unsigned int amountOfBlocksRead = 0;
 
   if(size > descritor.record.bytesFileSize) {
@@ -38,6 +38,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
   } else {
     bytesLeft = size;
   }
+  cpySize = bytesLeft;
   tempBuffer = malloc(sizeof(char) * bytesLeft);
 
   // Achar tupla, bloco e offset inicial, de acordo com currentPointer.
@@ -59,21 +60,36 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
           };
 
           if(bytesLeft <= constants.BLOCK_SIZE) {
-            memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, bytesLeft);
-            bytesRead += bytesLeft;
-            bytesLeft = 0;
+            int bytes = bytesLeft;
+             // Caso de borda, se leitura vai estrapolar tamanho do arquivo.
+             // Se sim, bytes lidos apenas até o final do arquivo.
+            if(initialOffset + bytesLeft > descritor.record.bytesFileSize) {
+              bytes = (initialOffset + bytesLeft) % descritor.record.bytesFileSize;
+            }
 
+            memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, bytes);
+            bytesRead += bytes;
             descritor.currentPointer += bytesRead;
             updateLDAA(handle, TYPEVAL_REGULAR, descritor);
 
-            memcpy(buffer, tempBuffer, sizeof(char) * size);
-            free(tempBuffer);
+            memcpy(buffer, tempBuffer, sizeof(char) * cpySize);
 
+            bytesLeft = 0;
             return_value = bytesRead;
           } else {
             memcpy(&tempBuffer[bytesRead], blockBuffer.at + initialOffset, constants.BLOCK_SIZE);
-            bytesRead += bytesLeft;
+            bytesRead += constants.BLOCK_SIZE;
             bytesLeft -= constants.BLOCK_SIZE;
+
+            if(tuplas[i+1].atributeType == REGISTER_FIM) {
+              descritor.currentPointer += bytesRead;
+              updateLDAA(handle, TYPEVAL_REGULAR, descritor);
+
+              memcpy(buffer, tempBuffer, sizeof(char) * cpySize);
+
+              bytesLeft = 0;
+              return_value = bytesRead;
+            }
           }
 
           initialOffset = 0;
