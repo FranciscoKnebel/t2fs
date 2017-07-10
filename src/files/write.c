@@ -23,6 +23,7 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
   BLOCK_T blockBuffer;
   blockBuffer.at = malloc(sizeof(unsigned char) * constants.BLOCK_SIZE);
 
+  int allocated, fileBlocksCounter = 0;
   unsigned int i = 0, block;
   unsigned int bytesWritten = 0, bytesLeft = size;
   unsigned int amountOfBlocksRead = 0;
@@ -85,33 +86,92 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
           initialOffset = 0;
         }
 
+        fileBlocksCounter += amountOfBlocksRead;
+
         if(bytesLeft > 0) {
-          // verifica se a próxima tupla é REGISTER_FIM
-          // se sim
+          if(tuplas[i+1].atributeType == REGISTER_FIM) {
             // verificar se é possivel criar bloco contiguo na tupla atual
-            // se sim
-              //numberOfContiguosBlocks++
-              //seta bloco como ocupado
-              //initialBlock = numberOfContiguosBlocks
-              //e manter i igual, refará o loop na mesma tupla,
-              //e com o initialBlock indicando o bloco certo
+            block = tuplas[i].logicalBlockNumber + tuplas[i].numberOfContiguosBlocks;
+            allocated = getBitmap2(block);
 
-            // se não
-              // verificar se a próxima tupla (que é REGISTER_FIM) está no final do registro
-              // se sim, próxima tupla vira uma REGISTER_ADITIONAL
-                // alocar novo registro para o arquivo, setar como ocupado
-                // inicializar novo registro
-                // setar novo bloco como ocupado,
-                // i = 0, e reiniciar o loop
-              // se não. próxima tupla vira um REGISTER_MAP
+            if(allocated < 0) {
+              return BM_ERROR;
+            }
+
+            if(allocated == BM_LIVRE) {
+              // Aloca bloco contíguo, atualizando o registro
+              tuplas[i].numberOfContiguosBlocks += 1;
+              writeTupla(reg.at, &tuplas[i], i);
+              setBitmap2(block, BM_OCUPADO);
+
+              resetBlock(block);
+
+              writeRegister(registerIndex, &reg);
+
+              // Loop de tuplas começara novamente, partindo do novo bloco.
+              initialBlock = tuplas[i].numberOfContiguosBlocks - 1;
+            } else {
+              // próxima tupla está no final do registro
+              if(i+1 == constants.MAX_TUPLAS_REGISTER - 1) {
+                //próxima tupla vira uma REGISTER_ADITIONAL
+
+                /* Encontra indice para o novo registro. */
+                int novoRegisterIndex = searchMFT(MFT_BM_LIVRE);
+                int check = setMFT(novoRegisterIndex, MFT_BM_OCUPADO);
+                if (check < 0) {
+                  return MFT_BM_ERROR;
+                }
+
+                tuplas[i+1] = initTupla(REGISTER_ADITIONAL, novoRegisterIndex, 0, 0);
+                writeTupla(reg.at, &tuplas[i+1], i+1);
+                writeRegister(registerIndex, &reg);
+
+                /* Operações no novo registro */
+                int fileLBN;
+
+                fileLBN = searchBitmap2(BM_LIVRE); // Encontra bloco de dados para o arquivo
+                check = setBitmap2(fileLBN, BM_OCUPADO);
+                if (check < 0) {
+                  return BM_ERROR;
+                }
+
+                // Inicializa o novo registro.
+                initNewRegister(novoRegisterIndex, fileBlocksCounter, fileLBN);
+
+                i = 0; // Reinicia o loop, no novo registro.
+                if(readRegister(registerIndex, &reg) != TRUE) {
+                  return FALSE;
+                }
+                parseRegister(reg.at, tuplas);
+              } else { // próxima tupla vira um REGISTER_MAP
+                int newLBN = searchBitmap2(BM_LIVRE); // Encontra bloco de dados para o arquivo
+
                 // alocar novo bloco, setar como ocupado
-                // i++, e na próxima iteração do loop ira escrever no novo bloco
+                int check = setBitmap2(newLBN, BM_OCUPADO);
+                if (check < 0) {
+                  return BM_ERROR;
+                }
+                resetBlock(newLBN);
 
-          // se não
+                /* ATUALIZAÇÃO DO REGISTRO */
+                readRegister(registerIndex, &reg);
+
+                tuplas[i+1] = initTupla(REGISTER_MAP, fileBlocksCounter, newLBN, 1);
+                writeTupla(reg.at, &tuplas[i+1], i+1);
+
+                tuplas[i+2] = initTupla(REGISTER_FIM, 0, 0, 0);
+                writeTupla(reg.at, &tuplas[i+2], i+2);
+
+                // Atualização do registro com novos valores.
+                writeRegister(registerIndex, &reg);
+
+                i++; // próxima iteração do loop ira escrever no novo bloco
+              }
+            }
+          } else {
             // indica que o arquivo tem outras tuplas já alocadas
-            // i++, indo para a próxima tupla
-
-          i++;
+            i++;
+          }
         }
 
         break;
