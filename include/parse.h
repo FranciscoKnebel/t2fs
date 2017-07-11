@@ -4,6 +4,8 @@
 
   Douglas Lazaro
   Francisco Knebel
+
+  Funções de parsing de elementos em outras estruturas.
 */
 
 #ifndef __parse__

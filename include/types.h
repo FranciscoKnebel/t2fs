@@ -61,6 +61,11 @@
     unsigned int RECORD_PER_BLOCK;
   };
 
+
+  /*
+    Estrutura de configuração do T2FS,
+    com valores necessários para execução do sistema.
+  */
   struct Configuration {
     int initiated;
 
@@ -71,6 +76,10 @@
     struct descritor LDAA[MAX_FILES_OPEN];
   };
 
+  /*
+    Estruturas usadas para a leitura de
+    setores, blocos e registros, respectivamente.
+  */
   typedef struct {
     unsigned char at[SECTOR_SIZE];
   } SECTOR_T;

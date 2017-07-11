@@ -9,6 +9,14 @@
 #ifndef __helperaux__
 #define	__helperaux__
 
+  /*-----------------------------------------------------------------------------
+  Função: printX
+    Múltiplas funções para imprimir estruturas do sistema, para debuggação.
+    Cada função tem o seu comportamento definido independentemente, e deverá ser
+    visto cada implementação individualmente.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
   int printSector(unsigned char* buffer);
 
   int printSector2(unsigned char* buffer, int currentSector);
