@@ -42,6 +42,7 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
   tempBuffer = malloc(sizeof(char) * cpySize);
 
   // Achar tupla, bloco e offset inicial, de acordo com currentPointer.
+  unsigned int bytesReadFromBlock = 0;
   unsigned int initialBlock = descritor.currentPointer / constants.BLOCK_SIZE;
   unsigned int initialOffset = descritor.currentPointer % constants.BLOCK_SIZE;
   i = findOffsetTupla(tuplas, initialBlock, &reg);
@@ -51,14 +52,17 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
       case REGISTER_MAP:
         amountOfBlocksRead = initialBlock;
         initialBlock = 0;
-        while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks) {
+
+        bytesReadFromBlock = initialOffset;
+        while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && bytesLeft > (unsigned int) 0) {
           block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
-          amountOfBlocksRead++;
 
           if(readBlock(block, &blockBuffer) == FALSE) {
             return FALSE;
           };
 
+          //printf("CP: %d, IB: %d, IO: %d\n", descritor.currentPointer, initialBlock, initialOffset);
+          //printf("BR: %d, Block: %d, BFS: %d\n", bytesRead, block, descritor.record.bytesFileSize); getchar();
           if(bytesLeft <= constants.BLOCK_SIZE) {
             int bytes = bytesLeft;
              // Caso de borda, se leitura vai estrapolar tamanho do arquivo.
@@ -89,6 +93,13 @@ int readFile(int handle, struct descritor descritor, char * buffer, unsigned int
               bytesLeft = 0;
               return_value = bytesRead;
             }
+          }
+
+          // Verificação se leu até o final do bloco. Se sim, incrementa o contador.
+          bytesReadFromBlock += bytesRead;
+          if(bytesReadFromBlock >= constants.BLOCK_SIZE ) {
+            bytesReadFromBlock = 0;
+            amountOfBlocksRead++;
           }
 
           initialOffset = 0;

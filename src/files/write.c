@@ -29,6 +29,7 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
   unsigned int amountOfBlocksRead = 0;
 
   // Achar tupla, bloco e offset inicial, de acordo com currentPointer.
+  unsigned int bytesWrittenToBlock = 0;
   unsigned int initialBlock = descritor.currentPointer / constants.BLOCK_SIZE;
   unsigned int initialOffset = descritor.currentPointer % constants.BLOCK_SIZE;
   i = findOffsetTupla(tuplas, initialBlock, &reg);
@@ -38,9 +39,10 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
       case REGISTER_MAP:
         amountOfBlocksRead = initialBlock;
         initialBlock = 0;
+
+        bytesWrittenToBlock = initialOffset;
         while(amountOfBlocksRead < tuplas[i].numberOfContiguosBlocks && bytesLeft > (unsigned int) 0) {
           block = tuplas[i].logicalBlockNumber + amountOfBlocksRead;
-          amountOfBlocksRead++;
 
           if(readBlock(block, &blockBuffer) == FALSE) {
             return FALSE;
@@ -81,6 +83,13 @@ int writeFile(int handle, struct descritor descritor, char * buffer, unsigned in
 
             bytesWritten += constants.BLOCK_SIZE;
             bytesLeft -= constants.BLOCK_SIZE;
+          }
+
+          // Verificação se escreveu até o final do bloco. Se sim, incrementa o contador.
+          bytesWrittenToBlock += bytesWritten;
+          if(bytesWrittenToBlock >= constants.BLOCK_SIZE) {
+            bytesWrittenToBlock = 0;
+            amountOfBlocksRead++;
           }
 
           initialOffset = 0;
