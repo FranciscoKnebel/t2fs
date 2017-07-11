@@ -55,11 +55,107 @@ int readDirectory(DIR2 handle, struct descritor descritor, DIRENT2 *dentry) {
       }
     }
 
+    currentBlock = initialBlock+1;
     // Verificar nos blocos contiguos se há mais arquivos
+    while(currentBlock < tuplas[i].numberOfContiguosBlocks && foundFile != TRUE){
+        if(readBlock(currentBlock, &blockBuffer) == FALSE) {
+          return FALSE;
+        };
+
+        parseDirectory(blockBuffer, records);
+        recordIndex = (descritor.currentPointer % constants.BLOCK_SIZE) / RECORD_SIZE;
+
+        if(records[recordIndex].TypeVal != TYPEVAL_DIRETORIO && records[recordIndex].TypeVal != TYPEVAL_REGULAR) {
+          // Verifica no restante do bloco se há mais arquivos
+          for(k = recordIndex+1; k < constants.RECORD_PER_BLOCK && foundFile != TRUE; k++) {
+            if(records[k].TypeVal == TYPEVAL_DIRETORIO || records[k].TypeVal == TYPEVAL_REGULAR) {
+              strcpy(dirEntry_temp.name, file.name);
+              dirEntry_temp.fileType = file.TypeVal;
+              dirEntry_temp.fileSize = file.bytesFileSize;
+
+              memcpy(dentry, &dirEntry_temp, sizeof(DIRENT2));
+              foundFile = TRUE;
+              return_value = 0;
+            }
+        }
+      }
+      else {
+          strcpy(dirEntry_temp.name, file.name);
+          dirEntry_temp.fileType = file.TypeVal;
+          dirEntry_temp.fileSize = file.bytesFileSize;
+
+          memcpy(dentry, &dirEntry_temp, sizeof(DIRENT2));
+          foundFile = TRUE;
+          return_value = 0;
+     }
+
+     if(foundFile != TRUE)
+      currentBlock++;
+  }
 
     // Verifica nas tuplas seguintes se há mais arquivos
-      // precisa achar alguma tupla seguinte que é map.
-      // PS: SE tuplas[i+1] for FIM, não tem.
+        // precisa achar alguma tupla seguinte que é map.
+        // PS: SE tuplas[i+1] for FIM, não tem.]
+   
+    while(i < constants.MAX_TUPLAS_REGISTER && foundFile != TRUE){
+        switch(tuplas[i+1].atributeType){
+          case REGISTER_ADITIONAL:
+
+            if(readRegister(tuplas[i+1].virtualBlockNumber, &reg) != TRUE) {
+              return REGISTER_READ_ERROR;
+            }
+            free(tuplas);
+            tuplas = malloc(constants.MAX_TUPLAS_REGISTER * sizeof(struct t2fs_4tupla));
+            parseRegister(reg.at, tuplas);
+            i = 0;
+          
+          case REGISTER_MAP:
+               currentBlock = tuplas[i].logicalBlockNumber + initialBlock;
+
+               if(readBlock(currentBlock, &blockBuffer) == FALSE) {
+                 return FALSE;
+               };
+
+               parseDirectory(blockBuffer, records);
+               recordIndex = (descritor.currentPointer % constants.BLOCK_SIZE) / RECORD_SIZE;
+
+               if(records[recordIndex].TypeVal != TYPEVAL_DIRETORIO && records[recordIndex].TypeVal != TYPEVAL_REGULAR) {
+                 // Verifica no restante do bloco se há mais arquivos
+                 for(k = recordIndex+1; k < constants.RECORD_PER_BLOCK && foundFile != TRUE; k++) {
+                   if(records[k].TypeVal == TYPEVAL_DIRETORIO || records[k].TypeVal == TYPEVAL_REGULAR) {
+                     strcpy(dirEntry_temp.name, file.name);
+                     dirEntry_temp.fileType = file.TypeVal;
+                     dirEntry_temp.fileSize = file.bytesFileSize;
+
+                     memcpy(dentry, &dirEntry_temp, sizeof(DIRENT2));
+                     foundFile = TRUE;
+                     return_value = 0;
+                   }
+               }
+             }
+             else {
+                 strcpy(dirEntry_temp.name, file.name);
+                 dirEntry_temp.fileType = file.TypeVal;
+                 dirEntry_temp.fileSize = file.bytesFileSize;
+
+                 memcpy(dentry, &dirEntry_temp, sizeof(DIRENT2));
+                 foundFile = TRUE;
+                 return_value = 0;
+            }
+            
+            break;
+
+          case REGISTER_FREE:
+          case REGISTER_FIM:
+          default:
+            return -END_OF_DIR;
+            break;
+        }
+
+        if(foundFile != TRUE)
+          i++;
+    }
+
 
     if(foundFile != TRUE) {
       return -END_OF_DIR;
