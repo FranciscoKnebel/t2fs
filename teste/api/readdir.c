@@ -2,11 +2,10 @@
   INF01142 - Sistemas Operacionais I
   T2FS - 2017/1
 
-  Testes dos métodos de API: ReadDir
+  Testes dos métodos de API: readdir
 
-  Desenvolvido por Douglas Lázaro
+  Desenvolvido por Francisco Knebel
 */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,37 +15,7 @@
 
 #define IDENTIFY_SIZE 80
 
-
-void test_readdir() {
-  
-  struct t2fs_record record = {1, "Teste", 1, 896, 10 };
-  int handle = opendir2 ("/");
-  DIRENT2 dentry;
-
-  printf("Abrindo diretório root... \n");
-  if(handle != -1)
-    printf("\t Aberto com sucesso \n");
-  else
-    printf("\t Erro ao abrir \n");
-
-  printf("Descritor no LDAA \n");
-  printf("\t currentPointer = %d \n\t name = %s \n\t MFT = %d \n", config.LDAA[handle].currentPointer, config.LDAA[handle].record.name, config.LDAA[handle].record.MFTNumber);
-
-  printf("READDIR2() \n");
-  while(readdir2(handle, &dentry) != -1)
-  {
-    printf("Arquivo: %s \t\t Tipo: %d \t\t Tamanho: %d \n", dentry.name, dentry.fileType, dentry.fileSize);
-    
-  }
-  
-  printf("Descritor no LDAA \n");
-  printf("\t currentPointer = %d \n\t name = %s \n\t MFT = %d \n", config.LDAA[handle].currentPointer, config.LDAA[handle].record.name, config.LDAA[handle].record.MFTNumber);
-
-}
-
-
-
-int main(int argc, char const *argv[]) {
+int main() {
   char identify[IDENTIFY_SIZE];
 
   identify2(identify, IDENTIFY_SIZE);
@@ -54,11 +23,23 @@ int main(int argc, char const *argv[]) {
 
   initConfig();
 
-  printf("\n ------ \n");
-  test_readdir();
+  printf("--- READDIR2 ---\n");
 
-  printf("\n ------ \n");
+  int handle = open2("/");
+  DIRENT2 dentry;
 
+  int check = 0;
+  while(check != -END_OF_DIR) {
+    check = readdir2(handle, &dentry);
+
+    if(check != -END_OF_DIR) {
+      printf("%s: %d, %d\n", dentry.name, dentry.fileType, dentry.fileSize);
+    } else {
+      printf("END OF DIR REACHED!\n");
+    }
+  }
+
+  printf("--- END READDIR2 ---\n");
 
   return 0;
 }

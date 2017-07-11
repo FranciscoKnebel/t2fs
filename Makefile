@@ -8,7 +8,7 @@ SRC_DIR=./src
 TST_DIR=./teste
 
 # GERAÇÂO DO T2FS #
-FILES_OBJECTS=$(LIB_DIR)/files/create.o $(LIB_DIR)/files/delete.o $(LIB_DIR)/files/open.o $(LIB_DIR)/files/close.o $(LIB_DIR)/files/read.o $(LIB_DIR)/files/write.o $(LIB_DIR)/files/truncate.o
+FILES_OBJECTS=$(LIB_DIR)/files/create.o $(LIB_DIR)/files/delete.o $(LIB_DIR)/files/open.o $(LIB_DIR)/files/close.o $(LIB_DIR)/files/read.o $(LIB_DIR)/files/write.o $(LIB_DIR)/files/truncate.o $(LIB_DIR)/files/readdir.o
 HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o $(LIB_DIR)/helpers/ldaa.o
 SRC_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o
 
@@ -48,6 +48,9 @@ $(LIB_DIR)/files/write.o: $(SRC_DIR)/files/write.c
 
 $(LIB_DIR)/files/truncate.o: $(SRC_DIR)/files/truncate.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/truncate.o -I$(INC_DIR) $(SRC_DIR)/files/truncate.c
+
+$(LIB_DIR)/files/readdir.o: $(SRC_DIR)/files/readdir.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/readdir.o -I$(INC_DIR) $(SRC_DIR)/files/readdir.c
 
 ## HELPERS ##
 $(LIB_DIR)/helpers/print.o: $(SRC_DIR)/helpers/print.c

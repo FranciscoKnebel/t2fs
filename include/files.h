@@ -173,5 +173,25 @@
   Responsável: Francisco Knebel
   -----------------------------------------------------------------------------*/
   int truncateFile(FILE2 handle, struct descritor descritor);
-  
+
+  /* Read Dir */
+  /*-----------------------------------------------------------------------------
+  Função: readDirectory
+    Lê um diretório, e a cada chamada de função retorna um descritor de arquivo
+    presente no diretório.
+
+  Entrada:
+    DIR2 handle: handle do diretório que deverá ser lido.
+    struct descritor descritor: descritor, associado junto ao handle, do arquivo atual.
+    DIRENT2 dentry: estrutura de saída, com informações do descritor de arquivo.
+
+  Saida:
+    Caso tudo ocorrer corretamente, retorna 0.
+    Caso chegou no final do diretório, retorna -END_OF_DIR;
+    Caso contrário, retorna um erro associado ao problema gerado, que é sempre < 0.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
+  int readDirectory(DIR2 handle, struct descritor descritor, DIRENT2 *dentry);
+
 #endif
