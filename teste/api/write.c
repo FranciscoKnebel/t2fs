@@ -265,11 +265,11 @@ void test_write2() {
 
   //test_writeBlock("/file2");
 
-  //test_contiguousBlocks("/file2");
+  test_contiguousBlocks("/file2");
 
   //test_contiguousBlocksThenMap("/file2", "/file3");
 
-  test_contiguousBlocksBlocksThenMapThenAditional("/file2");
+  //test_contiguousBlocksBlocksThenMapThenAditional("/file2");
 
   printf("\n--- ENCERRANDO WRITE2 ---\n");
   return;

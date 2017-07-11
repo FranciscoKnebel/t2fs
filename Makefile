@@ -8,7 +8,7 @@ SRC_DIR=./src
 TST_DIR=./teste
 
 # GERAÇÂO DO T2FS #
-FILES_OBJECTS=$(LIB_DIR)/files/create.o $(LIB_DIR)/files/delete.o $(LIB_DIR)/files/open.o $(LIB_DIR)/files/close.o $(LIB_DIR)/files/read.o $(LIB_DIR)/files/write.o
+FILES_OBJECTS=$(LIB_DIR)/files/create.o $(LIB_DIR)/files/delete.o $(LIB_DIR)/files/open.o $(LIB_DIR)/files/close.o $(LIB_DIR)/files/read.o $(LIB_DIR)/files/write.o $(LIB_DIR)/files/truncate.o
 HELPER_OBJECTS=$(LIB_DIR)/helpers/print.o $(LIB_DIR)/helpers/util.o $(LIB_DIR)/helpers/files.o $(LIB_DIR)/helpers/mft.o $(LIB_DIR)/helpers/ldaa.o
 SRC_OBJECTS=$(LIB_DIR)/t2fs.o $(LIB_DIR)/disk.o $(LIB_DIR)/parse.o
 
@@ -45,6 +45,9 @@ $(LIB_DIR)/files/read.o: $(SRC_DIR)/files/read.c
 
 $(LIB_DIR)/files/write.o: $(SRC_DIR)/files/write.c
 	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/write.o -I$(INC_DIR) $(SRC_DIR)/files/write.c
+
+$(LIB_DIR)/files/truncate.o: $(SRC_DIR)/files/truncate.c
+	$(CC) $(CFLAGS) -c -o $(LIB_DIR)/files/truncate.o -I$(INC_DIR) $(SRC_DIR)/files/truncate.c
 
 ## HELPERS ##
 $(LIB_DIR)/helpers/print.o: $(SRC_DIR)/helpers/print.c
@@ -109,7 +112,7 @@ ifeq (api,$(firstword $(MAKECMDGOALS)))
 endif
 
 API=$(BIN_DIR)/api
-API_FILES=$(API)/create $(API)/openclose $(API)/delete $(API)/read $(API)/write $(API)/seek $(API)/readdir
+API_FILES=$(API)/create $(API)/openclose $(API)/delete $(API)/read $(API)/write $(API)/seek $(API)/readdir $(API)/truncate
 API_SRC=$(TST_DIR)/api
 
 api: $(API_FILES)
@@ -135,6 +138,9 @@ $(API)/seek: all $(API_SRC)/seek.c
 
 $(API)/readdir: all $(API_SRC)/readdir.c
 	$(CC) $(CFLAGS) -o $(API)/readdir $(API_SRC)/readdir.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)/truncate: all $(API_SRC)/truncate.c
+	$(CC) $(CFLAGS) -o $(API)/truncate $(API_SRC)/truncate.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
 clean:

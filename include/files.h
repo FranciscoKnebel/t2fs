@@ -156,4 +156,22 @@
   -----------------------------------------------------------------------------*/
   int writeFile(int handle, struct descritor descritor, char * buffer, unsigned int size);
 
+  /* Truncate */
+  /*-----------------------------------------------------------------------------
+  Função: truncateFile
+    Apaga todos os bytes do arquivo, posteriores ao currentPointer do arquivo.
+    O arquivo final deverá ter tamanho igual ao currentPointer.
+
+  Entrada:
+    FILE2 handle: handle do arquivo que deverá ser truncado.
+    struct descritor descritor: descritor, associado junto ao handle, do arquivo atual.
+
+  Saida:
+    Caso tudo ocorrer corretamente, retorna 0.
+    Caso contrário, retorna um erro associado ao problema gerado, que é sempre < 0.
+
+  Responsável: Francisco Knebel
+  -----------------------------------------------------------------------------*/
+  int truncateFile(FILE2 handle, struct descritor descritor);
+  
 #endif

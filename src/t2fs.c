@@ -139,7 +139,16 @@ int truncate2 (FILE2 handle) {
     initConfig();
   }
 
-  return -1;
+  int check, return_value;
+  struct descritor descritor;
+  check = searchLDAA(handle, TYPEVAL_REGULAR, &descritor);
+  if(check == FALSE) {
+    return_value = -1;
+  } else {
+    return_value = truncateFile(handle, descritor);
+  }
+
+  return return_value;
 };
 
 int seek2 (FILE2 handle, DWORD offset) {
