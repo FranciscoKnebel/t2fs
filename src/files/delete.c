@@ -203,5 +203,5 @@ int deleteFileFromDisk(struct t2fs_record file, char* filename) {
   /* Desalocar blocos e registros do arquivo */
   removeFileFromMFT(file);
 
-  return 0;
+  return return_value;
 }
