@@ -216,6 +216,11 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry) {
 
       int i = 0, j = 0, indexRecord = 0, amountOfBlocksRead = 0, fimDir = FALSE, block, fileBlocksCounter = 0;
 
+      // Achar tupla, bloco e offset inicial, de acordo com currentPointer.
+      unsigned int initialBlock = descritorDir.currentPointer / constants.BLOCK_SIZE;
+      // unsigned int initialOffset = descritorDir.currentPointer % constants.BLOCK_SIZE;
+      i = findOffsetTupla(tuplas, initialBlock, &reg);
+
       int entry = descritorDir.currentPointer/RECORD_SIZE;
 
       if(entry > constants.RECORD_PER_BLOCK) // > OU >=

@@ -109,7 +109,7 @@ ifeq (api,$(firstword $(MAKECMDGOALS)))
 endif
 
 API=$(BIN_DIR)/api
-API_FILES=$(API)/create $(API)/openclose $(API)/delete $(API)/read $(API)/write $(API)/seek
+API_FILES=$(API)/create $(API)/openclose $(API)/delete $(API)/read $(API)/write $(API)/seek $(API)/readdir
 API_SRC=$(TST_DIR)/api
 
 api: $(API_FILES)
@@ -132,6 +132,9 @@ $(API)/write: all $(API_SRC)/write.c
 
 $(API)/seek: all $(API_SRC)/seek.c
 	$(CC) $(CFLAGS) -o $(API)/seek $(API_SRC)/seek.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
+
+$(API)/readdir: all $(API_SRC)/readdir.c
+	$(CC) $(CFLAGS) -o $(API)/readdir $(API_SRC)/readdir.c -L$(LIB_DIR) -lt2fs -I$(INC_DIR)
 
 # LIMPEZA #
 clean:
